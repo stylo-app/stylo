@@ -23,7 +23,6 @@ import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
 import { isSubstrateNetwork } from 'types/networkTypes';
 import { alertDecodeError } from 'utils/alertUtils';
-import { withRegistriesStore } from 'utils/HOC';
 import { shortString } from 'utils/strings';
 
 import { GenericExtrinsicPayload } from '@polkadot/types';
@@ -40,11 +39,10 @@ type ExtrinsicPartProps = {
 	fallback?: string;
 	label: string;
 	networkKey: string;
-	registriesStore: RegistriesStoreState;
 	value: AnyJson | AnyU8a | IMethod | IExtrinsicEra;
 };
 
-const ExtrinsicPart = withRegistriesStore<ExtrinsicPartProps>(({ fallback, label, networkKey, registriesStore, value }: ExtrinsicPartProps): React.ReactElement => {
+const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProps): React.ReactElement => {
 	const [period, setPeriod] = useState<string>();
 	const [phase, setPhase] = useState<string>();
 	const [formattedCallArgs, setFormattedCallArgs] = useState<any>();
@@ -58,20 +56,18 @@ const ExtrinsicPart = withRegistriesStore<ExtrinsicPartProps>(({ fallback, label
 	const typeRegistry = getTypeRegistry(networks, networkKey)!;
 
 	useEffect(() => {
-
 		if (label === 'Method' && !fallback) {
 			try {
 				const call = typeRegistry.createType('Call', value);
 				const methodArgs = {};
 
-				function formatArgs(callInstance: Call,
-					callMethodArgs: any,
-					depth: number): void {
+				function formatArgs(callInstance: Call, callMethodArgs: any, depth: number): void {
 					const { args, meta } = callInstance;
 					const paramArgKvArray = [];
 
+					const sectionMethod = `${call.section}.${call.method}`;
+
 					if (!meta.args.length) {
-						const sectionMethod = `${call.method}.${call.section}`;
 
 						callMethodArgs[sectionMethod] = null;
 
@@ -82,30 +78,28 @@ const ExtrinsicPart = withRegistriesStore<ExtrinsicPartProps>(({ fallback, label
 						let argument;
 
 						if (
-							args[i].toRawType() === 'Balance' ||
-								args[i].toRawType() === 'Compact<Balance>'
+							args[i].toRawType() === 'Balance' || args[i].toRawType() === 'Compact<Balance>'
 						) {
 							argument = formatBalance(args[i].toString());
-						} else if (
-							args[i].toRawType() === 'Address' ||
-								args[i].toRawType() === 'AccountId'
-						) {
-							// encode Address and AccountId to the appropriate prefix
-							argument = recodeAddress(args[i].toString(), prefix);
+						// } else if (
+						// 	args[i].toRawType() === 'Address' ||
+						// 		args[i].toRawType() === 'AccountId'
+						// ) {
+						// 	// encode Address and AccountId to the appropriate prefix
+						// 	argument = recodeAddress(args[i].toString(), prefix);
 						} else if ((args[i] as Call).section) {
 							argument = formatArgs(args[i] as Call, callMethodArgs, depth++); // go deeper into the nested calls
-						} else if (
-							args[i].toRawType() === 'Vec<AccountId>' ||
-								args[i].toRawType() === 'Vec<Address>'
-						) {
-							argument = (args[i] as any).map((v: any) =>
-								recodeAddress(v.toString(), prefix));
+						// } else if (
+						// 	args[i].toRawType() === 'Vec<AccountId>' ||
+						// 		args[i].toRawType() === 'Vec<Address>'
+						// ) {
+						// 	argument = (args[i] as any).map((v: any) =>
+						// 		recodeAddress(v.toString(), prefix));
 						} else {
-							argument = args[i].toString();
+							argument = JSON.stringify(args[i].toHuman());
 						}
 
-						const param = meta.args[i].name.toString();
-						const sectionMethod = `${call.method}.${call.section}`;
+						const param = meta.args[i].name.toHuman();
 
 						paramArgKvArray.push([param, argument]);
 						callMethodArgs[sectionMethod] = paramArgKvArray;
@@ -247,7 +241,7 @@ const ExtrinsicPart = withRegistriesStore<ExtrinsicPartProps>(({ fallback, label
 				</View>
 			</View>
 		);
-});
+};
 
 interface PayloadDetailsCardProps {
 	description?: string;

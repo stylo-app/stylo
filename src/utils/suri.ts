@@ -92,17 +92,19 @@ export function parseSURI(suri: string): SURIObject {
 	};
 }
 
+interface SuriObject {
+	derivePath?: string;
+	password?: string;
+	phrase: string;
+}
+
 /**
  * @description Return a SURI format from a bip39 phrase, a derivePath, e.g `//hard/soft` and a password.
  * @param {SURIObject} SURIObject
  * @returns {string}
  */
 
-export function constructSURI({ derivePath = '', password = '', phrase }: {
-	derivePath?: string;
-	password?: string;
-	phrase: string;
-}): string {
+export function constructSURI({ derivePath = '', password = '', phrase }: SuriObject): string {
 	if (!phrase) {
 		throw new Error('Cannot construct an SURI from emtpy phrase.');
 	}
@@ -110,9 +112,11 @@ export function constructSURI({ derivePath = '', password = '', phrase }: {
 	return `${phrase}${derivePath}///${password}`;
 }
 
-export function constructSuriSuffix({ derivePath = '', password = '' }: {
+interface SuriSuffix {
 	derivePath?: string;
 	password?: string;
-}): string {
+}
+
+export function constructSuriSuffix({ derivePath = '', password = '' }: SuriSuffix): string {
 	return `${derivePath}///${password}`;
 }

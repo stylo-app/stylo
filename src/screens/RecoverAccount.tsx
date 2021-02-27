@@ -27,7 +27,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
-import { isEthereumNetwork, NetworkParams, SubstrateNetworkParams } from 'types/networkTypes';
+import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
 import { NavigationProps } from 'types/props';
 import { emptyAccount, validateSeed } from 'utils/account';
 import { alertError, alertRisks } from 'utils/alertUtils';
@@ -37,22 +37,20 @@ import { constructSURI } from 'utils/suri';
 
 import { AccountsContext, AlertContext, NetworksContext } from '../context';
 
-interface State {
-	derivationPassword: string;
-	derivationPath: string;
-	isDerivationPathValid: boolean;
-	selectedNetwork?:NetworkParams | null;
-	newAccount?: Account;
-}
+// interface State {
+// 	derivationPassword: string;
+// 	derivationPath: string;
+// 	isDerivationPathValid: boolean;
+// 	newAccount?: Account;
+// }
+
+// const initialState = {
+// 	derivationPassword: '',
+// 	derivationPath: '',
+// 	isDerivationPathValid: true
+// };
 
 function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>): React.ReactElement {
-	const initialState = {
-		derivationPassword: '',
-		derivationPath: '',
-		isDerivationPathValid: true,
-		selectedNetwork: undefined
-	};
-
 	const [derivationPath, setDerivationPath] = useState('');
 	const [derivationPassword, setDerivationPassword] = useState('');
 	const { newAccount, updateNew } = useContext(AccountsContext);
@@ -71,15 +69,7 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 	useEffect((): void => {
 		console.log('----> empty it')
 		updateNew(emptyAccount('', ''));
-	// we get an infinite loop if we add anything here.
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	// useEffect((): void => {
-	// 	const selectedNetwork = getNetwork(newAccount.networkKey);
-
-	// 	updateState({ selectedNetwork });
-	// }, [newAccount, getNetwork]);
+	}, [updateNew]);
 
 	const onSeedTextInput = (inputSeedPhrase: string): void => {
 		setSeedPhrase(inputSeedPhrase);
@@ -96,7 +86,6 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 	};
 
 	const generateAddress = useCallback(() => {
-		console.log('<--generate')
 
 		if (!selectedNetwork) {
 			console.error('No network selected')
@@ -115,6 +104,10 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 					}))
 				.catch(console.error);
 		} else {
+			if (!seedPhrase){
+				return;
+			}
+
 			// Substrate
 			try {
 				const { prefix } = selectedNetwork as SubstrateNetworkParams
@@ -124,8 +117,10 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 					phrase: seedPhrase
 				});
 
+				console.log('calling', !!suri, prefix)
 				substrateAddress(suri, prefix)
 					.then(address => {
+						console.log('got address', address)
 						updateNew({
 							address,
 							derivationPassword,
@@ -137,7 +132,7 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 					})
 					.catch((e) => {
 						//invalid phrase
-						console.error('invalid phrase',e)
+						console.error('invalid phrase', e)
 					});
 			} catch (e) {
 				// invalid phrase or derivation path
@@ -146,29 +141,12 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 		}
 	}, [derivationPassword, derivationPath, seedPhrase, selectedNetwork, updateNew]);
 
-	// derivationPassword, derivationPath, seedPhrase, selecteNetwork, updateNew
 	useEffect(() => {
-		console.log('useEffect isSeedValid')
 		isSeedValid.bip39 && generateAddress()
 	}, [generateAddress, isSeedValid.bip39])
 
-	const onRecoverIdentity = async (): Promise<void> => {
-		// const pin = await setPin(navigation);
-
-		// try {
-		// if (isSeedValid.bip39) {
+	const onRecoverIdentity = (): void => {
 		goToPin()
-		// 	} else {
-		// 		await accountsStore.saveNewIdentity(seedPhrase,
-		// 			pin,
-		// 			createSeedRefWithNewSeed);
-		// 	}
-
-		// 	setSeedPhrase('');
-		// 	navigateToNewIdentityNetwork(navigation);
-		// } catch (e) {
-		// 	alertIdentityCreationError(setAlert, e.message);
-		// }
 	};
 
 	const onRecoverConfirm = (): void | Promise<void> => {
@@ -183,10 +161,6 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 		return onRecoverIdentity();
 	};
 
-	// const onCreateNewIdentity = (): void => {
-	// 	setSeedPhrase('');
-	// 	navigation.navigate('IdentityBackup', { isNew: true });
-	// };
 	const { address, name, networkKey } = newAccount;
 
 	return (

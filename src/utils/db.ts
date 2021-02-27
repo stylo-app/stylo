@@ -63,10 +63,12 @@ export async function loadAccounts(version = 1): Promise<LegacyAccount[]> {
 		});
 }
 
-export const deleteAccount = (accountAddress: string): Promise<void> => {
-	const address = encodeAddress(accountAddress, SUSTRATE_SS58_PREFIX);
+export const deleteAccount = (address: string, isEthereum: boolean): Promise<void> => {
+	const dbAddress = isEthereum
+		? address
+		: encodeAddress(address, SUSTRATE_SS58_PREFIX);
 
-	return	SecureStorage.deleteItem(address, currentAccountsStore);
+	return	SecureStorage.deleteItem(dbAddress, currentAccountsStore);
 }
 
 export const saveAccount = (account: LegacyAccount, isEthereum: boolean): Promise<void> => {

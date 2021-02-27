@@ -1,7 +1,7 @@
 import { ETHEREUM_NETWORK_LIST, NetworkProtocols } from 'constants/networkSpecs';
 import { createContext, default as React, useCallback, useContext, useEffect, useReducer, useState } from 'react';
 import { Account, AccountsStoreState, Identity, isUnlockedAccount, LegacyAccount, LockedAccount, UnlockedAccount } from 'types/identityTypes';
-import { SubstrateNetworkParams } from 'types/networkTypes';
+import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
 import { emptyAccount, generateAccountId } from 'utils/account';
 import { deleteAccount as deleteDbAccount, loadAccounts, saveAccount as saveDbAccount, saveIdentities } from 'utils/db';
 import { accountExistedError, addressGenerateError, duplicatedIdentityError, emptyIdentityError, identityUpdateError } from 'utils/errors';
@@ -218,19 +218,34 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 		_updateAccount({ ... updatedAccount });
 	}
 
-	async function deleteAccount(address: string): Promise<void> {
-		const newAccounts = accounts.filter((account) => {
-			// TODO make sure this works with substrate addresses and that we store ss58 substrate encoding
-			return account.address !== address
-		})
+	const isEthereumAccount = (account: LegacyAccount): boolean => {
+		const network = getNetwork(account.networkKey)
 
-		await deleteDbAccount(address);
-		setAccounts(newAccounts)
-		setSelectedAccountAddress('');
-
+		return !!network && isEthereumNetwork(network)
 	}
 
-	const accountStateWithoutAccount = (address: string) => {
+	async function deleteAccount(addressToDelete: string): Promise<void> {
+		const accountToDelete = getAccountByAddress(addressToDelete)
+
+		if (!accountToDelete){
+			console.error('Could not find the account to delete with address',addressToDelete)
+
+			return;
+		}
+
+		const { address } = accountToDelete
+		const newAccounts = accounts.filter((account) => {
+
+			return account.address !== address
+		})
+		const isEthereum = isEthereumAccount(accountToDelete)
+
+		await deleteDbAccount(address, isEthereum);
+		setAccounts(newAccounts)
+		setSelectedAccountAddress('');
+	}
+
+	const getAccountsWithout = (address: string): LegacyAccount[] => {
 
 		return accounts.filter((account) => account.address !== address)
 	}
@@ -261,7 +276,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 			}
 
 			setAccounts([
-				...accountStateWithoutAccount(address),
+				...getAccountsWithout(address),
 				unlockedAccount
 			]);
 		} catch (e) {
@@ -278,7 +293,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 			const lockedAccount = _deleteSensitiveData(account);
 
 			setAccounts([
-				...accountStateWithoutAccount(address),
+				...getAccountsWithout(address),
 				lockedAccount
 			]);
 		}

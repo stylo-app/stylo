@@ -36,7 +36,7 @@ interface AmountProps {
 	style: ViewStyle;
 }
 
-function Amount({ gas, gasPrice, style, value }: AmountProps): React.ReactElement<AmountProps> {
+function EthAmount({ gas, gasPrice, style, value }: AmountProps): React.ReactElement<AmountProps> {
 	const fee = (parseInt(gas, 10) * parseInt(gasPrice, 10)) / WEI_IN_ETH;
 
 	return (
@@ -52,22 +52,19 @@ function Amount({ gas, gasPrice, style, value }: AmountProps): React.ReactElemen
 	);
 }
 
-export default class TxDetailsCard extends React.PureComponent<Props> {
-	render(): React.ReactNode {
-		const { description, gas, gasPrice, style, value } = this.props;
+const TxDetailsCard = ({ description, gas, gasPrice, style, value }: Props): React.ReactNode => {
 
-		return (
-			<View style={[styles.body, style]}>
-				<Text style={styles.titleText}>{description}</Text>
-				<Amount
-					gas={gas}
-					gasPrice={gasPrice}
-					style={{ marginTop: 10 }}
-					value={value}
-				/>
-			</View>
-		);
-	}
+	return (
+		<View style={[styles.body, style]}>
+			<Text style={styles.titleText}>{description}</Text>
+			<EthAmount
+				gas={gas}
+				gasPrice={gasPrice}
+				style={{ marginTop: 10 }}
+				value={value}
+			/>
+		</View>
+	);
 }
 
 const styles = StyleSheet.create({
@@ -99,3 +96,5 @@ const styles = StyleSheet.create({
 		textAlign: 'center'
 	}
 });
+
+export default TxDetailsCard;
