@@ -1,17 +1,17 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import Button from 'components/Button';
 import ScreenHeading from 'components/ScreenHeading';
@@ -24,15 +24,15 @@ import { getSubtitle, onPinInputChange } from 'modules/unlock/utils';
 import React from 'react';
 import { NavigationProps } from 'types/props';
 
-export default function PinNew({
-	route
-}: NavigationProps<'PinNew'>): React.ReactElement {
+export default function PinNew({ route }: NavigationProps<'PinNew'>): React.ReactElement {
 	const [state, updateState, resetState] = usePinState();
 
 	function submit(): void {
-		const { pin, confirmation } = state;
+		const { confirmation, pin } = state;
+
 		if (pin.length >= 6 && pin === confirmation) {
 			const resolve = route.params.resolve;
+
 			resetState();
 			resolve(pin);
 		} else {
@@ -44,41 +44,39 @@ export default function PinNew({
 
 	return (
 		<KeyboardAwareContainer
-			contentContainerStyle={{
-				flexGrow: 1
-			}}
+			contentContainerStyle={{ flexGrow: 1 }}
 		>
 			<ScreenHeading
-				title={t.title.pinCreation}
-				subtitle={getSubtitle(state, false)}
 				error={state.pinMismatch || state.pinTooShort}
+				subtitle={getSubtitle(state, false)}
+				title={t.title.pinCreation}
 			/>
 			<PinInput
-				label={t.pinLabel}
 				autoFocus
-				testID={testIDs.IdentityPin.setPin}
-				returnKeyType="next"
+				label={t.pinLabel}
+				onChangeText={onPinInputChange('pin', updateState)}
 				onFocus={(): void => updateState({ focusConfirmation: false })}
 				onSubmitEditing={(): void => {
 					updateState({ focusConfirmation: true });
 				}}
-				onChangeText={onPinInputChange('pin', updateState)}
+				returnKeyType="next"
+				testID={testIDs.IdentityPin.setPin}
 				value={state.pin}
 			/>
 			<PinInput
+				focus={state.focusConfirmation}
 				label={t.pinConfirmLabel}
+				onChangeText={onPinInputChange('confirmation', updateState)}
+				onSubmitEditing={submit}
 				returnKeyType="done"
 				testID={testIDs.IdentityPin.confirmPin}
-				focus={state.focusConfirmation}
-				onChangeText={onPinInputChange('confirmation', updateState)}
 				value={state.confirmation}
-				onSubmitEditing={submit}
 			/>
 			<Button
-				title={t.doneButton.pinCreation}
+				aboveKeyboard
 				onPress={submit}
 				testID={testIDs.IdentityPin.submitButton}
-				aboveKeyboard
+				title={t.doneButton.pinCreation}
 			/>
 		</KeyboardAwareContainer>
 	);

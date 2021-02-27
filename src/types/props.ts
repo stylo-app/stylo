@@ -1,15 +1,10 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import {
-	GestureResponderEvent,
-	NativeSyntheticEvent,
-	TextInputChangeEventData,
-	TextInputFocusEventData
-} from 'react-native';
-import { AccountsContextState } from 'stores/AccountsContext';
-import { ScannerContextState } from 'stores/ScannerContext';
-import { AccountsStoreStateWithIdentity, Identity } from 'types/identityTypes';
+import { GestureResponderEvent, NativeSyntheticEvent, TextInputChangeEventData, TextInputFocusEventData } from 'react-native';
+import { AccountsStoreStateWithIdentity, LegacyAccount } from 'types/identityTypes';
 import { RootStackParamList } from 'types/routes';
+
+import { AccountsContextType, ScannerContextType } from '../context';
 
 export interface NavigationProps<ScreenName extends keyof RootStackParamList> {
 	route: RouteProp<RootStackParamList, ScreenName>;
@@ -33,18 +28,16 @@ export interface NavigationAccountIdentityProps<
 export interface NavigationTargetIdentityProps<
 	ScreenName extends keyof RootStackParamList
 > extends NavigationProps<ScreenName> {
-	targetIdentity: Identity;
+	targetIdentity: LegacyAccount;
 }
 
 export interface NavigationAccountScannerProps<
 	ScreenName extends keyof RootStackParamList
 > extends NavigationProps<ScreenName> {
-	scannerStore: ScannerContextState;
-	accountsStore: AccountsContextState;
+	scannerStore: ScannerContextType;
+	accountsStore: AccountsContextType;
 }
 
 export interface NavigationScannerProps<
 	ScreenName extends keyof RootStackParamList
-> extends NavigationProps<ScreenName> {
-	scannerStore: ScannerContextState;
-}
+> extends NavigationProps<ScreenName> {}

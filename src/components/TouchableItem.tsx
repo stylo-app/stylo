@@ -1,18 +1,18 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * TouchableItem renders a touchable that looks native on both iOS and Android.
@@ -25,13 +25,7 @@
  */
 
 import React, { ReactElement } from 'react';
-import {
-	Platform,
-	TouchableNativeFeedback,
-	TouchableOpacity,
-	TouchableOpacityProps,
-	View
-} from 'react-native';
+import { Platform, TouchableNativeFeedback, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
@@ -60,14 +54,13 @@ export default class TouchableItem extends React.PureComponent<Props> {
 			Platform.Version >= ANDROID_VERSION_LOLLIPOP
 		) {
 			const { style, ...rest } = this.props;
+
 			return (
 				<TouchableNativeFeedback
 					{...rest}
+					background={TouchableNativeFeedback.Ripple(this.props.pressColor,
+						this.props.borderless)}
 					style={null}
-					background={TouchableNativeFeedback.Ripple(
-						this.props.pressColor,
-						this.props.borderless
-					)}
 				>
 					<View style={style}>{this.props.children}</View>
 				</TouchableNativeFeedback>

@@ -1,18 +1,18 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { NativeModules } from 'react-native';
 import { TryBrainWalletAddress } from 'utils/seedRefHooks';
@@ -60,7 +60,7 @@ function toHex(x: string): string {
 
 export async function brainWalletAddress(seed: string): Promise<AddressObject> {
 	const taggedAddress = await EthkeyBridge.brainWalletAddress(seed);
-	const { bip39, address } = untagAddress(taggedAddress);
+	const { address, bip39 } = untagAddress(taggedAddress);
 	const hash = await keccak(toHex(address));
 
 	return {
@@ -69,11 +69,9 @@ export async function brainWalletAddress(seed: string): Promise<AddressObject> {
 	};
 }
 
-export async function brainWalletAddressWithRef(
-	createBrainWalletFn: TryBrainWalletAddress
-): Promise<AddressObject> {
+export async function brainWalletAddressWithRef(createBrainWalletFn: TryBrainWalletAddress): Promise<AddressObject> {
 	const taggedAddress = await createBrainWalletFn();
-	const { bip39, address } = untagAddress(taggedAddress);
+	const { address, bip39 } = untagAddress(taggedAddress);
 	const hash = await keccak(toHex(address));
 
 	return {
@@ -82,12 +80,10 @@ export async function brainWalletAddressWithRef(
 	};
 }
 
-export async function brainWalletBIP39Address(
-	seed: string
-): Promise<AddressObject | null> {
+export async function brainWalletBIP39Address(seed: string): Promise<AddressObject | null> {
 	try {
 		const taggedAddress = await EthkeyBridge.brainWalletBIP(seed);
-		const { bip39, address } = untagAddress(taggedAddress);
+		const { address, bip39 } = untagAddress(taggedAddress);
 
 		const hash = await keccak(toHex(address));
 
@@ -100,10 +96,8 @@ export async function brainWalletBIP39Address(
 	}
 }
 
-export function brainWalletSign(
-	seed: string,
-	message: string
-): Promise<string> {
+export function brainWalletSign(seed: string,
+	message: string): Promise<string> {
 	return EthkeyBridge.brainWalletSign(seed, message);
 }
 
@@ -155,10 +149,8 @@ export function substrateSecret(suri: string): Promise<string> {
 //   Polkadot proper = 0
 //   Kusama = 2
 //   Default (testnets) = 42
-export function substrateAddress(
-	seed: string,
-	prefix: number
-): Promise<string> {
+export function substrateAddress(seed: string,
+	prefix: number): Promise<string> {
 	return EthkeyBridge.substrateAddress(seed, prefix);
 }
 
@@ -168,11 +160,9 @@ export function substrateSign(seed: string, message: string): Promise<string> {
 }
 
 // Verify a sr25519 signature is valid
-export function schnorrkelVerify(
-	seed: string,
+export function schnorrkelVerify(seed: string,
 	message: string,
-	signature: string
-): Promise<boolean> {
+	signature: string): Promise<boolean> {
 	return EthkeyBridge.schnorrkelVerify(seed, message, signature);
 }
 
@@ -195,12 +185,13 @@ export class SeedRefClass {
 			// Seed reference was already created.
 			return this.dataRef;
 		}
-		const dataRef: number = await EthkeyBridge.decryptDataRef(
-			encryptedSeed,
-			password
-		);
+
+		const dataRef: number = await EthkeyBridge.decryptDataRef(encryptedSeed,
+			password);
+
 		this.dataRef = dataRef;
 		this.valid = true;
+
 		return this.dataRef;
 	}
 
@@ -208,22 +199,20 @@ export class SeedRefClass {
 		if (!this.valid) {
 			throw new Error('a seed reference has not been created');
 		}
-		return EthkeyBridge.substrateAddressWithRef(
-			this.dataRef,
+
+		return EthkeyBridge.substrateAddressWithRef(this.dataRef,
 			suriSuffix,
-			prefix
-		);
+			prefix);
 	}
 
 	tryBrainWalletAddress(): Promise<string> {
 		if (!this.valid) {
 			throw new Error('a seed reference has not been created');
 		}
-		return EthkeyBridge.brainWalletAddressWithRef(this.dataRef).then(
-			(address: string) => {
-				return address;
-			}
-		);
+
+		return EthkeyBridge.brainWalletAddressWithRef(this.dataRef).then((address: string) => {
+			return address;
+		});
 	}
 
 	// Destroy the decrypted seed. Must be called before this leaves scope or
@@ -233,6 +222,7 @@ export class SeedRefClass {
 			// Seed reference was never created or was already destroyed.
 			throw new Error('cannot destroy an invalid seed reference');
 		}
+
 		return EthkeyBridge.destroyDataRef(this.dataRef).then(() => {
 			this.valid = false;
 		});
@@ -245,6 +235,7 @@ export class SeedRefClass {
 			// Seed reference was never created or was already destroyed.
 			throw new Error('cannot sign with an invalid seed reference');
 		}
+
 		return EthkeyBridge.brainWalletSignWithRef(this.dataRef, message);
 	}
 
@@ -254,6 +245,7 @@ export class SeedRefClass {
 			// Seed reference was never created or was already destroyed.
 			throw new Error('cannot sign with an invalid seed reference');
 		}
+
 		return EthkeyBridge.substrateSignWithRef(this.dataRef, suriSuffix, message);
 	}
 
@@ -262,6 +254,7 @@ export class SeedRefClass {
 			// Seed reference was never created or was already destroyed.
 			throw new Error('cannot sign with an invalid seed reference');
 		}
+
 		return EthkeyBridge.substrateSecretWithRef(this.dataRef, suriSuffix);
 	}
 }

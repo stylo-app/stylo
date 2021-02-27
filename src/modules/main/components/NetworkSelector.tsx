@@ -1,77 +1,67 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { useFocusEffect } from '@react-navigation/native';
-import { NetworkCard } from 'components/AccountCard';
+import { NetworkCard } from 'components/NetworkCard';
 import QrScannerTab from 'components/QrScannerTab';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import ScreenHeading, { IdentityHeading } from 'components/ScreenHeading';
 import testIDs from 'e2e/testIDs';
 import { filterNetworks } from 'modules/network/utils';
-import React, { ReactElement, useContext, useMemo, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useMemo, useState } from 'react';
 import { BackHandler, FlatList, FlatListProps } from 'react-native';
-import { AlertStateContext } from 'stores/alertContext';
-import { NetworksContext } from 'stores/NetworkContext';
 import colors from 'styles/colors';
-import {
-	isEthereumNetworkParams,
-	isSubstrateNetworkParams,
-	NetworkParams,
-	SubstrateNetworkParams
-} from 'types/networkTypes';
+import { isEthereumNetwork, isSubstrateNetwork, NetworkParams, SubstrateNetworkParams } from 'types/networkTypes';
 import { NavigationAccountIdentityProps } from 'types/props';
 import { alertPathDerivationError } from 'utils/alertUtils';
 import { withCurrentIdentity } from 'utils/HOC';
 import { getExistedNetworkKeys, getIdentityName } from 'utils/identitiesUtils';
-import {
-	navigateToPathDetails,
-	navigateToPathsList,
-	unlockSeedPhrase,
-	useUnlockSeed
-} from 'utils/navigationHelpers';
+import { navigateToPathDetails, navigateToPathsList, unlockSeedPhrase, useUnlockSeed } from 'utils/navigationHelpers';
 import { useSeedRef } from 'utils/seedRefHooks';
+
+import { AlertContext, NetworksContext } from '../../../context';
 
 function NetworkSelector({ accountsStore, navigation, route }: NavigationAccountIdentityProps<'Main'>): React.ReactElement {
 	const isNew = route.params?.isNew ?? false;
 	const [shouldShowMoreNetworks, setShouldShowMoreNetworks] = useState(false);
-	const { identities, currentIdentity } = accountsStore.state;
+	const { currentIdentity, identities } = accountsStore.state;
 	const networkContextState = useContext(NetworksContext);
-	const { getSubstrateNetwork, allNetworks } = networkContextState;
+	const { allNetworks } = networkContextState;
 	const { brainWalletAddress, isSeedRefValid, substrateAddress } = useSeedRef(currentIdentity.encryptedSeed);
 	const { unlockWithoutPassword } = useUnlockSeed(isSeedRefValid);
 
-	const { setAlert } = useContext(AlertStateContext);
+	const { setAlert } = useContext(AlertContext);
+
 	// catch android back button and prevent exiting the app
-	useFocusEffect(
-		React.useCallback((): any => {
-			const handleBackButton = (): boolean => {
-				if (shouldShowMoreNetworks) {
-					setShouldShowMoreNetworks(false);
-					return true;
-				} else {
-					return false;
-				}
-			};
-			const backHandler = BackHandler.addEventListener(
-				'hardwareBackPress',
-				handleBackButton
-			);
-			return (): void => backHandler.remove();
-		}, [shouldShowMoreNetworks])
-	);
+	useFocusEffect(useCallback((): any => {
+		const handleBackButton = (): boolean => {
+			if (shouldShowMoreNetworks) {
+				setShouldShowMoreNetworks(false);
+
+				return true;
+			} else {
+				return false;
+			}
+		};
+
+		const backHandler = BackHandler.addEventListener('hardwareBackPress',
+			handleBackButton);
+
+		return (): void => backHandler.remove();
+	}, [shouldShowMoreNetworks]));
 
 	const onAddCustomPath = (): Promise<void> =>
 		unlockWithoutPassword({
@@ -79,21 +69,19 @@ function NetworkSelector({ accountsStore, navigation, route }: NavigationAccount
 			params: { parentPath: '' }
 		});
 
-	const deriveSubstrateNetworkRootPath = async (
-		networkKey: string,
-		networkParams: SubstrateNetworkParams
-	): Promise<void> => {
+	const deriveSubstrateNetworkRootPath = async (networkKey: string,
+		networkParams: SubstrateNetworkParams): Promise<void> => {
 		const { pathId } = networkParams;
+
 		await unlockSeedPhrase(navigation, isSeedRefValid);
 		const fullPath = `//${pathId}`;
+
 		try {
-			await accountsStore.deriveNewPath(
-				fullPath,
+			await accountsStore.deriveNewPath(fullPath,
 				substrateAddress,
-				getSubstrateNetwork(networkKey),
+				networkParams,
 				`${networkParams.title} root`,
-				''
-			);
+				'');
 			navigateToPathDetails(navigation, networkKey, fullPath);
 		} catch (error) {
 			alertPathDerivationError(setAlert, error.message);
@@ -102,12 +90,9 @@ function NetworkSelector({ accountsStore, navigation, route }: NavigationAccount
 
 	const deriveEthereumAccount = async (networkKey: string): Promise<void> => {
 		await unlockSeedPhrase(navigation, isSeedRefValid);
+
 		try {
-			await accountsStore.deriveEthereumAccount(
-				brainWalletAddress,
-				networkKey,
-				allNetworks
-			);
+			await accountsStore.deriveEthereumAccount(brainWalletAddress, networkKey);
 			navigateToPathsList(navigation, networkKey);
 		} catch (e) {
 			alertPathDerivationError(setAlert, e.message);
@@ -121,10 +106,10 @@ function NetworkSelector({ accountsStore, navigation, route }: NavigationAccount
 			ListHeaderComponent: (
 				<NetworkCard
 					isAdd={true}
+					networkColor={colors.background.app}
 					onPress={onAddCustomPath}
 					testID={testIDs.Main.addCustomNetworkButton}
 					title="Create Custom Path"
-					networkColor={colors.background.app}
 				/>
 			)
 		};
@@ -150,22 +135,21 @@ function NetworkSelector({ accountsStore, navigation, route }: NavigationAccount
 		} else if (shouldShowMoreNetworks) {
 			return (
 				<IdentityHeading
-					title={'Choose Network'}
 					onPressBack={(): void => setShouldShowMoreNetworks(false)}
+					title={'Choose Network'}
 				/>
 			);
 		} else {
 			const identityName = getIdentityName(currentIdentity, identities);
+
 			return <IdentityHeading title={identityName} />;
 		}
 	};
 
-	const onNetworkChosen = async (
-		networkKey: string,
-		networkParams: NetworkParams
-	): Promise<void> => {
+	const onNetworkChosen = async (networkKey: string,
+		networkParams: NetworkParams): Promise<void> => {
 		if (isNew || shouldShowMoreNetworks) {
-			if (isSubstrateNetworkParams(networkParams)) {
+			if (isSubstrateNetwork(networkParams)) {
 				await deriveSubstrateNetworkRootPath(networkKey, networkParams);
 			} else {
 				await deriveEthereumAccount(networkKey);
@@ -175,42 +159,41 @@ function NetworkSelector({ accountsStore, navigation, route }: NavigationAccount
 		}
 	};
 
-	const availableNetworks = useMemo(
-		() => getExistedNetworkKeys(currentIdentity, networkContextState),
-		[currentIdentity, networkContextState]
-	);
+	const availableNetworks = useMemo(() => {
+		const networks = getExistedNetworkKeys(currentIdentity, networkContextState)
 
-	const networkList = useMemo(
-		() =>
-			filterNetworks(allNetworks, (networkKey, shouldExclude) => {
-				if (isNew && !shouldExclude) return true;
+		return networks;
+	},
+	[currentIdentity, networkContextState]);
 
-				if (shouldShowMoreNetworks) {
-					if (shouldExclude) return false;
-					return !availableNetworks.includes(networkKey);
-				}
-				return availableNetworks.includes(networkKey);
-			}),
-		[availableNetworks, isNew, shouldShowMoreNetworks, allNetworks]
-	);
+	const networkList = useMemo(() =>
+		filterNetworks(allNetworks, (networkKey, shouldExclude) => {
+			if (isNew && !shouldExclude) return true;
 
-	const renderNetwork = ({
-		item
-	}: {
+			if (shouldShowMoreNetworks) {
+				if (shouldExclude) return false;
+
+				return !availableNetworks.includes(networkKey);
+			}
+
+			return availableNetworks.includes(networkKey);
+		}),
+	[availableNetworks, isNew, shouldShowMoreNetworks, allNetworks]);
+
+	const renderNetwork = ({ item }: {
 		item: [string, NetworkParams];
 	}): ReactElement => {
 		const [networkKey, networkParams] = item;
-		const networkIndexSuffix = isEthereumNetworkParams(networkParams)
+		const networkIndexSuffix = isEthereumNetwork(networkParams)
 			? networkParams.ethereumChainId
 			: networkParams.pathId;
+
 		return (
 			<NetworkCard
 				key={networkKey}
-				testID={testIDs.Main.networkButton + networkIndexSuffix}
 				networkKey={networkKey}
-				onPress={(): Promise<void> =>
-					onNetworkChosen(networkKey, networkParams)
-				}
+				onPress={(): Promise<void> => onNetworkChosen(networkKey, networkParams) }
+				testID={testIDs.Main.networkButton + networkIndexSuffix}
 				title={networkParams.title}
 			/>
 		);

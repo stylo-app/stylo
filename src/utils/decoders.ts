@@ -1,35 +1,26 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import {
-	compactFromU8a,
-	hexStripPrefix,
-	hexToU8a,
-	u8aToHex
-} from '@polkadot/util';
-import { encodeAddress } from '@polkadot/util-crypto';
 import strings from 'modules/sign/strings';
 import { SubstrateNetworkParams } from 'types/networkTypes';
-import {
-	EthereumParsedData,
-	ParsedData,
-	SubstrateCompletedParsedData,
-	SubstrateMultiParsedData
-} from 'types/scannerTypes';
+import { EthereumParsedData, ParsedData, SubstrateCompletedParsedData, SubstrateMultiParsedData } from 'types/scannerTypes';
 import { blake2b } from 'utils/native';
+
+import { compactFromU8a, hexStripPrefix, hexToU8a, u8aToHex } from '@polkadot/util';
+import { encodeAddress } from '@polkadot/util-crypto';
 
 /*
  * @return strippedData: the rawBytes from react-native-camera, stripped of the ec11 padding to fill the frame size. See: decoders.js
@@ -101,14 +92,11 @@ export function rawDataToU8A(rawData: string): Uint8Array | null {
   ec11ec11ec11ec // SQRC filler bytes
   */
 
-export async function constructDataFromBytes(
-	bytes: Uint8Array,
-	multipartComplete = false,
-	networks: Map<string, SubstrateNetworkParams>
-): Promise<ParsedData> {
+export async function constructDataFromBytes(bytes: Uint8Array, multipartComplete = false, networks: Map<string, SubstrateNetworkParams>): Promise<ParsedData> {
 	const frameInfo = hexStripPrefix(u8aToHex(bytes.slice(0, 5)));
 	const frameCount = parseInt(frameInfo.substr(2, 4), 16);
 	const isMultipart = frameCount > 1; // for simplicity, even single frame payloads are marked as multipart.
+
 	if (frameCount > 50) throw new Error(strings.ERROR_WRONG_RAW);
 	const currentFrame = parseInt(frameInfo.substr(6, 4), 16);
 	const uosAfterFrames = hexStripPrefix(u8aToHex(bytes.slice(5)));
@@ -121,6 +109,7 @@ export async function constructDataFromBytes(
 			isMultipart,
 			partData: uosAfterFrames
 		};
+
 		return partData;
 	}
 
@@ -135,9 +124,9 @@ export async function constructDataFromBytes(
 		switch (zerothByte) {
 		case '45': {
 			// Ethereum UOS payload
-			const data = {
-				data: {} // for consistency with legacy data format.
-			} as EthereumParsedData;
+			// for consistency with legacy data format.
+			const data = { data: {} } as EthereumParsedData;
+
 			action =
 					firstByte === '00' || firstByte === '01'
 						? 'signData'
@@ -148,6 +137,7 @@ export async function constructDataFromBytes(
 
 			data.action = action;
 			data.data.account = address;
+
 			if (action === 'signData') {
 				data.data.rlp = uosAfterFrames[13];
 			} else if (action === 'signTransaction') {
@@ -155,13 +145,15 @@ export async function constructDataFromBytes(
 			} else {
 				throw new Error('Could not determine action type.');
 			}
+
 			return data;
 		}
+
 		case '53': {
 			// Substrate UOS payload
-			const data = {
-				data: {} // for consistency with legacy data format.
-			} as SubstrateCompletedParsedData;
+			// for consistency with legacy data format.
+			const data = { data: {} } as SubstrateCompletedParsedData;
+
 			try {
 				data.data.crypto =
 						firstByte === '00'
@@ -175,9 +167,11 @@ export async function constructDataFromBytes(
 				const hexPayload = hexEncodedData.slice(0, -64);
 				const genesisHash = `0x${hexEncodedData.substr(-64)}`;
 				const rawPayload = hexToU8a(hexPayload);
+
 				data.data.genesisHash = genesisHash;
 				const isOversized = rawPayload.length > 256;
 				const network = networks.get(genesisHash);
+
 				if (!network) {
 					throw new Error(strings.ERROR_NO_NETWORK);
 				}
@@ -190,13 +184,12 @@ export async function constructDataFromBytes(
 					data.isHash = isOversized;
 					const [offset] = compactFromU8a(rawPayload);
 					const payload = rawPayload.subarray(offset);
+
 					data.data.data = isOversized
 						? await blake2b(u8aToHex(payload, -1, false))
 						: rawPayload;
-					data.data.account = encodeAddress(
-						publicKeyAsBytes,
-						network.prefix
-					); // encode to the prefix;
+					data.data.account = encodeAddress(publicKeyAsBytes,
+						network.prefix); // encode to the prefix;
 
 					break;
 				case '01': // data is a hash
@@ -204,22 +197,19 @@ export async function constructDataFromBytes(
 					data.oversized = false;
 					data.isHash = true;
 					data.data.data = hexPayload;
-					data.data.account = encodeAddress(
-						publicKeyAsBytes,
-						network.prefix
-					); // default to Kusama
+					data.data.account = encodeAddress(publicKeyAsBytes,
+						network.prefix); // default to Kusama
 					break;
 				default:
 					break;
 				}
 			} catch (e) {
-				throw new Error(
-					'Error: something went wrong decoding the Substrate UOS payload: ' +
-							uosAfterFrames
-				);
+				throw new Error('Error: something went wrong decoding the Substrate UOS payload: ' + uosAfterFrames);
 			}
+
 			return data;
 		}
+
 		default:
 			throw new Error('Error: Payload is not formatted correctly: ' + bytes);
 		}
@@ -230,21 +220,26 @@ export async function constructDataFromBytes(
 
 export function decodeToString(message: Uint8Array): string {
 	const encodedString = String.fromCharCode.apply(null, Array.from(message));
+
 	return decodeURIComponent(escape(encodedString));
 }
 
 export function asciiToHex(message: string): string {
 	const result = [];
+
 	for (let i = 0; i < message.length; i++) {
 		const hex = Number(message.charCodeAt(i)).toString(16);
+
 		result.push(hex);
 	}
+
 	return result.join('');
 }
 
 export function hexToAscii(hexBytes: string): string {
 	const hex = hexBytes.toString();
 	let str = '';
+
 	for (let n = 0; n < hex.length; n += 2) {
 		str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
 	}
@@ -262,6 +257,7 @@ export function isJsonString(str: any): boolean {
 	} catch (e) {
 		return false;
 	}
+
 	return true;
 }
 

@@ -10,11 +10,11 @@ export type RootStackParamList = {
 	AccountUnlockAndSign: { next: string };
 	AccountUnlock: { next: string; onDelete: () => any };
 	IdentityBackup: { isNew: true } | { isNew: false; seedPhrase: string };
-	IdentityManagement: undefined;
-	IdentityNew: { isRecover: boolean } | undefined;
+	// IdentityManagement: undefined;
+	RecoverAccount: { isRecover: boolean } | undefined;
 	MessageDetails: undefined;
-	Empty: undefined;
-	LegacyAccountBackup:
+	Loading: undefined;
+	LegacyMnemonic:
 		| {
 				isNew: boolean;
 		  }

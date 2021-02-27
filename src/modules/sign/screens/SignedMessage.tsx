@@ -1,21 +1,20 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { isU8a, u8aToHex } from '@polkadot/util';
-import CompatibleCard from 'components/CompatibleCard';
+import AccountCard from 'components/AccountCard';
 import QrView from 'components/QrView';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import Separator from 'components/Separator';
@@ -26,29 +25,33 @@ import strings from 'modules/sign/strings';
 import styles from 'modules/sign/styles';
 import React, { useContext, useEffect, useRef } from 'react';
 import { Text, View } from 'react-native';
-import { AccountsContext } from 'stores/AccountsContext';
-import { NetworksContext } from 'stores/NetworkContext';
-import { ScannerContext } from 'stores/ScannerContext';
 import fontStyles from 'styles/fontStyles';
-import { FoundAccount } from 'types/identityTypes';
-import { isEthereumNetworkParams } from 'types/networkTypes';
+import { isEthereumNetwork } from 'types/networkTypes';
 import { NavigationProps, NavigationScannerProps } from 'types/props';
 
+import { isU8a, u8aToHex } from '@polkadot/util';
+
+import { AccountsContext, NetworksContext, ScannerContext } from '../../../context';
+
 interface Props extends NavigationScannerProps<'SignedMessage'> {
-	sender: FoundAccount;
+	sender: string;
 	message: string;
 }
 
-function SignedMessageView({
-	sender,
-	message,
-	scannerStore
-}: Props): React.ReactElement {
-	const accountsStore = useContext(AccountsContext);
-	const { signedData, isHash, dataToSign } = scannerStore.state;
+function SignedMessageView({ message, sender: senderAddress }: Props): React.ReactElement {
+	const { getAccountByAddress } = useContext(AccountsContext);
+	const sender = getAccountByAddress(senderAddress);
+	const { state: { dataToSign, isHash, signedData } } = useContext(ScannerContext);
 	const { getNetwork } = useContext(NetworksContext);
+
+	if (!sender) {
+		console.error('no sender')
+
+		return<View/>;
+	}
+
 	const senderNetworkParams = getNetwork(sender.networkKey);
-	const isEthereum = isEthereumNetworkParams(senderNetworkParams);
+	const isEthereum = !!senderNetworkParams && isEthereumNetwork(senderNetworkParams);
 
 	return (
 		<SafeAreaScrollViewContainer>
@@ -66,43 +69,40 @@ function SignedMessageView({
 			<View testID={testIDs.SignedMessage.qrView}>
 				<QrView data={signedData} />
 			</View>
-			<CompatibleCard
+			<AccountCard
+				address={senderAddress}
 				titlePrefix={'from:'}
-				account={sender}
-				accountsStore={accountsStore}
 			/>
 			{!isEthereum && dataToSign ? (
 				<PayloadDetailsCard
 					description={strings.INFO_MULTI_PART}
-					signature={signedData.toString()}
 					networkKey={sender.networkKey}
+					signature={signedData.toString()}
 				/>
 			) : null}
 			<MessageDetailsCard
+				data={isU8a(dataToSign) ? u8aToHex(dataToSign) : dataToSign.toString()}
 				isHash={isHash ?? false}
 				message={message}
-				data={isU8a(dataToSign) ? u8aToHex(dataToSign) : dataToSign.toString()}
 				style={styles.bodyContent}
 			/>
 		</SafeAreaScrollViewContainer>
 	);
 }
 
-export default function SignedMessage(
-	props: NavigationProps<'SignedMessage'>
-): React.ReactElement {
-	const scannerStore = useContext(ScannerContext);
-	const { sender, message } = scannerStore.state;
-	const cleanup = useRef(scannerStore.cleanup);
+export default function SignedMessage(props: NavigationProps<'SignedMessage'>): React.ReactElement {
+	const { cleanup, state } = useContext(ScannerContext);
+	const { message, senderAddress: sender } = state;
+	const clean = useRef(cleanup);
 
-	useEffect(() => cleanup.current, [cleanup]);
+	useEffect(() => clean.current, [clean]);
 
 	if (sender === null || message === null) return <View />;
+
 	return (
 		<SignedMessageView
-			sender={sender}
 			message={message}
-			scannerStore={scannerStore}
+			sender={sender}
 			{...props}
 		/>
 	);

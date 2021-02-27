@@ -1,18 +1,18 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import TextInput from 'components/TextInput';
 import testIDs from 'e2e/testIDs';
@@ -22,11 +22,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import fontStyles from 'styles/fontStyles';
 import { passwordRegex } from 'utils/regex';
 
-export default function PasswordInput({
-	password,
-	setPassword,
-	onSubmitEditing
-}: {
+export default function PasswordInput({ onSubmitEditing, password, setPassword }: {
 	password: string;
 	setPassword: (newPassword: string) => void;
 	onSubmitEditing: () => void;
@@ -34,6 +30,7 @@ export default function PasswordInput({
 	const onPasswordChange = (newPassword: string): void => {
 		if (passwordRegex.test(newPassword)) setPassword(newPassword);
 	};
+
 	const [isShow, setShow] = useState<boolean>(false);
 	const togglePasswordInput = (): void => setShow(!isShow);
 
@@ -54,10 +51,10 @@ export default function PasswordInput({
 				<>
 					<TextInput
 						onChangeText={onPasswordChange}
-						testID={testIDs.PathDerivation.passwordInput}
-						returnKeyType="done"
 						onSubmitEditing={onSubmitEditing}
 						placeholder="Optional password"
+						returnKeyType="done"
+						testID={testIDs.PathDerivation.passwordInput}
 						value={password}
 					/>
 					<Text style={styles.hintText}>
@@ -70,9 +67,7 @@ export default function PasswordInput({
 }
 
 const styles = StyleSheet.create({
-	container: {
-		marginBottom: 16
-	},
+	container: { marginBottom: 16 },
 	hintText: {
 		...fontStyles.t_regular,
 		paddingHorizontal: 16

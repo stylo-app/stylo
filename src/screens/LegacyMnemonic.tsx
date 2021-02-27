@@ -1,18 +1,18 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import AccountCard from 'components/AccountCard';
 import Button from 'components/Button';
@@ -21,26 +21,31 @@ import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import ScreenHeading from 'components/ScreenHeading';
 import TouchableItem from 'components/TouchableItem';
 import { NetworkProtocols } from 'constants/networkSpecs';
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { AppState, AppStateStatus, StyleSheet, Text, View } from 'react-native';
-import { AccountsContext } from 'stores/AccountsContext';
-import { AlertStateContext } from 'stores/alertContext';
-import { NetworksContext } from 'stores/NetworkContext';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
-import { UnlockedAccount } from 'types/identityTypes';
 import { NavigationProps } from 'types/props';
 import { alertBackupDone, alertCopyBackupPhrase } from 'utils/alertUtils';
 
-function LegacyAccountBackup({
-	navigation,
-	route
-}: NavigationProps<'LegacyAccountBackup'>): React.ReactElement {
-	const accountsStore = useContext(AccountsContext);
+import { AccountsContext, AlertContext, NetworksContext } from '../context';
+
+function LegacyMnemonic({ navigation, route }: NavigationProps<'LegacyMnemonic'>): React.ReactElement {
+	const { getSelectedAccount, lockAccount,newAccount } = useContext(AccountsContext);
+	const selectedAccount = getSelectedAccount();
 	const { getNetwork } = useContext(NetworksContext);
-	const { selectedKey, newAccount } = accountsStore.state;
+	const { navigate } = navigation;
+	const { setAlert } = useContext(AlertContext);
+	const isNew = !!route.params?.isNew;
+
+	const { address = '', derivationPassword = '', derivationPath = '', name, networkKey, seed = '', seedPhrase = '' } = isNew
+		? newAccount
+		: selectedAccount || {};
+	const protocol = getNetwork(networkKey)?.protocol;
+
 	useEffect(() => {
+
 		const handleAppStateChange = (nextAppState: AppStateStatus): void => {
 			if (nextAppState === 'inactive') {
 				navigation.goBack();
@@ -48,53 +53,47 @@ function LegacyAccountBackup({
 		};
 
 		AppState.addEventListener('change', handleAppStateChange);
+
 		return (): void => {
-			if (selectedKey) {
-				accountsStore.lockAccount(selectedKey);
+			if (address) {
+				console.log('got selected key locking', address)
+				lockAccount(address);
 			}
 
 			AppState.removeEventListener('change', handleAppStateChange);
 		};
-	}, [navigation, accountsStore, selectedKey]);
+	}, [address, lockAccount, navigation]);
 
-	const { navigate } = navigation;
-	const { setAlert } = useContext(AlertStateContext);
-	const isNew = route.params?.isNew ?? false;
-	const {
-		address,
-		derivationPassword = '',
-		derivationPath = '',
-		name,
-		networkKey,
-		seed = '',
-		seedPhrase = ''
-	} = isNew ? newAccount : (accountsStore.getSelected() as UnlockedAccount);
-	const protocol = getNetwork(networkKey).protocol;
+	const goToPin = useCallback(() => {
+		alertBackupDone(setAlert, () => {
+			navigate('AccountPin', { isNew });
+		});
+	}, [isNew, navigate, setAlert])
 
 	return (
 		<SafeAreaScrollViewContainer style={styles.body}>
 			<ScreenHeading
-				title="Recovery Phrase"
 				subtitle="Write these words down on paper. Keep the backup paper safe. These
 				words allow anyone to recover this account and access its funds."
+				title="Recovery Phrase"
 			/>
 
-			<AccountCard address={address} networkKey={networkKey} title={name} />
+			<AccountCard
+				address={address}
+				networkKey={networkKey}
+				title={name}
+			/>
 			<View style={styles.bodyContent}>
 				<TouchableItem
 					onPress={(): void => {
 						// only allow the copy of the recovery phrase in dev environment
 						if (__DEV__) {
 							if (protocol === NetworkProtocols.SUBSTRATE) {
-								alertCopyBackupPhrase(
-									setAlert,
-									`${seedPhrase}${derivationPath}`
-								);
+								alertCopyBackupPhrase(setAlert,
+									`${seedPhrase}${derivationPath}`);
 							} else {
-								alertCopyBackupPhrase(
-									setAlert,
-									seedPhrase === '' ? seed : seedPhrase
-								);
+								alertCopyBackupPhrase(setAlert,
+									seedPhrase === '' ? seed : seedPhrase);
 							}
 						}
 					}}
@@ -111,12 +110,8 @@ function LegacyAccountBackup({
 				)}
 				{isNew && (
 					<Button
-						title="Backup Done"
-						onPress={(): void => {
-							alertBackupDone(setAlert, () => {
-								navigate('AccountPin', { isNew });
-							});
-						}}
+						onPress={goToPin}
+						title="Done"
 					/>
 				)}
 			</View>
@@ -124,7 +119,7 @@ function LegacyAccountBackup({
 	);
 }
 
-export default LegacyAccountBackup;
+export default LegacyMnemonic;
 
 const styles = StyleSheet.create({
 	body: {
@@ -132,9 +127,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 40,
 		paddingTop: 24
 	},
-	bodyContent: {
-		padding: 16
-	},
+	bodyContent: { padding: 16 },
 	derivationText: {
 		backgroundColor: colors.background.card,
 		fontFamily: fonts.regular,

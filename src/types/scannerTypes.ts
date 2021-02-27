@@ -1,7 +1,7 @@
-import { GenericExtrinsicPayload } from '@polkadot/types';
 import { Point, Size } from 'react-native-camera/types';
-import { FoundAccount } from 'types/identityTypes';
 import { Transaction } from 'utils/transaction';
+
+import { GenericExtrinsicPayload } from '@polkadot/types';
 
 export type Frames = {
 	completedFramesCount: number;
@@ -109,13 +109,13 @@ export type MessageQRInfo = {
 	isHash: boolean;
 	isOversized: boolean;
 	message: string;
-	sender: FoundAccount;
+	senderAddress: string;
 	type: 'message';
 };
 
 export type TxQRInfo = {
-	sender: FoundAccount;
-	recipient: FoundAccount;
+	senderAddress: string;
+	recipientAddress: string;
 	type: 'transaction';
 	dataToSign: string | Uint8Array;
 	isHash: boolean;
@@ -131,48 +131,37 @@ export type MultiFramesInfo = {
 
 export type QrInfo = MessageQRInfo | TxQRInfo;
 
-export function isMultiFramesInfo(
-	data: MultiFramesInfo | SubstrateCompletedParsedData
-): data is MultiFramesInfo {
+export function isMultiFramesInfo(data: MultiFramesInfo | SubstrateCompletedParsedData): data is MultiFramesInfo {
 	return (data as MultiFramesInfo).completedFramesCount !== undefined;
 }
 
-export function isEthereumCompletedParsedData(
-	parsedData: ParsedData
-): parsedData is EthereumParsedData {
+export function isEthereumCompletedParsedData(parsedData: ParsedData): parsedData is EthereumParsedData {
 	return (parsedData as EthereumParsedData).data.rlp !== undefined;
 }
 
-export function isSubstrateCompletedParsedData(
-	parsedData: ParsedData | null
-): parsedData is SubstrateCompletedParsedData {
+export function isSubstrateCompletedParsedData(parsedData: ParsedData | null): parsedData is SubstrateCompletedParsedData {
 	return (
 		(parsedData as SubstrateCompletedParsedData)?.data?.crypto !== undefined
 	);
 }
 
-export function isSubstrateMessageParsedData(
-	parsedData: ParsedData | null
-): parsedData is SubstrateMessageParsedData {
+export function isSubstrateMessageParsedData(parsedData: ParsedData | null): parsedData is SubstrateMessageParsedData {
 	return (
 		(parsedData as SubstrateCompletedParsedData)?.data?.crypto !== undefined &&
 		(parsedData as SubstrateCompletedParsedData)?.action === 'signData'
 	);
 }
 
-export function isMultipartData(
-	parsedData: ParsedData | null
-): parsedData is SubstrateMultiParsedData {
+export function isMultipartData(parsedData: ParsedData | null): parsedData is SubstrateMultiParsedData {
 	const hasMultiFrames =
 		(parsedData as SubstrateMultiParsedData)?.frameCount !== undefined &&
 		(parsedData as SubstrateMultiParsedData).frameCount > 1;
+
 	return (
 		(parsedData as SubstrateMultiParsedData)?.isMultipart || hasMultiFrames
 	);
 }
 
-export function isNetworkParsedData(
-	parsedData: ParsedData | null
-): parsedData is NetworkParsedData {
+export function isNetworkParsedData(parsedData: ParsedData | null): parsedData is NetworkParsedData {
 	return (parsedData as NetworkParsedData).action === 'addNetwork';
 }

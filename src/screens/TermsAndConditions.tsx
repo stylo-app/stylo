@@ -1,71 +1,90 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import Button from 'components/Button';
 import CustomScrollView from 'components/CustomScrollView';
 import Markdown from 'components/Markdown';
 import TouchableItem from 'components/TouchableItem';
 import testIDs from 'e2e/testIDs';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { GlobalState, GlobalStateContext } from 'stores/globalStateContext';
 import colors from 'styles/colors';
 import containerStyles from 'styles/containerStyles';
 import fontStyles from 'styles/fontStyles';
-import { NavigationProps } from 'types/props';
-import { saveToCAndPPConfirmation } from 'utils/db';
+import { saveTaCAndPPConfirmation } from 'utils/db';
+import { migrateAccounts } from 'utils/migrationUtils';
 
-import toc from '../../docs/terms-and-conditions.md';
+import tac from '../../docs/terms-and-conditions.md';
+import { useTac } from '../hooks/useTac';
 
-export default function TermsAndConditions(
-	props: NavigationProps<'TermsAndConditions'>
-): React.ReactElement {
-	const [ppAgreement, setPpAgreement] = useState<boolean>(false);
-	const [tocAgreement, setTocAgreement] = useState<boolean>(false);
+export default function TermsAndConditions(): React.ReactElement {
+	const [isPPAgreed, setPpAgreement] = useState(false);
+	const [isTacAgreed, setTacAgreement] = useState(false);
+	const { dispatch, navigate } = useNavigation();
+	const { ppAndTaCAccepted, setPpAndTaCAccepted } = useTac();
 
-	const { setPolicyConfirmed, policyConfirmed } = useContext<GlobalState>(
-		GlobalStateContext
-	);
-	const { navigation } = props;
-	const onConfirm = async (): Promise<void> => {
-		await saveToCAndPPConfirmation();
-		setPolicyConfirmed(true);
-	};
+	const onConfirm = useCallback(async () => {
+		saveTaCAndPPConfirmation()
+			.then(() => {
+				console.log('done saving YES')
+				migrateAccounts()
+					.then(() => {
+						console.log('done migration')
+						setPpAndTaCAccepted(true);
+						const resetAction = CommonActions.reset({
+							index: 0,
+							routes: [{ name: 'LegacyAccountList' }]
+						});
+
+						dispatch(resetAction);
+					// 	setDataLoaded(true);
+					})
+					.catch((e) => {
+						console.error('migrateAccounts error', e);
+					})
+			}).catch((e)=> {
+				console.error('saveTaCAndPPConfirmation error', e)
+			});
+	}, [dispatch, setPpAndTaCAccepted]);
 
 	return (
-		<View style={containerStyles.background} testID={testIDs.TacScreen.tacView}>
+		<View
+			style={containerStyles.background}
+			testID={testIDs.TacScreen.tacView}
+		>
 			<CustomScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
-				<Markdown>{toc}</Markdown>
+				<Markdown>{tac}</Markdown>
 			</CustomScrollView>
 
-			{!policyConfirmed && (
+			{!ppAndTaCAccepted && (
 				<View>
 					<TouchableItem
-						testID={testIDs.TacScreen.agreeTacButton}
+						onPress={(): void => setTacAgreement(!isTacAgreed)}
 						style={{
 							alignItems: 'center',
 							flexDirection: 'row',
 							paddingHorizontal: 16,
 							paddingVertical: 10
 						}}
-						onPress={(): void => setTocAgreement(!tocAgreement)}
+						testID={testIDs.TacScreen.agreeTacButton}
 					>
 						<Icon
-							name={tocAgreement ? 'checkbox-marked' : 'checkbox-blank-outline'}
+							name={isTacAgreed ? 'checkbox-marked' : 'checkbox-blank-outline'}
 							style={styles.icon}
 						/>
 
@@ -74,26 +93,24 @@ export default function TermsAndConditions(
 						</Text>
 					</TouchableItem>
 					<TouchableItem
+						onPress={(): void => setPpAgreement(!isPPAgreed)}
 						style={{
 							alignItems: 'center',
 							flexDirection: 'row',
 							paddingHorizontal: 16
 						}}
-						onPress={(): void => setPpAgreement(!ppAgreement)}
 					>
 						<Icon
-							testID={testIDs.TacScreen.agreePrivacyButton}
-							name={ppAgreement ? 'checkbox-marked' : 'checkbox-blank-outline'}
+							name={isPPAgreed ? 'checkbox-marked' : 'checkbox-blank-outline'}
 							style={styles.icon}
+							testID={testIDs.TacScreen.agreePrivacyButton}
 						/>
 
 						<Text style={fontStyles.t_big}>
 							<Text>{'  I agree to the '}</Text>
 							<Text
+								onPress={(): void => { navigate('PrivacyPolicy'); }}
 								style={{ textDecorationLine: 'underline' }}
-								onPress={(): void => {
-									navigation.navigate('PrivacyPolicy');
-								}}
 							>
 								privacy policy
 							</Text>
@@ -101,11 +118,11 @@ export default function TermsAndConditions(
 					</TouchableItem>
 
 					<Button
+						disabled={!isPPAgreed || !isTacAgreed}
+						onPress={onConfirm}
+						style={styles.nextButton}
 						testID={testIDs.TacScreen.nextButton}
 						title="Next"
-						disabled={!ppAgreement || !tocAgreement}
-						onPress={onConfirm}
-						style={{ marginBottom: 24, marginTop: 16 }}
 					/>
 				</View>
 			)}
@@ -117,5 +134,9 @@ const styles = StyleSheet.create({
 	icon: {
 		color: colors.text.faded,
 		fontSize: 30
+	},
+	nextButton: {
+		marginBottom: 24,
+		marginTop: 16
 	}
 });

@@ -34,11 +34,14 @@ export type CreateSeedRefWithNewSeed = (
 
 export function useNewSeedRef(): CreateSeedRefWithNewSeed {
 	const [seedRefs, setSeedRefs] = useContext<SeedRefsState>(SeedRefsContext);
+
 	return async (encryptedSeed, password): Promise<void> => {
 		if (!seedRefs.has(encryptedSeed)) {
 			const seedRef = new SeedRefClass();
+
 			await seedRef.tryCreate(encryptedSeed, password);
 			const newSeedRefs = seedRefs.set(encryptedSeed, seedRef);
+
 			setSeedRefs(newSeedRefs);
 		}
 	};
@@ -51,7 +54,9 @@ export function useSeedRef(encryptedSeed: string): SeedRefHooks {
 			return seedRefs.get(encryptedSeed)!;
 		} else {
 			const newSeedRef = new SeedRefClass();
+
 			setSeedRefs(seedRefs.set(encryptedSeed, newSeedRef));
+
 			return newSeedRef;
 		}
 	}, [seedRefs, setSeedRefs, encryptedSeed]);
@@ -62,6 +67,7 @@ export function useSeedRef(encryptedSeed: string): SeedRefHooks {
 	const createSeedRef: TryCreateFunc = async function (password) {
 		await seedRef.tryCreate(encryptedSeed, password);
 		const newSeedRefs = seedRefs.set(encryptedSeed, seedRef);
+
 		setSeedRefs(newSeedRefs);
 	};
 
@@ -76,25 +82,17 @@ export function useSeedRef(encryptedSeed: string): SeedRefHooks {
 
 	// Use the seed reference to sign a message. Will throw an error if
 	// `tryDestroy` has already been called or if `tryCreate` failed.
-	const brainWalletSign: TryBrainWalletSignFunc = seedRef.tryBrainWalletSign.bind(
-		seedRef
-	);
+	const brainWalletSign: TryBrainWalletSignFunc = seedRef.tryBrainWalletSign.bind(seedRef);
 
 	// Use the seed reference to sign a message. Will throw an error if
 	// `tryDestroy` has already been called or if `tryCreate` failed.
 	const substrateSign: TrySignFunc = seedRef.trySubstrateSign.bind(seedRef);
 
-	const substrateAddress: TrySubstrateAddress = seedRef.trySubstrateAddress.bind(
-		seedRef
-	);
+	const substrateAddress: TrySubstrateAddress = seedRef.trySubstrateAddress.bind(seedRef);
 
-	const brainWalletAddress: TryBrainWalletAddress = seedRef.tryBrainWalletAddress.bind(
-		seedRef
-	);
+	const brainWalletAddress: TryBrainWalletAddress = seedRef.tryBrainWalletAddress.bind(seedRef);
 
-	const substrateSecret: TrySubstrateSecret = seedRef.trySubstrateSecret.bind(
-		seedRef
-	);
+	const substrateSecret: TrySubstrateSecret = seedRef.trySubstrateSecret.bind(seedRef);
 
 	return {
 		brainWalletAddress,

@@ -1,38 +1,26 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { describe, expect, it } from '@jest/globals';
-import {
-	createType,
-	GenericExtrinsicPayload,
-	Metadata,
-	TypeRegistry
-} from '@polkadot/types';
-import Call from '@polkadot/types/generic/Call';
-import { hexToU8a, u8aConcat } from '@polkadot/util';
-import { checkAddress, decodeAddress } from '@polkadot/util-crypto';
 import { kusamaMetadata } from 'constants/networkMetadata';
-import {
-	SUBSTRATE_NETWORK_LIST,
-	SubstrateNetworkKeys
-} from 'constants/networkSpecs';
+import { SUBSTRATE_NETWORK_LIST,
+	SubstrateNetworkKeys } from 'constants/networkSpecs';
 import { getOverrideTypes } from 'stores/RegistriesContext';
 import { SubstrateCompletedParsedData } from 'types/scannerTypes';
-import {
-	asciiToHex,
+import { asciiToHex,
 	constructDataFromBytes,
 	decodeToString,
 	hexToAscii,
@@ -40,11 +28,20 @@ import {
 	rawDataToU8A } from 'utils/decoders';
 import { isAscii } from 'utils/strings';
 
+import { createType,
+	GenericExtrinsicPayload,
+	Metadata,
+	TypeRegistry } from '@polkadot/types';
+import Call from '@polkadot/types/generic/Call';
+import { hexToU8a, u8aConcat } from '@polkadot/util';
+import { checkAddress, decodeAddress } from '@polkadot/util-crypto';
+
 const SUBSTRATE_ID = new Uint8Array([0x53]);
 const CRYPTO_SR25519 = new Uint8Array([0x01]);
 const CMD_SIGN_MORTAL = new Uint8Array([0]);
 const CMD_SIGN_MSG = new Uint8Array([3]);
 const registry = new TypeRegistry();
+
 registry.setMetadata(new Metadata(registry, kusamaMetadata));
 
 const KUSAMA_ADDRESS = 'FF42iLDmp7JLeySMjwWWtYQqfycJvsJFBYrySoMvtGfvAGs';
@@ -78,17 +75,13 @@ const SIGNER_PAYLOAD_TEST = {
 	transactionVersion: 234
 };
 
-const SIGN_TX_TEST = u8aConcat(
-	new Uint8Array([0, 0, 1, 0, 0]),
+const SIGN_TX_TEST = u8aConcat(new Uint8Array([0, 0, 1, 0, 0]),
 	SUBSTRATE_ID,
 	CRYPTO_SR25519,
 	CMD_SIGN_MORTAL,
 	decodeAddress(KUSAMA_ADDRESS),
-	new GenericExtrinsicPayload(registry, SIGNER_PAYLOAD_TEST, {
-		version: 4
-	}).toU8a(),
-	new Uint8Array(hexToU8a(SubstrateNetworkKeys.KUSAMA))
-);
+	new GenericExtrinsicPayload(registry, SIGNER_PAYLOAD_TEST, { version: 4 }).toU8a(),
+	new Uint8Array(hexToU8a(SubstrateNetworkKeys.KUSAMA)));
 
 describe('sanity check', () => {
 	it('sanity check address is kusama', () => {
@@ -96,9 +89,8 @@ describe('sanity check', () => {
 	});
 
 	it('sanity check payload encodes as expected', () => {
-		const payload = new GenericExtrinsicPayload(registry, SIGNER_PAYLOAD_TEST, {
-			version: 4
-		});
+		const payload = new GenericExtrinsicPayload(registry, SIGNER_PAYLOAD_TEST, { version: 4 });
+
 		// const fromBytes = new GenericExtrinsicPayload(registry, payload.toU8a(), {
 		// 	version: 4
 		// });
@@ -111,6 +103,7 @@ describe('type registry should get override types', () => {
 	it('get network latest override types', () => {
 		const testRegistry = new TypeRegistry();
 		const westendOverrideTypes = getOverrideTypes(testRegistry, 'westend');
+
 		expect(westendOverrideTypes).not.toEqual({});
 	});
 });
@@ -154,6 +147,7 @@ describe('decoders', () => {
 	describe('rawDataToU8a', () => {
 		it('should properly extract only UOS relevant data from RNCamera txRequest.rawData', () => {
 			const strippedU8a = rawDataToU8A(RN_TX_REQUEST_RAW_DATA);
+
 			expect(strippedU8a).not.toBeNull();
 			const frameInfo = strippedU8a!.slice(0, 5);
 			const uos = strippedU8a!.slice(5);
@@ -169,6 +163,7 @@ describe('decoders', () => {
 			const rawData =
 				'49900000100005301025a4a03f84a19cf8ebda40e62358c592870691a9cf456138bb4829969d10fe969a00400225902984d595e48ebbca3de30494bbe3d55f04cdf5253b9ce87dc6cfd6d65640700e40b5402750304001f040000b0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafef90e9edaecc40f894b72133df7072e6ab98080ac7f153295072f4295817e736b0ec11ec11ec11ec11ec11ec11ec11ec11ec11ec11ec11ec11ec11ec';
 			const strippedU8a = rawDataToU8A(rawData);
+
 			expect([].slice.call(strippedU8a)).toEqual(receiveSigner);
 		});
 	});
@@ -176,25 +171,19 @@ describe('decoders', () => {
 	describe('UOS parsing', () => {
 		it('from Substrate UOS Payload Mortal', async () => {
 			const networks = new Map(Object.entries(SUBSTRATE_NETWORK_LIST));
-			const unsignedData = await constructDataFromBytes(
-				SIGN_TX_TEST,
+			const unsignedData = await constructDataFromBytes(SIGN_TX_TEST,
 				false,
-				networks
-			);
+				networks);
 			const rawPayload = (unsignedData as SubstrateCompletedParsedData).data
 				.data;
 
-			const payload = registry.createType('ExtrinsicPayload', rawPayload, {
-				version: 4
-			});
+			const payload = registry.createType('ExtrinsicPayload', rawPayload, { version: 4 });
 
 			expect(payload.era.toHex()).toEqual(SIGNER_PAYLOAD_TEST.era.toHex());
 			expect(payload.method.toHex()).toEqual(SIGNER_PAYLOAD_TEST.method);
 			expect(payload.blockHash.toHex()).toEqual(SIGNER_PAYLOAD_TEST.blockHash);
 			expect(payload.nonce.eq(SIGNER_PAYLOAD_TEST.nonce)).toBe(true);
-			expect(payload.specVersion.eq(SIGNER_PAYLOAD_TEST.specVersion)).toBe(
-				true
-			);
+			expect(payload.specVersion.eq(SIGNER_PAYLOAD_TEST.specVersion)).toBe(true);
 			expect(payload.tip.eq(SIGNER_PAYLOAD_TEST.tip)).toBe(true);
 		});
 	});
@@ -210,13 +199,9 @@ describe('decoders', () => {
 		});
 
 		it('decodes Payload Method to something human readable with Kusama metadata', () => {
-			const payload = new GenericExtrinsicPayload(
-				registry,
+			const payload = new GenericExtrinsicPayload(registry,
 				SIGNER_PAYLOAD_TEST,
-				{
-					version: 4
-				}
-			);
+				{ version: 4 });
 
 			const call = new Call(registry, payload.method);
 

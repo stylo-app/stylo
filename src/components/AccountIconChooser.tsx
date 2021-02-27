@@ -1,28 +1,22 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { NetworkProtocols } from 'constants/networkSpecs';
 import React, { ReactElement } from 'react';
-import {
-	FlatList,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View
-} from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
@@ -44,73 +38,59 @@ interface Props {
 	derivationPassword: string;
 	derivationPath: string;
 	network: NetworkParams;
-	onSelect: (icon: {
-		isBip39: boolean;
-		newAddress: string;
-		newSeed: string;
-	}) => void;
+	onSelect: (icon: { isBip39: boolean; newAddress: string; newSeed: string; }) => void;
 	value: string;
 }
 
-export default class AccountIconChooser extends React.PureComponent<
-	Props,
-	{ icons: IconType[] }
-> {
+export default class AccountIconChooser extends React.PureComponent<Props, { icons: IconType[] }> {
 	constructor(props: any) {
 		super(props);
 
-		this.state = {
-			icons: []
-		};
+		this.state = { icons: [] };
 	}
 
 	refreshIcons = async (): Promise<void> => {
-		const {
-			derivationPassword,
-			derivationPath,
-			network,
-			onSelect
-		} = this.props;
+		const { derivationPassword, derivationPath, network, onSelect } = this.props;
 
 		// clean previous selection
 		onSelect({ isBip39: false, newAddress: '', newSeed: '' });
+
 		try {
-			const icons = await Promise.all(
-				Array(4)
-					.join(' ')
-					.split(' ')
-					.map(async () => {
-						const result = {
-							address: '',
-							bip39: false,
-							seed: ''
-						};
-						result.seed = await words(24);
+			const icons = await Promise.all(Array(4)
+				.join(' ')
+				.split(' ')
+				.map(async () => {
+					const result = {
+						address: '',
+						bip39: false,
+						seed: ''
+					};
 
-						if (network.protocol === NetworkProtocols.ETHEREUM) {
-							Object.assign(result, await brainWalletAddress(result.seed));
-						} else {
-							// Substrate
-							try {
-								const suri = constructSURI({
-									derivePath: derivationPath,
-									password: derivationPassword,
-									phrase: result.seed
-								});
+					result.seed = await words(12);
 
-								result.address = await substrateAddress(
-									suri,
-									(network as SubstrateNetworkParams).prefix
-								);
-								result.bip39 = true;
-							} catch (e) {
-								// invalid seed or derivation path
-								console.error(e);
-							}
+					if (network.protocol === NetworkProtocols.ETHEREUM) {
+						Object.assign(result, await brainWalletAddress(result.seed));
+					} else {
+						// Substrate
+						try {
+							const suri = constructSURI({
+								derivePath: derivationPath,
+								password: derivationPassword,
+								phrase: result.seed
+							});
+
+							result.address = await substrateAddress(suri,
+								(network as SubstrateNetworkParams).prefix);
+							result.bip39 = true;
+						} catch (e) {
+							// invalid seed or derivation path
+							console.error(e);
 						}
-						return result;
-					})
-			);
+					}
+
+					return result;
+				}));
+
 			this.setState({ icons });
 		} catch (e) {
 			console.error(e);
@@ -118,10 +98,7 @@ export default class AccountIconChooser extends React.PureComponent<
 	};
 
 	renderAddress = (): ReactElement => {
-		const {
-			network: { protocol },
-			value
-		} = this.props;
+		const { network: { protocol }, value } = this.props;
 
 		if (value) {
 			return (
@@ -136,14 +113,8 @@ export default class AccountIconChooser extends React.PureComponent<
 		}
 	};
 
-	renderIcon = ({
-		item,
-		index
-	}: {
-		item: IconType;
-		index: number;
-	}): ReactElement => {
-		const { onSelect, network, value } = this.props;
+	renderIcon = ({ index, item }: { item: IconType; index: number; }): ReactElement => {
+		const { network, onSelect, value } = this.props;
 		const { address, bip39, seed } = item;
 		const isSelected = address.toLowerCase() === value.toLowerCase();
 
@@ -155,12 +126,16 @@ export default class AccountIconChooser extends React.PureComponent<
 		return (
 			<TouchableOpacity
 				key={index}
-				style={[styles.iconBorder, isSelected ? styles.selected : {}]}
 				onPress={(): void =>
 					onSelect({ isBip39: bip39, newAddress: address, newSeed: seed })
 				}
+				style={[styles.iconBorder, isSelected ? styles.selected : {}]}
 			>
-				<AccountIcon address={address} network={network} style={styles.icon} />
+				<AccountIcon
+					address={address}
+					network={network}
+					style={styles.icon}
+				/>
 			</TouchableOpacity>
 		);
 	};
@@ -198,7 +173,10 @@ export default class AccountIconChooser extends React.PureComponent<
 						renderItem={this.renderIcon}
 					/>
 					<TouchableOpacity onPress={this.refreshIcons}>
-						<Icon name={'refresh'} size={35} style={styles.refreshIcon} />
+						<Icon
+							name={'refresh'}
+							size={35}
+							style={styles.refreshIcon} />
 					</TouchableOpacity>
 				</View>
 				{this.renderAddress()}
@@ -220,7 +198,6 @@ const styles = StyleSheet.create({
 		paddingLeft: 6
 	},
 	body: {
-		backgroundColor: colors.background.card,
 		display: 'flex',
 		flexDirection: 'column',
 		marginBottom: 20,
@@ -234,20 +211,19 @@ const styles = StyleSheet.create({
 		marginBottom: 10
 	},
 	icon: {
-		backgroundColor: colors.background.card,
 		height: 50,
 		padding: 5,
 		width: 50
 	},
 	iconBorder: {
-		borderColor: colors.background.card,
 		borderWidth: 6,
-		height: 62 // height = icon height + borderWidth * 2
+		height: 62 // height = icon height (50) + borderWidth (6) * 2
 	},
 	refreshIcon: {
 		color: colors.text.faded
 	},
 	selected: {
-		borderColor: colors.border.light
+		borderColor: colors.border.light,
+		borderRadius: 50
 	}
 });

@@ -1,31 +1,30 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { CommonActions } from '@react-navigation/native';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import ScreenHeading from 'components/ScreenHeading';
 import TextInput from 'components/TextInput';
 import React, { useContext, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { AccountsContext } from 'stores/AccountsContext';
-import { NetworksContext } from 'stores/NetworkContext';
-import { ScannerContext } from 'stores/ScannerContext';
+import { StyleSheet, View } from 'react-native';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
 import { NavigationProps } from 'types/props';
+
+import { AccountsContext, ScannerContext } from '../context';
 
 interface AccountUnlockViewProps {
 	checkPin: (pin: string) => Promise<boolean>;
@@ -36,14 +35,14 @@ interface AccountUnlockViewProps {
 function PinInput(props: any): React.ReactElement {
 	return (
 		<TextInput
+			autoCorrect={false}
 			autoFocus
-			keyboardAppearance="dark"
 			clearTextOnFocus
 			editable
 			fontSize={24}
+			keyboardAppearance="dark"
 			keyboardType="numeric"
 			multiline={false}
-			autoCorrect={false}
 			numberOfLines={1}
 			returnKeyType="next"
 			secureTextEntry
@@ -65,17 +64,19 @@ function AccountUnlockView(props: AccountUnlockViewProps): React.ReactElement {
 	return (
 		<SafeAreaViewContainer style={styles.body}>
 			<ScreenHeading
-				title={'Unlock Account'}
-				subtitle={showErrorMessage()}
 				error={hasWrongPin}
+				subtitle={showErrorMessage()}
+				title={'Unlock Account'}
 			/>
 			<PinInput
 				label="PIN"
 				onChangeText={async (inputPin: string): Promise<void> => {
 					setPin(inputPin);
+
 					if (inputPin.length < 4) {
 						return;
 					}
+
 					if (await checkPin(inputPin)) {
 						navigate();
 					} else if (inputPin.length > 5) {
@@ -88,20 +89,18 @@ function AccountUnlockView(props: AccountUnlockViewProps): React.ReactElement {
 	);
 }
 
-/* Used for unlock and sign tx and messages for legacy accounts */
-export function AccountUnlockAndSign(
-	props: NavigationProps<'AccountUnlockAndSign'>
-): React.ReactElement {
+/* Used for unlock and sign tx and messages */
+export function AccountUnlockAndSign(props: NavigationProps<'AccountUnlockAndSign'>): React.ReactElement {
 	const { navigation, route } = props;
-	const next = route.params.next ?? 'SignedTx';
+	const next = route.params.next;
 	const scannerStore = useContext(ScannerContext);
-	const { getNetwork } = useContext(NetworksContext);
 
 	return (
 		<AccountUnlockView
 			checkPin={async (pin: string): Promise<boolean> => {
 				try {
-					await scannerStore.signDataLegacy(pin, getNetwork);
+					await scannerStore.signDataLegacy(pin);
+
 					return true;
 				} catch (e) {
 					return false;
@@ -111,31 +110,33 @@ export function AccountUnlockAndSign(
 				const resetAction = CommonActions.reset({
 					index: 1,
 					routes: [
-						{
-							name: 'LegacyAccountList'
-						},
+						{ name: 'LegacyAccountList' },
 						{ name: next }
 					]
 				});
+
 				navigation.dispatch(resetAction);
 			}}
 		/>
 	);
 }
 
-export function AccountUnlock({
-	navigation,
-	route
-}: NavigationProps<'AccountUnlock'>): React.ReactElement {
-	const next = route.params.next ?? 'LegacyAccountList';
+export function AccountUnlock({ navigation, route }: NavigationProps<'AccountUnlock'>): React.ReactElement {
+	const next = route.params.next || 'LegacyAccountList';
 	const onDelete = route.params.onDelete ?? ((): any => null);
-	const accountsStore = useContext(AccountsContext);
-	const { selectedKey } = accountsStore.state;
+	const { getSelectedAccount, unlockAccount } = useContext(AccountsContext);
+	const selectedAccount = getSelectedAccount();
+
+	if (!selectedAccount?.address){
+		console.error('no selected account')
+
+		return <View/>;
+	}
 
 	return (
 		<AccountUnlockView
 			checkPin={async (pin: string): Promise<boolean> => {
-				return await accountsStore.unlockAccount(selectedKey, pin);
+				return await unlockAccount(selectedAccount.address, pin);
 			}}
 			navigate={(): void => {
 				if (next === 'AccountDelete') {
@@ -145,13 +146,12 @@ export function AccountUnlock({
 					const resetAction = CommonActions.reset({
 						index: 2,
 						routes: [
-							{
-								name: 'LegacyAccountList'
-							},
+							{ name: 'LegacyAccountList' },
 							{ name: 'AccountDetails' },
 							{ name: next }
 						]
 					});
+
 					navigation.dispatch(resetAction);
 				}
 			}}

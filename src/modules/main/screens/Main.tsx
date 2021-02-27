@@ -1,39 +1,32 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
-import NetworkSelector from 'modules/main/components/NetworkSelector';
-import NoCurrentIdentity from 'modules/main/components/NoCurrentIdentity';
-import OnBoardingView from 'modules/main/components/OnBoading';
-import React, { useContext } from 'react';
-import { AccountsContext } from 'stores/AccountsContext';
-import { NavigationAccountIdentityProps, NavigationProps } from 'types/props';
+import React from 'react';
+import LegacyAccountList from 'screens/LegacyAccountList';
+import TermsAndConditions from 'screens/TermsAndConditions';
 
-export default function Main(
-	props: NavigationProps<'Main'>
-): React.ReactElement {
-	const accountsStore = useContext(AccountsContext);
-	const { identities, currentIdentity, loaded, accounts } = accountsStore.state;
-	const hasLegacyAccount = accounts.size !== 0;
+import { useTac } from '../../../hooks/useTac';
 
-	if (!loaded) return <SafeAreaViewContainer />;
-	if (identities.length === 0)
-		return <OnBoardingView hasLegacyAccount={hasLegacyAccount} />;
-	if (currentIdentity === null) return <NoCurrentIdentity />;
-	return (
-		<NetworkSelector {...(props as NavigationAccountIdentityProps<'Main'>)} />
-	);
+export default function Main(): React.ReactElement {
+	const { dataLoaded, ppAndTaCAccepted } = useTac();
+
+	if (!dataLoaded) return <SafeAreaViewContainer />;
+
+	return ppAndTaCAccepted
+		? <LegacyAccountList />
+		: <TermsAndConditions />
 }

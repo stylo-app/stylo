@@ -1,18 +1,18 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import React from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
@@ -36,13 +36,9 @@ interface AmountProps {
 	style: ViewStyle;
 }
 
-function Amount({
-	style,
-	value,
-	gas,
-	gasPrice
-}: AmountProps): React.ReactElement<AmountProps> {
+function Amount({ gas, gasPrice, style, value }: AmountProps): React.ReactElement<AmountProps> {
 	const fee = (parseInt(gas, 10) * parseInt(gasPrice, 10)) / WEI_IN_ETH;
+
 	return (
 		<View style={[styles.amountContainer, style]}>
 			<Text style={styles.amountTextContainer}>
@@ -58,16 +54,16 @@ function Amount({
 
 export default class TxDetailsCard extends React.PureComponent<Props> {
 	render(): React.ReactNode {
-		const { value, description, gas, gasPrice, style } = this.props;
+		const { description, gas, gasPrice, style, value } = this.props;
 
 		return (
 			<View style={[styles.body, style]}>
 				<Text style={styles.titleText}>{description}</Text>
 				<Amount
-					style={{ marginTop: 10 }}
-					value={value}
 					gas={gas}
 					gasPrice={gasPrice}
+					style={{ marginTop: 10 }}
+					value={value}
 				/>
 			</View>
 		);

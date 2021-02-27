@@ -1,17 +1,17 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import Button from 'components/Button';
 import ScreenHeading from 'components/ScreenHeading';
@@ -26,17 +26,15 @@ import { NavigationTargetIdentityProps } from 'types/props';
 import { withTargetIdentity } from 'utils/HOC';
 import { useSeedRef } from 'utils/seedRefHooks';
 
-function PinUnlockWithPassword({
-	targetIdentity,
-	route
-}: NavigationTargetIdentityProps<'PinUnlockWithPassword'>): React.ReactElement {
+function PinUnlockWithPassword({ route, targetIdentity }: NavigationTargetIdentityProps<'PinUnlockWithPassword'>): React.ReactElement {
 	const [state, updateState, resetState] = usePinState();
 	const [focusPassword, setFocusPassword] = useState<boolean>(false);
 	const { createSeedRef } = useSeedRef(targetIdentity.encryptedSeed);
 
 	async function submit(): Promise<void> {
-		const { pin, password } = state;
+		const { password, pin } = state;
 		const resolvePassword = route.params.resolve;
+
 		if (!route.params.isSeedRefValid) {
 			if (pin.length >= 6 && targetIdentity) {
 				try {
@@ -65,40 +63,38 @@ function PinUnlockWithPassword({
 
 	return (
 		<KeyboardAwareContainer
-			contentContainerStyle={{
-				flexGrow: 1
-			}}
+			contentContainerStyle={{ flexGrow: 1 }}
 		>
 			<ScreenHeading
-				title={t.title.pinUnlock}
 				error={state.pinMismatch || state.pinTooShort}
 				subtitle={getSubtitle(state, true)}
+				title={t.title.pinUnlock}
 			/>
 			{!route.params.isSeedRefValid && (
 				<PinInput
-					label={t.pinLabel}
 					autoFocus
-					testID={testIDs.IdentityPin.unlockPinInput}
-					returnKeyType="done"
+					label={t.pinLabel}
 					onChangeText={onPinInputChange('pin', updateState)}
 					onSubmitEditing={(): void => setFocusPassword(true)}
+					returnKeyType="done"
+					testID={testIDs.IdentityPin.unlockPinInput}
 					value={state.pin}
 				/>
 			)}
 			<PinInput
-				label={t.passwordLabel}
-				testID={testIDs.IdentityPin.passwordInput}
-				returnKeyType="done"
-				keyboardType="default"
 				focus={focusPassword}
+				keyboardType="default"
+				label={t.passwordLabel}
 				onChangeText={onPasswordInputChange}
 				onSubmitEditing={submit}
+				returnKeyType="done"
+				testID={testIDs.IdentityPin.passwordInput}
 				value={state.password}
 			/>
 			<Button
-				title={t.doneButton.pinUnlock}
 				onPress={submit}
 				testID={testIDs.IdentityPin.unlockPinButton}
+				title={t.doneButton.pinUnlock}
 			/>
 		</KeyboardAwareContainer>
 	);

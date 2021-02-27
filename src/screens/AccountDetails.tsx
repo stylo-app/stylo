@@ -1,18 +1,18 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import AccountCard from 'components/AccountCard';
 import AccountIcon from 'components/AccountIcon';
@@ -22,47 +22,57 @@ import QrView from 'components/QrView';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import { UnknownAccountWarning } from 'components/Warnings';
 import { NetworkProtocols } from 'constants/networkSpecs';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { AccountsContext } from 'stores/AccountsContext';
-import { AlertStateContext } from 'stores/alertContext';
-import { NetworksContext } from 'stores/NetworkContext';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
+import { EthereumNetwork, isSubstrateNetwork } from 'types/networkTypes';
 import { NavigationProps } from 'types/props';
 import { alertDeleteLegacyAccount } from 'utils/alertUtils';
-import {
-	navigateToLandingPage,
-	navigateToLegacyAccountList
-} from 'utils/navigationHelpers';
+import { navigateToLegacyAccountList } from 'utils/navigationHelpers';
 
-export default function AccountDetails({
-	navigation
-}: NavigationProps<'AccountDetails'>): React.ReactElement {
-	const accountsStore = useContext(AccountsContext);
-	const account = accountsStore.getSelected();
+import { AccountsContext, AlertContext, NetworksContext } from '../context';
+
+export default function AccountDetails({ navigation }: NavigationProps<'AccountDetails'>): React.ReactElement {
+	const { deleteAccount, getSelectedAccount } = useContext(AccountsContext);
+	const selectedAccount = getSelectedAccount();
+	const { address, name, networkKey } = selectedAccount || { address: '', name: '', networkKey: '' };
 	const { getNetwork } = useContext(NetworksContext);
-	const { setAlert } = useContext(AlertStateContext);
-	const { accounts, selectedKey } = accountsStore.state;
+	const { setAlert } = useContext(AlertContext);
+	const network = getNetwork(networkKey);
 
-	if (!account) return <View />;
+	const accountId = useMemo((): string => {
+		if (!network){
+			console.log('Account without network')
 
-	const network = getNetwork(account.networkKey);
+			return '';
+		}
 
-	const protocol = network.protocol;
+		const { protocol } = network;
+
+		if (isSubstrateNetwork(network)) {
+			const { genesisHash } = network;
+
+			return `${protocol}:${address}:${genesisHash ?? ''}`;
+		} else {
+			const { ethereumChainId } = network as EthereumNetwork;
+
+			return `${protocol}:0x${address}@${ethereumChainId}`;
+		}
+	}, [address, network])
+
+	if (!address || !network) return <View />;
+
+	const protocol = network?.protocol;
 
 	const onDelete = (): void => {
-		alertDeleteLegacyAccount(
-			setAlert,
-			account.name || account.address || 'this account',
+		alertDeleteLegacyAccount(setAlert,
+			name || address || 'this account',
 			async () => {
-				await accountsStore.deleteAccount(selectedKey);
-				if (accounts.size === 0) {
-					return navigateToLandingPage(navigation);
-				}
+				await deleteAccount(address);
+
 				navigateToLegacyAccountList(navigation);
-			}
-		);
+			});
 	};
 
 	const onOptionSelect = (value: string): void => {
@@ -78,38 +88,34 @@ export default function AccountDetails({
 
 	return (
 		<SafeAreaViewContainer>
-			<ScrollView style={styles.scrollBody} bounces={false}>
+			<ScrollView bounces={false}
+				style={styles.scrollBody}>
 				<View style={styles.header}>
-					<AccountIcon address={''} network={network} style={styles.icon} />
+					<AccountIcon address={''}
+						network={network}
+						style={styles.icon} />
 					<Text style={fontStyles.h2}>Public Address</Text>
 					<View style={styles.menuView}>
 						<PopupMenu
-							onSelect={onOptionSelect}
-							menuTriggerIconName={'more-vert'}
 							menuItems={[
-								{ text: 'Edit', value: 'AccountEdit' },
-								{ text: 'Change Pin', value: 'AccountPin' },
-								{
-									text: 'View Recovery Phrase',
-									value: 'LegacyAccountBackup'
-								},
-								{
-									text: 'Delete',
-									textStyle: styles.deleteText,
-									value: 'AccountDelete'
-								}
+								{ text: 'Change name', value: 'AccountEdit' },
+								{ text: 'Change pin', value: 'AccountPin' },
+								{ text: 'View recovery phrase', value: 'LegacyMnemonic' },
+								{ text: 'Delete', textStyle: styles.deleteText, value: 'AccountDelete' }
 							]}
+							menuTriggerIconName={'more-vert'}
+							onSelect={onOptionSelect}
 						/>
 					</View>
 				</View>
-				<AccountCard
-					address={account.address}
-					networkKey={account.networkKey}
-					title={account.name}
-				/>
+				<AccountCard address={address} />
 				<View>
 					<QrView
-						data={account.name ? `${selectedKey}:${account.name}` : selectedKey}
+						data={
+							name
+								? `${accountId}:${name}`
+								: accountId
+						}
 					/>
 					{protocol === NetworkProtocols.UNKNOWN && <UnknownAccountWarning />}
 				</View>

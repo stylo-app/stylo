@@ -1,45 +1,39 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import {
-	addNetworkGenesisHash,
+import { addNetworkGenesisHash,
 	addNetworkPathId,
-	ScanTestRequest
-} from 'e2e/mockScanRequests';
+	ScanTestRequest } from 'e2e/mockScanRequests';
 import testIDs from 'e2e/testIDs';
-import {
-	launchWithScanRequest,
+import { launchWithScanRequest,
 	pinCode,
 	tapBack,
 	testExist,
 	testRecoverIdentity,
 	testTap,
 	testUnlockPin,
-	testVisible
-} from 'e2e/utils';
+	testVisible } from 'e2e/utils';
 
-const {
-	Main,
+const { Main,
+	NetworkSettings,
 	PathDetail,
 	PathsList,
 	QrScanner,
-	NetworkSettings,
 	SecurityHeader,
-	SignedTx
-} = testIDs;
+	SignedTx } = testIDs;
 
 const testSignedTx = async (): Promise<void> => {
 	await testTap(SecurityHeader.scanButton);
@@ -60,6 +54,7 @@ describe('Signing ane exporting test', () => {
 	it('derive a new account from the path list', async () => {
 		await tapBack();
 		const addedNetworkButtonIndex = Main.networkButton + addNetworkPathId;
+
 		await testTap(testIDs.Main.addNewNetworkButton);
 		await testTap(addedNetworkButtonIndex);
 		await testUnlockPin(pinCode);

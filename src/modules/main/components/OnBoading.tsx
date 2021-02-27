@@ -1,18 +1,18 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -28,20 +28,17 @@ import { RootStackParamList } from 'types/routes';
 export default function OnBoardingView({ hasLegacyAccount }: {hasLegacyAccount: boolean}): React.ReactElement {
 	const navigation: StackNavigationProp<RootStackParamList> = useNavigation();
 
-	function TextButton({
-		text,
-		isRecover
-	}: {
+	function TextButton({ isRecover, text }: {
 		text: string;
 		isRecover: boolean;
 	}): React.ReactElement {
 		return (
 			<Text
+				onPress={(): void => navigation.navigate('RecoverAccount', { isRecover })}
 				style={[fontStyles.quote, { textDecorationLine: 'underline' }]}
 				testID={
 					isRecover ? testIDs.Main.recoverButton : testIDs.Main.createButton
 				}
-				onPress={(): void => navigation.navigate('IdentityNew', { isRecover })}
 			>
 				{text}
 			</Text>
@@ -50,21 +47,23 @@ export default function OnBoardingView({ hasLegacyAccount }: {hasLegacyAccount: 
 
 	return (
 		<SafeAreaScrollViewContainer
-			testID={testIDs.Main.noAccountScreen}
 			contentContainerStyle={styles.scrollContent}
+			testID={testIDs.Main.noAccountScreen}
 		>
 			<View style={styles.onboardingWrapper}>
-				<TextButton text="Create" isRecover={false} />
+				<TextButton isRecover={false}
+					text="Create" />
 				<Text style={fontStyles.quote}> or </Text>
-				<TextButton text="recover" isRecover={true} />
+				<TextButton isRecover={true}
+					text="recover" />
 				<Text style={fontStyles.quote}>your identity to get started.</Text>
 				{hasLegacyAccount && (
 					<Button
-						title="Show Legacy Accounts"
 						onPress={(): void => navigation.navigate('LegacyAccountList')}
-						small={true}
 						onlyText={true}
+						small={true}
 						style={{ marginLeft: 0 }}
+						title="Show Legacy Accounts"
 					/>
 				)}
 			</View>

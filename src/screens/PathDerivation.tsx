@@ -1,24 +1,21 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import Button from 'components/Button';
-import {
-	DerivationNetworkSelector,
-	NetworkOptions
-} from 'components/DerivationNetworkSelector';
+import { DerivationNetworkSelector, NetworkOptions } from 'components/DerivationNetworkSelector';
 import PasswordInput from 'components/PasswordInput';
 import PathCard from 'components/PathCard';
 import ScreenHeading from 'components/ScreenHeading';
@@ -28,39 +25,25 @@ import { defaultNetworkKey, UnknownNetworkKeys } from 'constants/networkSpecs';
 import testIDs from 'e2e/testIDs';
 import { KeyboardAwareContainer } from 'modules/unlock/components/Container';
 import React, { useContext,useMemo, useRef, useState } from 'react';
-import { AlertStateContext } from 'stores/alertContext';
-import { NetworksContext } from 'stores/NetworkContext';
 import { NavigationAccountIdentityProps } from 'types/props';
 import { alertPathDerivationError } from 'utils/alertUtils';
 import { withCurrentIdentity } from 'utils/HOC';
-import {
-	extractPathId,
-	getNetworkKey,
-	getSubstrateNetworkKeyByPathId,
-	validateDerivedPath
-} from 'utils/identitiesUtils';
-import {
-	navigateToPathDetails,
-	unlockSeedPhrase
-} from 'utils/navigationHelpers';
+import { extractPathId, getNetworkKey, getSubstrateNetworkKeyByPathId, validateDerivedPath } from 'utils/identitiesUtils';
+import { navigateToPathDetails, unlockSeedPhrase } from 'utils/navigationHelpers';
 import { useSeedRef } from 'utils/seedRefHooks';
 
-function PathDerivation({
-	accountsStore,
-	navigation,
-	route
-}: NavigationAccountIdentityProps<'PathDerivation'>): React.ReactElement {
+import { AlertContext, NetworksContext } from '../context';
+
+function PathDerivation({ accountsStore, navigation, route }: NavigationAccountIdentityProps<'PathDerivation'>): React.ReactElement {
 	const [derivationPath, setDerivationPath] = useState<string>('');
 	const [keyPairsName, setKeyPairsName] = useState<string>('');
 	const [modalVisible, setModalVisible] = useState<boolean>(false);
 	const [password, setPassword] = useState<string>('');
 	const networkContextState = useContext(NetworksContext);
 	const pathNameInput = useRef<TextInput>(null);
-	const { setAlert } = useContext(AlertStateContext);
+	const { setAlert } = useContext(AlertContext);
 	const currentIdentity = accountsStore.state.currentIdentity;
-	const { isSeedRefValid, substrateAddress } = useSeedRef(
-		currentIdentity.encryptedSeed
-	);
+	const { isSeedRefValid, substrateAddress } = useSeedRef(currentIdentity.encryptedSeed);
 	const parentPath = route.params.parentPath;
 
 	const parentNetworkKey = useMemo((): string => {
@@ -75,11 +58,9 @@ function PathDerivation({
 		return getSubstrateNetworkKeyByPathId(pathId, networks);
 	}, [currentIdentity, networkContextState, parentPath]);
 
-	const [customNetworkKey, setCustomNetworkKey] = useState(
-		parentNetworkKey === UnknownNetworkKeys.UNKNOWN
-			? defaultNetworkKey
-			: parentNetworkKey
-	);
+	const [customNetworkKey, setCustomNetworkKey] = useState(parentNetworkKey === UnknownNetworkKeys.UNKNOWN
+		? defaultNetworkKey
+		: parentNetworkKey);
 	const completePath = `${parentPath}${derivationPath}`;
 	const enableCustomNetwork = parentPath === '';
 	const currentNetworkKey = enableCustomNetwork
@@ -89,14 +70,13 @@ function PathDerivation({
 
 	const onPathDerivation = async (): Promise<void> => {
 		await unlockSeedPhrase(navigation, isSeedRefValid);
+
 		try {
-			await accountsStore.deriveNewPath(
-				completePath,
+			await accountsStore.deriveNewPath(completePath,
 				substrateAddress,
 				networkContextState.getSubstrateNetwork(currentNetworkKey),
 				keyPairsName,
-				password
-			);
+				password);
 			setAlert('Success', 'New Account Successfully derived');
 			navigateToPathDetails(navigation, currentNetworkKey, derivationPath);
 		} catch (error) {
@@ -107,9 +87,9 @@ function PathDerivation({
 	return (
 		<KeyboardAwareContainer>
 			<ScreenHeading
-				title="Derive Account"
-				subtitle={parentPath}
 				hasSubtitleIcon={true}
+				subtitle={parentPath}
+				title="Derive Account"
 			/>
 			<TextInput
 				autoCompleteType="off"
@@ -145,28 +125,28 @@ function PathDerivation({
 			)}
 			<Separator style={{ height: 0 }} />
 			<PasswordInput
+				onSubmitEditing={onPathDerivation}
 				password={password}
 				setPassword={setPassword}
-				onSubmitEditing={onPathDerivation}
 			/>
 			<PathCard
 				identity={accountsStore.state.currentIdentity!}
 				isPathValid={isPathValid}
 				name={keyPairsName}
-				path={password === '' ? completePath : `${completePath}///${password}`}
 				networkKey={currentNetworkKey}
+				path={password === '' ? completePath : `${completePath}///${password}`}
 			/>
 			<Button
 				disabled={!isPathValid}
-				title="Next"
-				testID={testIDs.PathDerivation.deriveButton}
 				onPress={onPathDerivation}
+				testID={testIDs.PathDerivation.deriveButton}
+				title="Next"
 			/>
 			{enableCustomNetwork && (
 				<NetworkOptions
 					setNetworkKey={setCustomNetworkKey}
-					visible={modalVisible}
 					setVisible={setModalVisible}
+					visible={modalVisible}
 				/>
 			)}
 		</KeyboardAwareContainer>

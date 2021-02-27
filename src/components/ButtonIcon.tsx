@@ -1,27 +1,21 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import React, { FunctionComponent } from 'react';
-import {
-	StyleSheet,
-	Text,
-	TextStyle,
-	TouchableOpacity,
-	View,
-	ViewStyle } from 'react-native';
+import { StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { Icon } from 'react-native-elements';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import colors from 'styles/colors';
@@ -40,18 +34,7 @@ interface Props {
 	style?: ViewStyle;
 }
 
-const ButtonIcon: FunctionComponent<Props> = ({
-	iconName,
-	iconType,
-	iconColor,
-	onPress,
-	iconBgStyle,
-	iconSize,
-	testID,
-	textStyle,
-	title,
-	style = {}
-}) => {
+const ButtonIcon: FunctionComponent<Props> = ({ iconName, iconType, iconColor, onPress, iconBgStyle, iconSize, testID, textStyle, title, style = {} }) => {
 	const size = iconSize || 28;
 
 	const styles = StyleSheet.create({
@@ -71,9 +54,7 @@ const ButtonIcon: FunctionComponent<Props> = ({
 			paddingTop: size / 8,
 			width: size
 		},
-		title: {
-			marginLeft: 8
-		}
+		title: { marginLeft: 8 }
 	});
 
 	const renderIcon = (): React.ReactElement => {
@@ -81,16 +62,17 @@ const ButtonIcon: FunctionComponent<Props> = ({
 			return (
 				<AntIcon
 					color={iconColor || colors.text.main}
-					size={size - 6}
 					name={iconName}
+					size={size - 6}
 				/>
 			);
 		}
+
 		return (
 			<Icon
 				color={iconColor || colors.text.main}
-				size={size - 6}
 				name={iconName}
+				size={size - 6}
 				type={iconType}
 			/>
 		);
@@ -98,9 +80,8 @@ const ButtonIcon: FunctionComponent<Props> = ({
 
 	return (
 		<TouchableOpacity
-			accessibilityComponentType="button"
-			onPress={onPress}
 			activeOpacity={0.5}
+			onPress={onPress}
 			style={{ ...styles.generalView, ...style }}
 			testID={testID}
 		>

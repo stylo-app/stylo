@@ -1,59 +1,39 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import Separator from 'components/Separator';
-import {
-	defaultNetworkKey,
-	NETWORK_LIST,
-	UnknownNetworkKeys
-} from 'constants/networkSpecs';
+import { defaultNetworkKey, NETWORK_LIST, UnknownNetworkKeys } from 'constants/networkSpecs';
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import { NetworksContext } from 'stores/NetworkContext';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
 import { Identity } from 'types/identityTypes';
-import {
-	isSubstrateNetworkParams,
-	isUnknownNetworkParams
-} from 'types/networkTypes';
+import { isSubstrateNetwork, isUnknownNetworkParams } from 'types/networkTypes';
 import { ButtonListener } from 'types/props';
-import {
-	getAddressWithPath,
-	getNetworkKeyByPath,
-	getPathName
-} from 'utils/identitiesUtils';
+import { getAddressWithPath, getNetworkKeyByPath, getPathName } from 'utils/identitiesUtils';
 import { useSeedRef } from 'utils/seedRefHooks';
 
+import { NetworksContext } from '../context';
 import AccountIcon from './AccountIcon';
 import AccountPrefixedTitle from './AccountPrefixedTitle';
 import Address from './Address';
 import TouchableItem from './TouchableItem';
 
-export default function PathCard({
-	onPress,
-	identity,
-	isPathValid = true,
-	path,
-	name,
-	networkKey,
-	testID,
-	titlePrefix
-}: {
+interface Props {
 	onPress?: ButtonListener;
 	identity: Identity;
 	isPathValid?: boolean;
@@ -62,29 +42,35 @@ export default function PathCard({
 	networkKey?: string;
 	testID?: string;
 	titlePrefix?: string;
-}): React.ReactElement {
+}
+
+export default function PathCard({ identity, isPathValid = true, name, networkKey, onPress, path, testID, titlePrefix }: Props): React.ReactElement {
 	const networksContext = useContext(NetworksContext);
-	const { networks, allNetworks } = networksContext;
+	const { allNetworks, networks } = networksContext;
 	const isNotEmptyName = name && name !== '';
 	const pathName = isNotEmptyName ? name : getPathName(path, identity);
-	const { isSeedRefValid, substrateAddress } = useSeedRef(
-		identity.encryptedSeed
-	);
+	const { isSeedRefValid, substrateAddress } = useSeedRef(identity.encryptedSeed);
 	const [address, setAddress] = useState('');
 	const computedNetworkKey =
 		networkKey ||
 		getNetworkKeyByPath(path, identity.meta.get(path)!, networksContext);
+
 	useEffect(() => {
 		const getAddress = async (): Promise<void> => {
 			const existedAddress = getAddressWithPath(path, identity);
+
 			if (existedAddress !== '') return setAddress(existedAddress);
+
 			if (isSeedRefValid && isPathValid && networks.has(computedNetworkKey)) {
 				const prefix = networks.get(computedNetworkKey)!.prefix;
 				const generatedAddress = await substrateAddress(path, prefix);
+
 				return setAddress(generatedAddress);
 			}
+
 			setAddress('');
 		};
+
 		getAddress();
 	}, [
 		path,
@@ -117,11 +103,11 @@ export default function PathCard({
 				}}
 			/>
 			<View
-				testID={testID}
 				style={[
 					styles.content,
 					{ backgroundColor: 'transparent', paddingVertical: 0 }
 				]}
+				testID={testID}
 			>
 				<AccountIcon
 					address={address}
@@ -132,15 +118,15 @@ export default function PathCard({
 					<Text style={[fontStyles.t_regular, { color: colors.text.faded }]}>
 						{networkParams.title}
 					</Text>
-					<AccountPrefixedTitle title={pathName!} titlePrefix={titlePrefix} />
-					<Address address={address} protocol={networkParams.protocol} />
+					<AccountPrefixedTitle title={pathName!}
+						titlePrefix={titlePrefix} />
+					<Address address={address}
+						protocol={networkParams.protocol} />
 				</View>
 				<View
 					style={[
 						styles.footer,
-						{
-							backgroundColor: networkParams.color
-						}
+						{ backgroundColor: networkParams.color }
 					]}
 				/>
 			</View>
@@ -149,12 +135,12 @@ export default function PathCard({
 
 	const substrateDerivationCard = (
 		<TouchableItem
-			accessibilityComponentType="button"
 			disabled={false}
 			onPress={onPress}
 			style={styles.body}
 		>
-			<View style={styles.content} testID={testID}>
+			<View style={styles.content}
+				testID={testID}>
 				<AccountIcon
 					address={address}
 					network={networkParams}
@@ -162,8 +148,10 @@ export default function PathCard({
 				/>
 				<View style={styles.desc}>
 					<View style={styles.row}>
-						<AccountPrefixedTitle title={pathName!} titlePrefix={titlePrefix} />
-						{hasPassword && <AntIcon name="lock" style={styles.iconLock} />}
+						<AccountPrefixedTitle title={pathName!}
+							titlePrefix={titlePrefix} />
+						{hasPassword && <AntIcon name="lock"
+							style={styles.iconLock} />}
 					</View>
 					<View
 						style={{
@@ -172,9 +160,9 @@ export default function PathCard({
 						}}
 					>
 						<AntIcon
+							color={colors.signal.main}
 							name="user"
 							size={fontStyles.i_small.fontSize}
-							color={colors.signal.main}
 						/>
 
 						{hasPassword ? (
@@ -186,9 +174,9 @@ export default function PathCard({
 								</Text>
 
 								<AntIcon
+									color={colors.signal.main}
 									name="lock"
 									size={fontStyles.i_small.fontSize}
-									color={colors.signal.main}
 									style={{ alignSelf: 'center' }}
 								/>
 							</View>
@@ -200,9 +188,9 @@ export default function PathCard({
 					</View>
 					{address !== '' && (
 						<Text
-							style={[fontStyles.t_codeS, { color: colors.text.faded }]}
 							ellipsizeMode="middle"
 							numberOfLines={1}
+							style={[fontStyles.t_codeS, { color: colors.text.faded }]}
 						>
 							{address}
 						</Text>
@@ -212,7 +200,7 @@ export default function PathCard({
 		</TouchableItem>
 	);
 
-	return isSubstrateNetworkParams(networkParams) ||
+	return isSubstrateNetwork(networkParams) ||
 		isUnknownNetworkParams(networkParams)
 		? substrateDerivationCard
 		: nonSubstrateCard;

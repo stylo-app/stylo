@@ -1,18 +1,18 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * @typedef {Object} SURIObject
@@ -41,9 +41,7 @@ import { SURIObject } from 'types/scannerTypes';
  * @returns {DerivationPathObject}
  */
 
-export function parseDerivationPath(
-	input: string
-): {
+export function parseDerivationPath(input: string): {
 	derivePath: string;
 	password: string;
 } {
@@ -73,6 +71,7 @@ export function parseSURI(suri: string): SURIObject {
 
 	if (matches) {
 		[, phrase, derivationPath = ''] = matches;
+
 		try {
 			parsedDerivationPath = parseDerivationPath(derivationPath);
 		} catch {
@@ -99,11 +98,7 @@ export function parseSURI(suri: string): SURIObject {
  * @returns {string}
  */
 
-export function constructSURI({
-	derivePath = '',
-	password = '',
-	phrase
-}: {
+export function constructSURI({ derivePath = '', password = '', phrase }: {
 	derivePath?: string;
 	password?: string;
 	phrase: string;
@@ -115,10 +110,7 @@ export function constructSURI({
 	return `${phrase}${derivePath}///${password}`;
 }
 
-export function constructSuriSuffix({
-	derivePath = '',
-	password = ''
-}: {
+export function constructSuriSuffix({ derivePath = '', password = '' }: {
 	derivePath?: string;
 	password?: string;
 }): string {

@@ -1,28 +1,21 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import React, { ReactElement, useState } from 'react';
-import {
-	NativeSyntheticEvent,
-	StyleSheet,
-	Text,
-	TextInputProps,
-	TextInputSelectionChangeEventData,
-	View
-} from 'react-native';
+import { NativeSyntheticEvent, StyleSheet, Text, TextInputProps, TextInputSelectionChangeEventData, View } from 'react-native';
 import BIP39_WORDS from 'res/bip39_wordlist.json';
 import PARITY_WORDS from 'res/parity_wordlist.json';
 import colors from 'styles/colors';
@@ -37,24 +30,16 @@ import TouchableItem from './TouchableItem';
 const ALL_WORDS = Array.from(new Set(PARITY_WORDS.concat(BIP39_WORDS))).sort();
 const SUGGESTIONS_COUNT = 5;
 
-interface Props extends TextInputProps {
-	onChangeText: (text: string) => void;
-	valid: boolean;
-}
+interface Props extends TextInputProps { onChangeText: (text: string) => void; valid: boolean;}
 
-export default function AccountSeed({
-	valid,
-	onChangeText,
-	...props
-}: Props): React.ReactElement {
+export default function AccountSeed({ onChangeText, valid, ...props }: Props): React.ReactElement {
 	const [cursorPosition, setCursorPosition] = useState({
 		end: 0,
 		start: 0
 	});
 	const [value, setValue] = useState('');
-	function handleCursorPosition(
-		event: NativeSyntheticEvent<TextInputSelectionChangeEventData>
-	): void {
+
+	function handleCursorPosition(event: NativeSyntheticEvent<TextInputSelectionChangeEventData>): void {
 		setCursorPosition(event.nativeEvent.selection);
 	}
 
@@ -66,9 +51,7 @@ export default function AccountSeed({
 
 		let suggestions = wordList.slice(fromIndex, fromIndex + SUGGESTIONS_COUNT);
 
-		const lastValidIndex = suggestions.findIndex(
-			word => !word.startsWith(input)
-		);
+		const lastValidIndex = suggestions.findIndex(word => !word.startsWith(input));
 
 		if (lastValidIndex !== -1) {
 			suggestions = suggestions.slice(0, lastValidIndex);
@@ -98,7 +81,8 @@ export default function AccountSeed({
 	}
 
 	function renderSuggestions(): ReactElement {
-		const { start, end } = cursorPosition;
+		const { end, start } = cursorPosition;
+
 		if (start !== end) return <View style={styles.suggestions} />;
 		const currentPosition = end;
 		let left = value.substring(0, currentPosition).split(' ');
@@ -127,17 +111,20 @@ export default function AccountSeed({
 						i !== suggestions.length - 1
 							? { borderColor: colors.border.light, borderRightWidth: 0.3 }
 							: {};
+
 					return (
 						<TouchableItem
 							key={i}
 							onPress={(): void => {
 								let phrase = left.concat(suggestion, right).join(' ').trimEnd();
 								const is24words = phrase.split(' ').length === 24;
+
 								if (!is24words) phrase += ' ';
 								onNativeChangeText(phrase);
 							}}
 						>
-							<View key={suggestion} style={[styles.suggestion, sepStyle]}>
+							<View key={suggestion}
+								style={[styles.suggestion, sepStyle]}>
 								<Text style={styles.suggestionText}>{suggestion}</Text>
 							</View>
 						</TouchableItem>
@@ -148,27 +135,24 @@ export default function AccountSeed({
 	}
 
 	const validStyles = valid ? styles.validInput : styles.invalidInput;
+
 	return (
 		<View>
 			<TextInput
-				style={StyleSheet.flatten([
-					fontStyles.t_seed,
-					styles.input,
-					validStyles
-				])}
-				multiline
-				autoCorrect={false}
-				autoCompleteType="off"
 				autoCapitalize="none"
-				returnKeyType="done"
+				autoCompleteType="off"
+				autoCorrect={false}
 				blurOnSubmit={true}
-				textAlignVertical="top"
-				onSelectionChange={handleCursorPosition}
-				value={value}
+				multiline
 				onChangeText={onNativeChangeText}
+				onSelectionChange={handleCursorPosition}
+				returnKeyType="done"
+				style={StyleSheet.flatten([ fontStyles.t_seed, styles.input, validStyles ])}
+				textAlignVertical="top"
+				value={value}
 				{...props}
 			/>
-			{value.length > 0 && renderSuggestions()}
+			{value.length > 0 && !valid && renderSuggestions()}
 		</View>
 	);
 }
@@ -205,6 +189,8 @@ const styles = StyleSheet.create({
 		overflow: 'hidden'
 	},
 	validInput: {
-		borderColor: colors.border.valid
+		borderBottomColor: colors.border.valid,
+		borderColor: colors.border.valid,
+		color: colors.text.faded
 	}
 });

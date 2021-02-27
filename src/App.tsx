@@ -1,18 +1,18 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import '../shim';
 import 'utils/iconLoader';
@@ -22,33 +22,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import CustomAlert from 'components/CustomAlert';
 import { AppProps, getLaunchArgs } from 'e2e/injections';
 import * as React from 'react';
-import { LogBox,StatusBar, StyleSheet, View } from 'react-native';
+import { LogBox,StatusBar } from 'react-native';
 import NavigationBar from 'react-native-navbar-color';
 import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AccountsContext,useAccountContext } from 'stores/AccountsContext';
-import { AlertStateContext, useAlertContext } from 'stores/alertContext';
-import {
-	GlobalState,
-	GlobalStateContext,
-	useGlobalStateContext
-} from 'stores/globalStateContext';
-import { NetworksContext,useNetworksContext } from 'stores/NetworkContext';
-import {
-	RegistriesContext,
-	useRegistriesStore } from 'stores/RegistriesContext';
-import { ScannerContext,useScannerContext } from 'stores/ScannerContext';
+import { RegistriesContext, useRegistriesStore } from 'stores/RegistriesContext';
 import { SeedRefsContext, useSeedRefStore } from 'stores/SeedRefStore';
 import colors from 'styles/colors';
 
-import {
-	AppNavigator,
-	ScreenStack,
-	TocAndPrivacyPolicyNavigator } from './screens';
+import { AccountsContextProvider, AlertContextProvider, NetworksContextProvider, ScannerContextProvider } from './context';
+import { AppNavigator } from './screens';
 
 export default function App(props: AppProps): React.ReactElement {
 	getLaunchArgs(props);
 	NavigationBar.setColor(colors.background.os);
+
 	if (__DEV__) {
 		LogBox.ignoreLogs([
 			'Warning: componentWillReceiveProps',
@@ -60,69 +48,33 @@ export default function App(props: AppProps): React.ReactElement {
 		]);
 	}
 
-	const alertContext = useAlertContext();
-	const globalContext: GlobalState = useGlobalStateContext();
 	const seedRefContext = useSeedRefStore();
-	const networkContext = useNetworksContext();
-	const accountsContext = useAccountContext();
-	const scannerContext = useScannerContext();
 	const registriesContext = useRegistriesStore();
-
-	const renderStacks = (): React.ReactElement => {
-		if (globalContext.dataLoaded) {
-			return globalContext.policyConfirmed ? (
-				<AppNavigator />
-			) : (
-				<TocAndPrivacyPolicyNavigator />
-			);
-		} else {
-			return (
-				<ScreenStack.Navigator>
-					<ScreenStack.Screen name="Empty">
-						{(navigationProps: any): React.ReactElement => (
-							<View style={emptyScreenStyles} {...navigationProps} />
-						)}
-					</ScreenStack.Screen>
-				</ScreenStack.Navigator>
-			);
-		}
-	};
 
 	return (
 		<SafeAreaProvider>
-			<NetworksContext.Provider value={networkContext}>
-				<AccountsContext.Provider value={accountsContext}>
-					<ScannerContext.Provider value={scannerContext}>
+			<NetworksContextProvider>
+				<AccountsContextProvider>
+					<ScannerContextProvider>
 						<RegistriesContext.Provider value={registriesContext}>
-							<GlobalStateContext.Provider value={globalContext}>
-								<AlertStateContext.Provider value={alertContext}>
-									<SeedRefsContext.Provider value={seedRefContext}>
-										<MenuProvider backHandler={true}>
-											<StatusBar
-												barStyle="light-content"
-												backgroundColor={colors.background.app}
-											/>
-											<CustomAlert />
-											<NavigationContainer>
-												{renderStacks()}
-											</NavigationContainer>
-										</MenuProvider>
-									</SeedRefsContext.Provider>
-								</AlertStateContext.Provider>
-							</GlobalStateContext.Provider>
+							<AlertContextProvider>
+								<SeedRefsContext.Provider value={seedRefContext}>
+									<MenuProvider backHandler={true}>
+										<StatusBar
+											backgroundColor={colors.background.app}
+											barStyle="light-content"
+										/>
+										<CustomAlert />
+										<NavigationContainer>
+											<AppNavigator />
+										</NavigationContainer>
+									</MenuProvider>
+								</SeedRefsContext.Provider>
+							</AlertContextProvider>
 						</RegistriesContext.Provider>
-					</ScannerContext.Provider>
-				</AccountsContext.Provider>
-			</NetworksContext.Provider>
+					</ScannerContextProvider>
+				</AccountsContextProvider>
+			</NetworksContextProvider>
 		</SafeAreaProvider>
 	);
 }
-
-const emptyScreenStyles = StyleSheet.create({
-	body: {
-		backgroundColor: colors.background.app,
-		flex: 1,
-		flexDirection: 'column',
-		padding: 20
-	}
-});

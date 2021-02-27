@@ -1,30 +1,28 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import AccountCard from 'components/AccountCard';
 import AccountIconChooser from 'components/AccountIconChooser';
 import Button from 'components/Button';
 import DerivationPathField from 'components/DerivationPathField';
 import KeyboardScrollView from 'components/KeyboardScrollView';
+import { NetworkCard } from 'components/NetworkCard';
 import TextInput from 'components/TextInput';
 import { NetworkProtocols } from 'constants/networkSpecs';
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useCallback, useContext, useEffect, useReducer } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { AccountsContext } from 'stores/AccountsContext';
-import { NetworksContext } from 'stores/NetworkContext';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
@@ -34,169 +32,162 @@ import { NavigationProps } from 'types/props';
 import { emptyAccount, validateSeed } from 'utils/account';
 import { constructSURI } from 'utils/suri';
 
+import { AccountsContext, NetworksContext } from '../context';
+
 interface State {
 	derivationPassword: string;
 	derivationPath: string;
 	isDerivationPathValid: boolean;
-	selectedAccount: undefined | Account;
-	selectedNetwork: undefined | NetworkParams;
-	newAccount?: Account;
+	chosenAccount?: Account;
+	selectedNetwork?:NetworkParams | null;
 }
 
-export default function AccountNew({
-	navigation
-}: NavigationProps<'AccountNew'>): React.ReactElement {
-	const accountsStore = useContext(AccountsContext);
-	const { getNetwork } = useContext(NetworksContext);
-
+export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>): React.ReactElement {
 	const initialState = {
+		chosenAccount: undefined,
 		derivationPassword: '',
 		derivationPath: '',
 		isDerivationPathValid: true,
-		selectedAccount: undefined,
 		selectedNetwork: undefined
 	};
-
 	const reducer = (state: State, delta: Partial<State>): State => ({
 		...state,
 		...delta
 	});
 	const [state, updateState] = useReducer(reducer, initialState);
+	const { chosenAccount, derivationPassword, derivationPath, isDerivationPathValid, selectedNetwork } = state;
+	const { newAccount, updateNew } = useContext(AccountsContext);
+	const { getNetwork } = useContext(NetworksContext);
+	const seed = (chosenAccount as UnlockedAccount)?.seed;
+	const isSubstrate = selectedNetwork?.protocol === NetworkProtocols.SUBSTRATE;
 
 	useEffect((): void => {
-		accountsStore.updateNew(emptyAccount());
-	}, [accountsStore]);
+		updateNew(emptyAccount('', ''));
+	// we get an infinite loop if we add anything here.
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect((): void => {
-		const selectedAccount = accountsStore.state.newAccount;
-		const selectedNetwork = getNetwork(selectedAccount.networkKey);
+		const selectedNetwork = getNetwork(newAccount.networkKey);
+
+		updateState({ chosenAccount: newAccount, selectedNetwork });
+	}, [newAccount, getNetwork]);
+
+	const onSelectIcon = useCallback(({ isBip39, newAddress, newSeed }): void => {
+		if (newAddress && isBip39 && newSeed) {
+			if (isSubstrate) {
+				try {
+					const suri = constructSURI({
+						derivePath: derivationPath,
+						password: derivationPassword,
+						phrase: newSeed
+					});
+
+					updateNew({
+						address: newAddress,
+						derivationPassword,
+						derivationPath,
+						seed: suri,
+						seedPhrase: newSeed,
+						validBip39Seed: isBip39
+					});
+				} catch (e) {
+					console.error(e);
+				}
+			} else {
+				// Ethereum account
+				updateNew({
+					address: newAddress,
+					seed: newSeed,
+					validBip39Seed: isBip39
+				});
+			}
+		}
+		// else {
+		// 	console.log('-----------> ooooooops')
+		// 	accountsStore.updateNew({
+		// 		address: '',
+		// 		seed: '',
+		// 		validBip39Seed: false
+		// 	});
+		// }
+	},[derivationPassword, derivationPath, isSubstrate, updateNew])
+
+	const onCreate = useCallback(() => {
+		navigation.navigate('LegacyMnemonic', { isNew: true })
+	}, [navigation])
+
+	const onDerivationChange = useCallback((newDerivationPath: { derivationPassword: string; derivationPath: string; isDerivationPathValid: boolean; }): void => {
 		updateState({
-			selectedAccount,
-			selectedNetwork
+			derivationPassword: newDerivationPath.derivationPassword,
+			derivationPath: newDerivationPath.derivationPath,
+			isDerivationPathValid: newDerivationPath.isDerivationPathValid
 		});
-	}, [accountsStore.state.newAccount, getNetwork]);
+	}, []);
 
-	const {
-		derivationPassword,
-		derivationPath,
-		isDerivationPathValid,
-		selectedAccount,
-		selectedNetwork
-	} = state;
-	if (!selectedAccount) return <View />;
+	if (!chosenAccount) {
+		return <View />;
+	}
 
-	const { address, name, validBip39Seed } = selectedAccount;
-	const seed = (selectedAccount as UnlockedAccount)?.seed;
-	const isSubstrate = selectedNetwork!.protocol === NetworkProtocols.SUBSTRATE;
+	const { address, name, validBip39Seed } = chosenAccount;
 
 	return (
 		<KeyboardScrollView>
-			<View style={styles.body}>
+			<View style={styles.bodyContainer}>
 				<Text style={styles.titleTop}>CREATE ACCOUNT</Text>
-				<Text style={styles.title}>NETWORK</Text>
-			</View>
-			<AccountCard
-				address={''}
-				title={selectedNetwork!.title}
-				networkKey={selectedAccount.networkKey}
-				onPress={(): void => navigation.navigate('LegacyNetworkChooser')}
-			/>
-			<View style={styles.body}>
-				<Text style={styles.title}>ICON & ADDRESS</Text>
-				<AccountIconChooser
-					derivationPassword={derivationPassword}
-					derivationPath={derivationPath}
-					onSelect={({ newAddress, isBip39, newSeed }): void => {
-						if (newAddress && isBip39 && newSeed) {
-							if (isSubstrate) {
-								try {
-									const suri = constructSURI({
-										derivePath: derivationPath,
-										password: derivationPassword,
-										phrase: newSeed
-									});
-
-									accountsStore.updateNew({
-										address: newAddress,
-										derivationPassword,
-										derivationPath,
-										seed: suri,
-										seedPhrase: newSeed,
-										validBip39Seed: isBip39
-									});
-								} catch (e) {
-									console.error(e);
-								}
-							} else {
-								// Ethereum account
-								accountsStore.updateNew({
-									address: newAddress,
-									seed: newSeed,
-									validBip39Seed: isBip39
-								});
-							}
-						} else {
-							accountsStore.updateNew({
-								address: '',
-								seed: '',
-								validBip39Seed: false
-							});
+				<View style={styles.step}>
+					<Text style={styles.title}>NAME</Text>
+					<TextInput
+						onChangeText={(input: string): void =>
+							updateNew({ name: input })
 						}
-					}}
-					network={selectedNetwork!}
-					value={address && address}
-				/>
-				<Text style={styles.title}>NAME</Text>
-				<TextInput
-					onChangeText={(input: string): void =>
-						accountsStore.updateNew({ name: input })
-					}
-					value={name}
-					placeholder="Enter a new account name"
-				/>
-				{isSubstrate && (
-					<DerivationPathField
-						onChange={(newDerivationPath: {
-							derivationPassword: string;
-							derivationPath: string;
-							isDerivationPathValid: boolean;
-						}): void => {
-							updateState({
-								derivationPassword: newDerivationPath.derivationPassword,
-								derivationPath: newDerivationPath.derivationPath,
-								isDerivationPathValid: newDerivationPath.isDerivationPathValid
-							});
-						}}
-						styles={styles}
-					/>
-				)}
-				<View style={styles.bottom}>
-					<Text style={styles.hintText}>
-						Next, you will be asked to backup your account, get a pen and some
-						paper.
-					</Text>
-					<Button
-						title="Next Step"
-						disabled={
-							!validateSeed(seed, validBip39Seed).valid ||
-							!isDerivationPathValid
-						}
-						onPress={(): void => {
-							navigation.navigate('LegacyAccountBackup', {
-								isNew: true
-							});
-						}}
+						placeholder="new name"
+						value={name}
 					/>
 				</View>
+				<View style={styles.step}>
+					<Text style={styles.title}>NETWORK</Text>
+					<NetworkCard
+						networkKey={chosenAccount.networkKey}
+						onPress={(): void => navigation.navigate('LegacyNetworkChooser')}
+						title={selectedNetwork?.title || 'Select Network'}
+					/>
+				</View>
+				{selectedNetwork && (
+					<View>
+						<View style={styles.step}>
+							<Text style={styles.title}>ICON & ADDRESS</Text>
+							<AccountIconChooser
+								derivationPassword={derivationPassword}
+								derivationPath={derivationPath}
+								network={selectedNetwork!}
+								onSelect={onSelectIcon}
+								value={address && address}
+							/>
+						</View>
+						{isSubstrate && (
+							<View style={StyleSheet.flatten([styles.step, styles.lastStep])}>
+								<DerivationPathField
+									onChange={onDerivationChange}
+									styles={styles}
+								/>
+							</View>
+						)}
+						<View style={styles.bottom}>
+							<Button
+								disabled={!validateSeed(seed, validBip39Seed).valid || !isDerivationPathValid}
+								onPress={onCreate}
+								title="Next Step"
+							/>
+						</View>
+					</View>
+				)}
 			</View>
 		</KeyboardScrollView>
 	);
 }
 
 const styles = StyleSheet.create({
-	body: {
-		padding: 16
-	},
 	bodyContainer: {
 		flex: 1,
 		flexDirection: 'column',
@@ -206,12 +197,11 @@ const styles = StyleSheet.create({
 		flexBasis: 50,
 		paddingBottom: 15
 	},
-	hintText: {
-		color: colors.text.faded,
-		fontFamily: fonts.bold,
-		fontSize: 12,
-		paddingTop: 20,
-		textAlign: 'center'
+	lastStep: {
+		paddingTop: 0
+	},
+	step: {
+		padding: 16
 	},
 	title: {
 		...fontStyles.h_subheading,

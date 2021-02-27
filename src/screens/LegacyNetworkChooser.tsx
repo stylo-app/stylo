@@ -1,37 +1,29 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { NetworkCard } from 'components/NetworkCard';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
-import TouchableItem from 'components/TouchableItem';
-import {
-	SubstrateNetworkKeys,
-	UnknownNetworkKeys } from 'constants/networkSpecs';
+import { SubstrateNetworkKeys, UnknownNetworkKeys } from 'constants/networkSpecs';
 import React, { useContext } from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { AccountsContext } from 'stores/AccountsContext';
-import { NetworksContext } from 'stores/NetworkContext';
-import colors from 'styles/colors';
-import fonts from 'styles/fonts';
 import { NetworkParams } from 'types/networkTypes';
 import { NavigationProps } from 'types/props';
-import { emptyAccount } from 'utils/account';
 
-export default function LegacyNetworkChooserView({
-	navigation
-}: NavigationProps<'LegacyNetworkChooser'>): React.ReactElement {
+import { AccountsContext, NetworksContext } from '../context';
+
+export default function LegacyNetworkChooserView({ navigation }: NavigationProps<'LegacyNetworkChooser'>): React.ReactElement {
 	const accountsStore = useContext(AccountsContext);
 	const { allNetworks } = useContext(NetworksContext);
 	const excludedNetworks = [UnknownNetworkKeys.UNKNOWN];
@@ -43,76 +35,23 @@ export default function LegacyNetworkChooserView({
 
 	return (
 		<SafeAreaScrollViewContainer contentContainerStyle={{ padding: 20 }}>
-			<Text style={styles.title}>CHOOSE NETWORK</Text>
 			{Array.from(allNetworks.entries())
-				.filter(
-					([networkKey]: [string, any]): boolean =>
-						!excludedNetworks.includes(networkKey)
-				)
-				.map(
-					([networkKey, networkParams]: [
+				.filter(([networkKey]: [string, any]): boolean =>
+					!excludedNetworks.includes(networkKey))
+				.map(([networkKey, networkParams]: [
 						string,
 						NetworkParams
 					]): React.ReactElement => (
-						<TouchableItem
-							key={networkKey}
-							style={[
-								styles.card,
-								{
-									backgroundColor: networkParams.color,
-									marginTop: 20
-								}
-							]}
-							onPress={(): void => {
-								accountsStore.updateNew(emptyAccount('', networkKey));
-								navigation.goBack();
-							}}
-						>
-							<Text
-								style={[
-									styles.cardText,
-									{
-										color: networkParams.secondaryColor
-									}
-								]}
-							>
-								{networkParams.title}
-							</Text>
-						</TouchableItem>
-					)
-				)}
+					<NetworkCard
+						key={networkKey}
+						networkKey={networkKey}
+						onPress={(): void =>{
+							accountsStore.updateNew({ networkKey });
+							navigation.goBack();
+						}}
+						title={networkParams.title}
+					/>
+				))}
 		</SafeAreaScrollViewContainer>
 	);
 }
-
-const styles = StyleSheet.create({
-	bottom: {
-		flexBasis: 50,
-		paddingBottom: 15
-	},
-	card: {
-		backgroundColor: colors.background.card,
-		padding: 20
-	},
-	cardText: {
-		color: colors.background.app,
-		fontFamily: fonts.bold,
-		fontSize: 20
-	},
-	title: {
-		color: colors.text.main,
-		fontFamily: fonts.bold,
-		fontSize: 18,
-		paddingBottom: 20
-	},
-	titleTop: {
-		color: colors.text.main,
-		fontFamily: fonts.bold,
-		fontSize: 24,
-		paddingBottom: 20,
-		textAlign: 'center'
-	},
-	top: {
-		flex: 1
-	}
-});

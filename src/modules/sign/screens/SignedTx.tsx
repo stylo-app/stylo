@@ -1,20 +1,20 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import CompatibleCard from 'components/CompatibleCard';
+import AccountCard from 'components/AccountCard';
 import QrView from 'components/QrView';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import Separator from 'components/Separator';
@@ -24,75 +24,78 @@ import TxDetailsCard from 'modules/sign/components/TxDetailsCard';
 import { usePayloadDetails } from 'modules/sign/hooks';
 import strings from 'modules/sign/strings';
 import styles from 'modules/sign/styles';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import { Text, View } from 'react-native';
-import { AccountsContext } from 'stores/AccountsContext';
-import { NetworksContext } from 'stores/NetworkContext';
-import { ScannerContext } from 'stores/ScannerContext';
 import fontStyles from 'styles/fontStyles';
-import { FoundAccount } from 'types/identityTypes';
-import { isEthereumNetworkParams } from 'types/networkTypes';
+import { isEthereumNetwork } from 'types/networkTypes';
 import { NavigationProps, NavigationScannerProps } from 'types/props';
 import { Transaction } from 'utils/transaction';
 
+import { AccountsContext, NetworksContext, ScannerContext } from '../../../context';
+
 interface Props extends NavigationScannerProps<'SignedTx'> {
-	sender: FoundAccount;
-	recipient: FoundAccount;
+	senderAddress: string;
+	recipientAddress: string;
 }
 
-function SignedTxView({
-	sender,
-	recipient,
-	scannerStore
-}: Props): React.ReactElement {
-	const accountsStore = useContext(AccountsContext);
-	const { getNetwork } = useContext(NetworksContext);
-	const { signedData, tx, rawPayload } = scannerStore.state;
-	const senderNetworkParams = getNetwork(sender.networkKey);
-	const isEthereum = isEthereumNetworkParams(senderNetworkParams);
-	const { value, gas, gasPrice } = tx as Transaction;
-	const [isProcessing, payload] = usePayloadDetails(
-		rawPayload,
-		sender.networkKey
-	);
+const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactElement => {
+	const { getAccountByAddress } = useContext(AccountsContext);
+	const sender = getAccountByAddress(senderAddress);
 
-	function renderPayloadDetails(): React.ReactNode {
+	const { getNetwork } = useContext(NetworksContext);
+	const { state: { rawPayload, signedData, tx } } = useContext(ScannerContext)
+	const { gas, gasPrice, value } = tx as Transaction;
+	const [isProcessing, payload] = usePayloadDetails(rawPayload, sender?.networkKey);
+	const senderNetwork = getNetwork(sender?.networkKey);
+	const isEthereum = !!senderNetwork && isEthereumNetwork(senderNetwork);
+
+	if (!sender) {
+		console.error('no sender');
+
+		return <View/>;
+	}
+
+	const PayloadDetails = () => {
 		if (isEthereum) {
 			return (
-				<View style={[styles.bodyContent, { marginTop: 16 }]}>
+				<View style={{ marginTop: 16 }}>
 					<TxDetailsCard
-						style={{ marginBottom: 20 }}
 						description={strings.INFO_ETH_TX}
-						value={value}
 						gas={gas}
 						gasPrice={gasPrice}
+						style={{ marginBottom: 20 }}
+						value={value}
 					/>
 					<Text style={styles.title}>Recipient</Text>
-					<CompatibleCard account={recipient} accountsStore={accountsStore} />
+					<AccountCard
+						address={recipientAddress}
+					/>
 				</View>
 			);
-		} else {
-			if (!isProcessing && payload !== null) {
-				return (
-					<PayloadDetailsCard
-						networkKey={sender.networkKey}
-						payload={payload}
-						signature={signedData}
-					/>
-				);
-			}
 		}
+
+		if (isProcessing || payload === null) {
+
+			return null;
+		}
+
+		return (
+			<PayloadDetailsCard
+				networkKey={sender.networkKey}
+				payload={payload}
+				signature={signedData}
+			/>
+		);
 	}
 
 	return (
 		<SafeAreaScrollViewContainer>
 			<Text style={styles.topTitle}>Signed extrinsic</Text>
-			<CompatibleCard
-				account={sender}
-				accountsStore={accountsStore}
+			<AccountCard
+				address={sender.address}
 				titlePrefix={'from:'}
 			/>
-			{renderPayloadDetails()}
+			<PayloadDetails />
 			<Separator
 				shadow={true}
 				style={{
@@ -103,7 +106,8 @@ function SignedTxView({
 			<Text style={[fontStyles.h_subheading, { paddingHorizontal: 16 }]}>
 				{'Scan to publish'}
 			</Text>
-			<View style={styles.qr} testID={testIDs.SignedTx.qrView}>
+			<View style={styles.qr}
+				testID={testIDs.SignedTx.qrView}>
 				<QrView data={signedData} />
 			</View>
 		</SafeAreaScrollViewContainer>
@@ -111,18 +115,14 @@ function SignedTxView({
 }
 
 function SignedTx(props: NavigationProps<'SignedTx'>): React.ReactElement {
-	const scannerStore = useContext(ScannerContext);
-	const { recipient, sender } = scannerStore.state;
-	const cleanup = useRef(scannerStore.cleanup);
+	const { state: { recipientAddress, senderAddress } } = useContext(ScannerContext);
 
-	useEffect(() => cleanup.current, [cleanup]);
+	if (senderAddress === null || recipientAddress === null) return <View />;
 
-	if (sender === null || recipient === null) return <View />;
 	return (
 		<SignedTxView
-			sender={sender}
-			recipient={recipient}
-			scannerStore={scannerStore}
+			recipientAddress={recipientAddress}
+			senderAddress={senderAddress}
 			{...props}
 		/>
 	);

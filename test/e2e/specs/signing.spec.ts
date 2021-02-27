@@ -1,28 +1,25 @@
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
-// This file is part of Parity.
+// Modifications Copyright (c) 2021 Thibaut Sardan
 
-// Parity is free software: you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 
-// Parity is distributed in the hope that it will be useful,
+// This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with Parity.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import {
-	EthereumNetworkKeys,
+import { EthereumNetworkKeys,
 	SUBSTRATE_NETWORK_LIST,
-	SubstrateNetworkKeys
-} from 'constants/networkSpecs';
+	SubstrateNetworkKeys } from 'constants/networkSpecs';
 import { ScanTestRequest } from 'e2e/mockScanRequests';
 import testIDs from 'e2e/testIDs';
-import {
-	launchWithScanRequest,
+import { launchWithScanRequest,
 	pinCode,
 	tapBack,
 	testExist,
@@ -30,17 +27,14 @@ import {
 	testScrollAndTap,
 	testTap,
 	testUnlockPin,
-	testVisible
-} from 'e2e/utils';
+	testVisible } from 'e2e/utils';
 
-const {
-	Main,
+const { Main,
 	PathDetail,
 	PathsList,
 	SecurityHeader,
 	SignedMessage,
-	SignedTx
-} = testIDs;
+	SignedTx } = testIDs;
 
 const testSignedTx = async (): Promise<void> => {
 	await testTap(SecurityHeader.scanButton);
@@ -68,9 +62,7 @@ describe('Signing ane exporting test', () => {
 			await testTap(PathsList.pathCard + '//kusama');
 			await testTap(PathDetail.popupMenuButton);
 			await testTap(PathDetail.exportButton);
-			await testExist(
-				'secret:0xdf46d55a2d98695e9342b67edae6669e5c0b4e1a3895f1adf85989565b9ab827:0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe:Kusama root'
-			);
+			await testExist('secret:0xdf46d55a2d98695e9342b67edae6669e5c0b4e1a3895f1adf85989565b9ab827:0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe:Kusama root');
 			await tapBack();
 			await testVisible(PathDetail.screen);
 		});
@@ -110,11 +102,10 @@ describe('Signing ane exporting test', () => {
 			const PolkadotNetworkButtonIndex =
 				Main.networkButton +
 				SUBSTRATE_NETWORK_LIST[SubstrateNetworkKeys.POLKADOT].pathId;
+
 			await testTap(testIDs.Main.addNewNetworkButton);
-			await testScrollAndTap(
-				PolkadotNetworkButtonIndex,
-				testIDs.Main.chooserScreen
-			);
+			await testScrollAndTap(PolkadotNetworkButtonIndex,
+				testIDs.Main.chooserScreen);
 			await testVisible(PathDetail.screen);
 		});
 
@@ -140,11 +131,10 @@ describe('Signing ane exporting test', () => {
 			await tapBack();
 			const kovanNetworkButtonIndex =
 				Main.networkButton + EthereumNetworkKeys.KOVAN;
+
 			await testTap(testIDs.Main.addNewNetworkButton);
-			await testScrollAndTap(
-				kovanNetworkButtonIndex,
-				testIDs.Main.chooserScreen
-			);
+			await testScrollAndTap(kovanNetworkButtonIndex,
+				testIDs.Main.chooserScreen);
 			await testVisible(PathDetail.screen);
 			await tapBack();
 			await testExist(Main.chooserScreen);
