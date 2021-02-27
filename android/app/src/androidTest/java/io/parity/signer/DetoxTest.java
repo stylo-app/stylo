@@ -1,4 +1,4 @@
-package com.stylo-app;
+package com.styloapp;
 
 import com.wix.detox.Detox;
 

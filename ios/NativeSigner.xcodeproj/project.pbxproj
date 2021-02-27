@@ -837,7 +837,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.stylo-app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.styloapp;
 				PRODUCT_NAME = stylo-app;
 				SWIFT_OBJC_BRIDGING_HEADER = "stylo-app/stylo-app-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -880,7 +880,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.stylo-app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.styloapp;
 				PRODUCT_NAME = stylo-app;
 				SWIFT_OBJC_BRIDGING_HEADER = "stylo-app/stylo-app-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -974,7 +974,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.stylo-app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.styloapp;
 				PRODUCT_NAME = stylo-app;
 				SWIFT_OBJC_BRIDGING_HEADER = "stylo-app/stylo-app-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

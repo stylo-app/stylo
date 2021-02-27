@@ -13,7 +13,7 @@ Stylo is built to be used offline. The mobile device used to run the app will ho
 
 ### Install the app
 The app is available in beta for Android and iOs :
-- [Android Play store](https://play.google.com/store/apps/details?id=com.stylo-app)
+- [Android Play store](https://play.google.com/store/apps/details?id=com.styloapp)
 - [iOs app store](https://itunes.apple.com/us/app/parity-signer/id1218174838)
 - [Signed APK from GitHub](https://github.com/paritytech/parity-signer/releases)
 

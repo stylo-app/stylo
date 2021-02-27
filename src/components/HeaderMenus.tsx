@@ -20,7 +20,7 @@ import { StyleSheet, View } from 'react-native';
 
 import PopupMenu from './PopupMenu';
 
-const MAIN_MENUS = ['LegacyAccountList', 'Main'];
+const MAIN_MENUS = ['LegacyAccountList'];
 
 function HeaderMenus(): React.ReactElement {
 	const { navigate } = useNavigation()

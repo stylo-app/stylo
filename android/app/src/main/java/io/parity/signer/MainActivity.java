@@ -1,4 +1,4 @@
-package com.stylo-app;
+package com.styloapp;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

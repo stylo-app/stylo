@@ -29,7 +29,7 @@ Please find more info [here](Parity-Signer-Mobile-App) about the Stylo applicati
 ### Install Stylo mobile application
 
 Install Stylo making sure that it originated from **Parity Technologies**
-- [Android](https://play.google.com/store/apps/details?id=com.stylo-app)
+- [Android](https://play.google.com/store/apps/details?id=com.styloapp)
 <!-- - [iOS](https://itunes.apple.com/us/app/parity-signer/id1218174838) -->
 
 
