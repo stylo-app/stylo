@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import AccountCard from 'components/AccountCard';
 import AccountSeed from 'components/AccountSeed';
 import Button from 'components/Button';
+import KeyboardScrollView from 'components/KeyboardScrollView';
 import { NetworkCard } from 'components/NetworkCard';
 import ScreenHeading from 'components/ScreenHeading';
 import TextInput from 'components/TextInput';
@@ -50,7 +51,7 @@ import { AccountsContext, AlertContext, NetworksContext } from '../context';
 // 	isDerivationPathValid: true
 // };
 
-function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>): React.ReactElement {
+function RecoverAccount(): React.ReactElement {
 	// eslint-disable-next-line no-unused-vars
 	const [derivationPath, setDerivationPath] = useState('');
 	// eslint-disable-next-line no-unused-vars
@@ -166,7 +167,9 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 	const { address, name, networkKey } = newAccount;
 
 	return (
-		<KeyboardAwareContainer>
+		<KeyboardScrollView
+			extraHeight={140}
+		>
 			<ScreenHeading title={'New Account'} />
 			<View style={styles.step}>
 				<Text style={styles.title}>Name</Text>
@@ -182,7 +185,7 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 				<Text style={styles.title}>NETWORK</Text>
 				<NetworkCard
 					networkKey={networkKey}
-					onPress={(): void => navigation.navigate('LegacyNetworkChooser')}
+					onPress={(): void => navigate('LegacyNetworkChooser')}
 					title={selectedNetwork?.title || 'Select Network'}
 				/>
 			</View>
@@ -225,7 +228,7 @@ function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>
 					title="Recover"
 				/>
 			</View>
-		</KeyboardAwareContainer>
+		</KeyboardScrollView>
 	);
 }
 
