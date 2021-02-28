@@ -63,12 +63,6 @@ function SignedMessageView({ message, sender: senderAddress }: Props): React.Rea
 					marginVertical: 20
 				}}
 			/>
-			<Text style={[fontStyles.h_subheading, { paddingHorizontal: 16 }]}>
-				{'Scan to publish'}
-			</Text>
-			<View testID={testIDs.SignedMessage.qrView}>
-				<QrView data={signedData} />
-			</View>
 			<AccountCard
 				address={senderAddress}
 				titlePrefix={'from:'}
@@ -86,6 +80,12 @@ function SignedMessageView({ message, sender: senderAddress }: Props): React.Rea
 				message={message}
 				style={styles.bodyContent}
 			/>
+			<Text style={[fontStyles.h_subheading, { paddingHorizontal: 16 }]}>
+				{'Scan to publish'}
+			</Text>
+			<View testID={testIDs.SignedMessage.qrView}>
+				<QrView data={signedData} />
+			</View>
 		</SafeAreaScrollViewContainer>
 	);
 }

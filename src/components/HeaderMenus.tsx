@@ -41,7 +41,7 @@ function HeaderMenus(): React.ReactElement {
 					menuItems={[
 						{ text: 'Create account', value: 'AccountNew' },
 						{ text: 'Recover account', value: 'RecoverAccount' },
-						{ text: 'Manage networks', value: 'NetworkSettings' }
+						{ text: 'About', value: 'About' }
 					]}
 					menuTriggerIconName={'add'}
 					onSelect={onAccountCreate}

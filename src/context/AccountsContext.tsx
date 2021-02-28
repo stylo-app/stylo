@@ -69,12 +69,9 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 	const { allNetworks, getNetwork } = useContext(NetworksContext);
 
 	// console.log('accounts', accounts)
-	// console.log('account new', newAccount)
 
 	const loadAccountsFromDb = async (): Promise<void> => {
 		const loadedAccounts = await loadAccounts();
-		// const identities = await loadIdentities();
-		// const currentIdentity = identities.length > 0 ? identities[0] : null;
 
 		setAccounts(loadedAccounts);
 		setAccountLoaded(true);
@@ -85,7 +82,6 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 	}, []);
 
 	const updateNew = useCallback((accountUpdate: Partial<LegacyAccount>): void => {
-		// const newConstrustedAccount = { ...newAccount, ...accountUpdate }
 
 		setNewAccount((previous: LegacyAccount | undefined) => ({
 			...previous,

@@ -93,7 +93,7 @@ export default function AccountIcon({ address, network, style }: Props): ReactEl
 
 		return (
 			<Identicon
-				size={iconSize || 40}
+				size={iconSize || 50}
 				value={address}
 			/>
 		);

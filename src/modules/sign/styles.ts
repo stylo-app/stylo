@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 	qr: { marginBottom: 8 },
 	title: {
 		...fontStyles.h2,
-		paddingBottom: 20
+		paddingHorizontal: 16
 	},
 	topTitle: {
 		...fontStyles.h1,

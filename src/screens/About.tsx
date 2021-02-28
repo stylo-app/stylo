@@ -16,74 +16,38 @@
 
 import CustomScrollView from 'components/CustomScrollView';
 import React from 'react';
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 
 import { version } from '../../package.json';
 
-export default class About extends React.PureComponent {
-	render(): React.ReactElement {
-		return (
-			<CustomScrollView contentContainerStyle={{ padding: 20 }}>
-				<Text style={styles.title}>Stylo v{version}</Text>
-				<View>
-					<Text style={styles.text}>
-						The Stylo mobile application is a secure air-gapped wallet
-						developed by Parity Technologies. It allows users to use a
-						smartphone as cold storage.
-					</Text>
-					<Text style={styles.text}>
-						This application is meant to be used on a phone that will remain
-						offline at any point in time. To upgrade the app, you need to make
-						sure you backup your accounts (e.g by writing the recovery phrase on
-						paper), then factory reset the phone, then install Stylo's
-						new version either from the store (iPhone or android) or from a sd
-						card, and finally turn your phone offline for good before recoveing
-						or generating new accounts.
-					</Text>
-					<Text style={styles.text}>
-						Any data transfer from or to the App will happen using QR code
-						scanning. By doing so, the most sensitive piece of information, the
-						private keys, will never leave the phone. The Stylo mobile
-						app can be used to store Ethereum or Kusama accounts. This includes
-						ETH, ETC or Ether from various testnets (Kovan, Ropsten…) as well as
-						KSMs.
-					</Text>
-					<Text style={styles.text}>
-						This app does not send any data to Parity Technologies or any
-						partner. The app works entirely offline once installed.
-					</Text>
-					<Text style={styles.text}>
-						The code of this application is available on Github (
-						<Text
-							onPress={(): Promise<any> =>
-								Linking.openURL('https://github.com/paritytech/parity-signer')
-							}
-							style={[styles.text, { textDecorationLine: 'underline' }]}
-						>
-							{'https://github.com/paritytech/parity-signer'}
-						</Text>
-						) and licensed under GNU General Public License v3.0.
-					</Text>
-					<Text style={styles.text}>
-						Find on the Stylo wiki more information about this
-						application as well as some tutorials:
-						<Text
-							onPress={(): Promise<any> =>
-								Linking.openURL('https://wiki.parity.io/Parity-Signer-Mobile-App')
-							}
-							style={[styles.text, { textDecorationLine: 'underline' }]}
-						>
-							{' https://wiki.parity.io/Parity-Signer-Mobile-App'}
-						</Text>
-						.
-					</Text>
-				</View>
-			</CustomScrollView>
-		);
-	}
-}
+const About = () => (
+	<CustomScrollView contentContainerStyle={{ padding: 20 }}>
+		<Text style={styles.title}>Stylo v{version}</Text>
+		<View>
+			<Text style={styles.text}>
+				The code of this application is available on GitHub: https://github.com/stylo-app/stylo
+				and licensed under GNU General Public License v3.0.
+			</Text>
+			<Text style={styles.text}>
+				This application is meant to be used on a phone that will remain
+				offline at any point in time. To upgrade the app, you need to make
+				sure you backup your accounts (e.g by writing the recovery phrase on
+				paper), then factory reset the phone, then install Stylo's
+				new version either from the store or from a sd card, and finally turn
+				your phone offline for good before recoveing or generating new accounts.
+			</Text>
+			<Text style={styles.text}>
+				This app does not send any data to its developer or any
+				partner. The app works entirely offline once installed.
+			</Text>
+			<Text style={styles.text}>
+				The development of this application was supported by the Polkadot treasury.
+			</Text>
+		</View>
+	</CustomScrollView>
+);
 
 const styles = StyleSheet.create({
 	bottom: {
@@ -104,3 +68,5 @@ const styles = StyleSheet.create({
 	},
 	top: { flex: 1 }
 });
+
+export default About;

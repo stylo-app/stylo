@@ -233,8 +233,8 @@ const styles = StyleSheet.create({
 		...fontStyles.h2
 	},
 	identicon: {
-		height: 40,
-		width: 40
+		height: 50,
+		width: 50
 	},
 	row: {
 		alignItems: 'flex-end',

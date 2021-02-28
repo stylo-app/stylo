@@ -70,6 +70,7 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 					<Text style={styles.title}>Recipient</Text>
 					<AccountCard
 						address={recipientAddress}
+						networkKey={sender.networkKey}
 					/>
 				</View>
 			);
@@ -91,10 +92,9 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 
 	return (
 		<SafeAreaScrollViewContainer>
-			<Text style={styles.topTitle}>Signed extrinsic</Text>
+			<Text style={styles.topTitle}>Signed transaction</Text>
 			<AccountCard
 				address={sender.address}
-				titlePrefix={'from:'}
 			/>
 			<PayloadDetails />
 			<Separator

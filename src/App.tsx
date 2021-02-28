@@ -26,7 +26,6 @@ import { LogBox,StatusBar } from 'react-native';
 import NavigationBar from 'react-native-navbar-color';
 import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SeedRefsContext, useSeedRefStore } from 'stores/SeedRefStore';
 import colors from 'styles/colors';
 
 import { AccountsContextProvider, AlertContextProvider, NetworksContextProvider, RegistriesContextProvider, ScannerContextProvider } from './context';
@@ -47,8 +46,6 @@ export default function App(props: AppProps): React.ReactElement {
 		]);
 	}
 
-	const seedRefContext = useSeedRefStore();
-
 	return (
 		<SafeAreaProvider>
 			<NetworksContextProvider>
@@ -56,18 +53,16 @@ export default function App(props: AppProps): React.ReactElement {
 					<ScannerContextProvider>
 						<RegistriesContextProvider>
 							<AlertContextProvider>
-								<SeedRefsContext.Provider value={seedRefContext}>
-									<MenuProvider backHandler={true}>
-										<StatusBar
-											backgroundColor={colors.background.app}
-											barStyle="light-content"
-										/>
-										<CustomAlert />
-										<NavigationContainer>
-											<AppNavigator />
-										</NavigationContainer>
-									</MenuProvider>
-								</SeedRefsContext.Provider>
+								<MenuProvider backHandler={true}>
+									<StatusBar
+										backgroundColor={colors.background.app}
+										barStyle="light-content"
+									/>
+									<CustomAlert />
+									<NavigationContainer>
+										<AppNavigator />
+									</NavigationContainer>
+								</MenuProvider>
 							</AlertContextProvider>
 						</RegistriesContextProvider>
 					</ScannerContextProvider>
