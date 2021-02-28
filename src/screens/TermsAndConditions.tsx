@@ -33,9 +33,8 @@ import tac from '../../docs/terms-and-conditions.md';
 import { useTac } from '../hooks/useTac';
 
 export default function TermsAndConditions(): React.ReactElement {
-	const [isPPAgreed, setPpAgreement] = useState(false);
 	const [isTacAgreed, setTacAgreement] = useState(false);
-	const { dispatch, navigate } = useNavigation();
+	const { dispatch } = useNavigation();
 	const { ppAndTaCAccepted, setPpAndTaCAccepted } = useTac();
 
 	const onConfirm = useCallback(async () => {
@@ -92,33 +91,9 @@ export default function TermsAndConditions(): React.ReactElement {
 							{'  I agree to the terms and conditions'}
 						</Text>
 					</TouchableItem>
-					<TouchableItem
-						onPress={(): void => setPpAgreement(!isPPAgreed)}
-						style={{
-							alignItems: 'center',
-							flexDirection: 'row',
-							paddingHorizontal: 16
-						}}
-					>
-						<Icon
-							name={isPPAgreed ? 'checkbox-marked' : 'checkbox-blank-outline'}
-							style={styles.icon}
-							testID={testIDs.TacScreen.agreePrivacyButton}
-						/>
-
-						<Text style={fontStyles.t_big}>
-							<Text>{'  I agree to the '}</Text>
-							<Text
-								onPress={(): void => { navigate('PrivacyPolicy'); }}
-								style={{ textDecorationLine: 'underline' }}
-							>
-								privacy policy
-							</Text>
-						</Text>
-					</TouchableItem>
 
 					<Button
-						disabled={!isPPAgreed || !isTacAgreed}
+						disabled={!isTacAgreed}
 						onPress={onConfirm}
 						style={styles.nextButton}
 						testID={testIDs.TacScreen.nextButton}

@@ -30,7 +30,6 @@ import { Metadata } from '@polkadot/metadata';
 import { createType,
 	GenericExtrinsicPayload,
 	TypeRegistry } from '@polkadot/types';
-import Call from '@polkadot/types/generic/Call';
 import { hexToU8a, u8aConcat } from '@polkadot/util';
 import { checkAddress, decodeAddress } from '@polkadot/util-crypto';
 
@@ -102,7 +101,7 @@ describe('sanity check', () => {
 describe('type registry should get override types', () => {
 	it('get network latest override types', () => {
 		const testRegistry = new TypeRegistry();
-		const westendOverrideTypes = getOverrideTypes(testRegistry, 'westend');
+		const westendOverrideTypes = getOverrideTypes(testRegistry, 'westend', 0);
 
 		expect(westendOverrideTypes).not.toEqual({});
 	});
@@ -203,7 +202,7 @@ describe('decoders', () => {
 				SIGNER_PAYLOAD_TEST,
 				{ version: 4 });
 
-			const call = new Call(registry, payload.method);
+			const call = registry.createType('Call', payload.method);
 
 			expect(call).toBeDefined();
 			expect(call.args).toBeDefined();

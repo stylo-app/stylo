@@ -49,6 +49,20 @@ First make sure `detox-cli` is installed as global dependency with
 yarn global add detox-cli
 ```
 
+#### Clearing cache
+
+In order to clear the detox cache run:
+```
+detox clean-framework-cache && detox build-framework-cache
+```
+
+In order to clear the ios simulator run:
+```
+xcrun simctl erase all
+```
+
+
+
 #### Complete Test
 
 If dependencies are not installed please first run `yarn install:ios` or `yarn install` for android.

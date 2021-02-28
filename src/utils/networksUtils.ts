@@ -1,6 +1,6 @@
-import colors from 'styles/colors';
+// import colors from 'styles/colors';
 import { SubstrateNetworkParams } from 'types/networkTypes';
-import { NetworkParsedData } from 'types/scannerTypes';
+// import { NetworkParsedData } from 'types/scannerTypes';
 
 export const serializeNetworks = (networks: Map<string, SubstrateNetworkParams>): string => {
 	const networksEntries = Array.from(networks.entries());
@@ -24,7 +24,6 @@ export const mergeNetworks = (defaultNetworks: Record<string, SubstrateNetworkPa
 		const newNetworksList = Object.assign({}, acc);
 
 		if (!defaultNetworks.hasOwnProperty(networkKey)) {
-			// const newAcc = Object.assign({}, acc);
 			newNetworksList[networkKey] = {
 				...networkParams,
 				logo: require('res/img/logos/Substrate_Dev.png')
@@ -47,16 +46,16 @@ export const mergeNetworks = (defaultNetworks: Record<string, SubstrateNetworkPa
 	return new Map(Object.entries(mergedNetworksObject));
 };
 
-export const generateNetworkParamsFromParsedData = (networkParsedData: NetworkParsedData): SubstrateNetworkParams => {
-	const pathId = networkParsedData.data.title.toLowerCase();
+// export const generateNetworkParamsFromParsedData = (networkParsedData: NetworkParsedData): SubstrateNetworkParams => {
+// 	const pathId = networkParsedData.data.title.toLowerCase();
 
-	return {
-		...networkParsedData.data,
-		deleted: false,
-		logo: require('res/img/logos/Substrate_Dev.png'),
-		order: 0,
-		pathId: pathId.replace(/ /g, '_'),
-		protocol: 'substrate',
-		secondaryColor: colors.background.card
-	};
-};
+// 	return {
+// 		...networkParsedData.data,
+// 		deleted: false,
+// 		logo: require('res/img/logos/Substrate_Dev.png'),
+// 		order: 0,
+// 		pathId: pathId.replace(/ /g, '_'),
+// 		protocol: 'substrate',
+// 		secondaryColor: colors.background.card
+// 	};
+// };

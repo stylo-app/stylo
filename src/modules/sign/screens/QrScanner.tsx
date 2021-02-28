@@ -45,9 +45,7 @@ export default function Scanner({ navigation }: NavigationProps<'QrScanner'>): R
 		totalFramesCount: 0
 	});
 
-	function showAlertMessage(title: string,
-		message: string,
-		isAddNetworkSuccess?: boolean): void {
+	function showAlertMessage(title: string, message: string, isAddNetworkSuccess?: boolean): void {
 		const clearByTap = async (): Promise<void> => {
 			scannerStore.cleanup();
 			scannerStore.setReady();
@@ -72,7 +70,7 @@ export default function Scanner({ navigation }: NavigationProps<'QrScanner'>): R
 			setAlert(title, message, [
 				{
 					onPress: clearByTap,
-					text: 'Try again'
+					text: 'OK'
 				}
 			]);
 		}

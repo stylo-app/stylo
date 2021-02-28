@@ -17,13 +17,11 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { SUBSTRATE_NETWORK_LIST } from 'constants/networkSpecs';
 import SecureStorage from 'react-native-secure-storage';
-import { Identity, LegacyAccount } from 'types/identityTypes';
+import { LegacyAccount } from 'types/identityTypes';
 import { SubstrateNetworkParams } from 'types/networkTypes';
 import { mergeNetworks, serializeNetworks } from 'utils/networksUtils';
 
 import { encodeAddress } from '@polkadot/util-crypto';
-
-import { deserializeIdentities, serializeIdentities } from './identitiesUtils';
 
 const SUSTRATE_SS58_PREFIX = 42;
 
@@ -81,37 +79,6 @@ export const saveAccount = (account: LegacyAccount, isEthereum: boolean): Promis
 
 /*
  * ========================================
- *	Identities Store
- * ========================================
- */
-const identitiesStore = {
-	keychainService: 'parity_signer_identities',
-	sharedPreferencesName: 'parity_signer_identities'
-};
-const currentIdentityStorageLabel = 'identities_v4';
-
-export async function loadIdentities(version = 4): Promise<Identity[]> {
-	const identityStorageLabel = `identities_v${version}`;
-
-	try {
-		const identities = await SecureStorage.getItem(identityStorageLabel, identitiesStore);
-
-		if (!identities) return [];
-
-		return deserializeIdentities(identities);
-	} catch (e) {
-		return handleError(e, 'identity');
-	}
-}
-
-export const saveIdentities = (identities: Identity[]): void => {
-	SecureStorage.setItem(currentIdentityStorageLabel,
-		serializeIdentities(identities),
-		identitiesStore);
-};
-
-/*
- * ========================================
  *	Networks Store
  * ========================================
  */
@@ -161,14 +128,14 @@ export async function saveNetworks(newNetwork: SubstrateNetworkParams): Promise<
  * ========================================
  */
 
-const version = 1;
+const VERSION = 1;
 
 export async function loadTaCAndPPConfirmation(): Promise<boolean> {
-	const result = await AsyncStorage.getItem(`TaCAndPPConfirmation_v${version}`);
+	const result = await AsyncStorage.getItem(`TaCAndPPConfirmation_v${VERSION}`);
 
 	return !!result;
 }
 
 export async function saveTaCAndPPConfirmation(): Promise<void> {
-	await AsyncStorage.setItem(`TaCAndPPConfirmation_v${version}`, 'yes');
+	await AsyncStorage.setItem(`TaCAndPPConfirmation_v${VERSION}`, 'yes');
 }

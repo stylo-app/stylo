@@ -45,9 +45,7 @@ export class Transaction {
 	}
 }
 
-async function asyncTransaction(rlp: string,
-	resolve: (value?: Transaction) => void,
-	reject: any): Promise<void> {
+async function asyncTransaction(rlp: string, resolve: (value: Transaction) => void, reject: any): Promise<void> {
 	try {
 		const nonce = await rlpItem(rlp, 0);
 		const gasPrice = await rlpItem(rlp, 1);

@@ -1,50 +1,41 @@
-import { ETHEREUM_NETWORK_LIST, NetworkProtocols } from 'constants/networkSpecs';
-import { createContext, default as React, useCallback, useContext, useEffect, useReducer, useState } from 'react';
-import { Account, AccountsStoreState, Identity, isUnlockedAccount, LegacyAccount, LockedAccount, UnlockedAccount } from 'types/identityTypes';
-import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
-import { emptyAccount, generateAccountId } from 'utils/account';
-import { deleteAccount as deleteDbAccount, loadAccounts, saveAccount as saveDbAccount, saveIdentities } from 'utils/db';
-import { accountExistedError, addressGenerateError, duplicatedIdentityError, emptyIdentityError, identityUpdateError } from 'utils/errors';
-import { deepCopyIdentities, deepCopyIdentity, emptyIdentity, extractAddressFromAccountId, getAddressKeyByPath } from 'utils/identitiesUtils';
-import { brainWalletAddressWithRef, decryptData, encryptData } from 'utils/native';
-import { CreateSeedRefWithNewSeed, TryBrainWalletAddress, TrySubstrateAddress } from 'utils/seedRefHooks';
-import { constructSuriSuffix, parseSURI } from 'utils/suri';
+import { NetworkProtocols } from 'constants/networkSpecs';
+import { createContext, default as React, useCallback, useContext, useEffect, useState } from 'react';
+import { Account, isUnlockedAccount, LegacyAccount, LockedAccount, UnlockedAccount } from 'types/identityTypes';
+import { isEthereumNetwork } from 'types/networkTypes';
+import { emptyAccount } from 'utils/account';
+import { deleteAccount as deleteDbAccount, loadAccounts, saveAccount as saveDbAccount } from 'utils/db';
+import { decryptData, encryptData } from 'utils/native';
+import { parseSURI } from 'utils/suri';
 
-import { NetworksContext, NetworksContextType } from './NetworksContext';
+import { NetworksContext } from './NetworksContext';
 
 export interface AccountsContextType {
 	accounts: LegacyAccount[];
 	accountsLoaded: boolean;
 	newAccount: LegacyAccount;
-	clearIdentity: () => void;
+	// clearIdentity: () => void;
 	deleteAccount: (accountAddress: string) => Promise<void>;
-	deleteCurrentIdentity: () => Promise<void>;
-	deletePath: (path: string, networkContext: NetworksContextType) => void;
-	deriveNewPath: (newPath: string, createSubstrateAddress: TrySubstrateAddress, networkParams: SubstrateNetworkParams, name: string, password: string) => Promise<void>;
-	deriveEthereumAccount: (createBrainWalletAddress: TryBrainWalletAddress, networkKey: string) => Promise<void>;
+	// deleteCurrentIdentity: () => Promise<void>;
+	// deletePath: (path: string, networkContext: NetworksContextType) => void;
+	// deriveNewPath: (newPath: string, createSubstrateAddress: TrySubstrateAddress, networkParams: SubstrateNetworkParams, name: string, password: string) => Promise<void>;
+	// deriveEthereumAccount: (createBrainWalletAddress: TryBrainWalletAddress, networkKey: string) => Promise<void>;
 	getAccountByAddress: (address: string) => LegacyAccount | undefined;
-	getIdentityByAccountId: (accountId: string) => Identity | undefined;
+	// getIdentityByAccountId: (accountId: string) => Identity | undefined;
 	getSelectedAccount: () => LegacyAccount | undefined;
 	lockAccount: (accountKey: string) => void;
-	resetCurrentIdentity: () => void;
+	// resetCurrentIdentity: () => void;
 	saveAccount: (account: Account, pin?: string) => Promise<void>;
-	saveNewIdentity: (seedPhrase: string, pin: string, generateSeedRef: CreateSeedRefWithNewSeed) => Promise<void>;
+	// saveNewIdentity: (seedPhrase: string, pin: string, generateSeedRef: CreateSeedRefWithNewSeed) => Promise<void>;
 	selectAccount: (accountAddress: string) => void;
-	state: AccountsStoreState;
+	// state: AccountsStoreState;
 	submitNew: (pin: string) => Promise<void>;
-	selectIdentity: (identity: Identity) => void;
+	// selectIdentity: (identity: Identity) => void;
 	unlockAccount: (accountKey: string, pin: string) => Promise<boolean>;
-	updateIdentityName: (name: string) => void;
+	// updateIdentityName: (name: string) => void;
 	updateNew: (accountUpdate: Partial<LegacyAccount>) => void;
-	updateNewIdentity: (identityUpdate: Partial<Identity>) => void;
-	updatePathName: (path: string, name: string) => void;
-	updateAccountName: (updatedAccount: Partial<LockedAccount>) => void;
-};
-
-const defaultAccountState = {
-	currentIdentity: null,
-	identities: [],
-	newIdentity: emptyIdentity()
+	// updateNewIdentity: (identityUpdate: Partial<Identity>) => void;
+	// updatePathName: (path: string, name: string) => void;
+	// updateAccountName: (updatedAccount: Partial<LockedAccount>) => void;
 };
 
 interface AccountsContextProviderProps {
@@ -54,19 +45,11 @@ interface AccountsContextProviderProps {
 export const AccountsContext = createContext({} as AccountsContextType);
 
 export function AccountsContextProvider({ children }: AccountsContextProviderProps): React.ReactElement {
-	const initialState: AccountsStoreState = defaultAccountState;
 	const [selectedAccountAddress, setSelectedAccountAddress] = useState('');
 	const [accounts, setAccounts] = useState<LegacyAccount[]>([]);
 	const [newAccount, setNewAccount] = useState<LegacyAccount>(emptyAccount());
 	const [accountsLoaded, setAccountLoaded] = useState(false);
-
-	const reducer = (state: AccountsStoreState,
-		delta: Partial<AccountsStoreState>): AccountsStoreState => ({
-		...state,
-		...delta
-	});
-	const [state, setState] = useReducer(reducer, initialState)
-	const { allNetworks, getNetwork } = useContext(NetworksContext);
+	const { getNetwork } = useContext(NetworksContext);
 
 	// console.log('accounts', accounts)
 
@@ -140,79 +123,66 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 		}
 	}
 
-	function _updateIdentitiesWithCurrentIdentity(updatedCurrentIdentity: Identity): void {
-		setState({ currentIdentity: updatedCurrentIdentity });
-		const newIdentities = deepCopyIdentities(state.identities);
+	// function _updateCurrentIdentity(updatedIdentity: Identity): void {
+	// 	try {
+	// 		_updateIdentitiesWithCurrentIdentity(updatedIdentity);
+	// 	} catch (error) {
+	// 		throw new Error(identityUpdateError);
+	// 	}
+	// }
 
-		if (state.currentIdentity === null) return;
-		const identityIndex = newIdentities.findIndex((identity: Identity) =>
-			identity.encryptedSeed === state.currentIdentity!.encryptedSeed);
+	// function updateIdentityName(name: string): void {
+	// 	const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity!);
 
-		newIdentities.splice(identityIndex, 1, updatedCurrentIdentity);
-		setState({ identities: newIdentities });
-		saveIdentities(newIdentities);
-	}
+	// 	updatedCurrentIdentity.name = name;
+	// 	_updateCurrentIdentity(updatedCurrentIdentity);
+	// }
 
-	function _updateCurrentIdentity(updatedIdentity: Identity): void {
-		try {
-			_updateIdentitiesWithCurrentIdentity(updatedIdentity);
-		} catch (error) {
-			throw new Error(identityUpdateError);
-		}
-	}
+	// async function deriveEthereumAccount(createBrainWalletAddress: TryBrainWalletAddress, networkKey: string): Promise<void> {
+	// 	const networkParams = ETHEREUM_NETWORK_LIST[networkKey];
+	// 	const ethereumAddress = await brainWalletAddressWithRef(createBrainWalletAddress);
 
-	function updateIdentityName(name: string): void {
-		const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity!);
+	// 	if (ethereumAddress.address === '') throw new Error(addressGenerateError);
+	// 	const { ethereumChainId, pathId } = networkParams;
+	// 	const accountId = generateAccountId(ethereumAddress.address, networkKey, allNetworks);
 
-		updatedCurrentIdentity.name = name;
-		_updateCurrentIdentity(updatedCurrentIdentity);
-	}
+	// 	if (state.currentIdentity === null) {
+	// 		throw new Error(emptyIdentityError);
+	// 	}
 
-	async function deriveEthereumAccount(createBrainWalletAddress: TryBrainWalletAddress, networkKey: string): Promise<void> {
-		const networkParams = ETHEREUM_NETWORK_LIST[networkKey];
-		const ethereumAddress = await brainWalletAddressWithRef(createBrainWalletAddress);
+	// 	const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity);
 
-		if (ethereumAddress.address === '') throw new Error(addressGenerateError);
-		const { ethereumChainId, pathId } = networkParams;
-		const accountId = generateAccountId(ethereumAddress.address, networkKey, allNetworks);
+	// 	if (updatedCurrentIdentity.meta.has(ethereumChainId)){
+	// 		throw new Error(accountExistedError);
+	// 	}
 
-		if (state.currentIdentity === null) {
-			throw new Error(emptyIdentityError);
-		}
+	// 	updatedCurrentIdentity.meta.set(ethereumChainId, {
+	// 		address: ethereumAddress.address,
+	// 		createdAt: new Date().getTime(),
+	// 		name: '',
+	// 		networkPathId: pathId,
+	// 		updatedAt: new Date().getTime()
+	// 	});
 
-		const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity);
+	// 	updatedCurrentIdentity.addresses.set(accountId, ethereumChainId);
+	// 	_updateCurrentIdentity(updatedCurrentIdentity);
+	// }
 
-		if (updatedCurrentIdentity.meta.has(ethereumChainId)){
-			throw new Error(accountExistedError);
-		}
+	// function _updateAccount(updatedAccount: Partial<LockedAccount>): void {
+	// 	const account = accounts.find((stored) => stored.address === updatedAccount.address);
 
-		updatedCurrentIdentity.meta.set(ethereumChainId, {
-			address: ethereumAddress.address,
-			createdAt: new Date().getTime(),
-			name: '',
-			networkPathId: pathId,
-			updatedAt: new Date().getTime()
-		});
+	// 	if (!account){
+	// 		console.error('No account found to update', accounts, account)
 
-		updatedCurrentIdentity.addresses.set(accountId, ethereumChainId);
-		_updateCurrentIdentity(updatedCurrentIdentity);
-	}
+	// 		return;
+	// 	}
 
-	function _updateAccount(updatedAccount: Partial<LockedAccount>): void {
-		const account = accounts.find((stored) => stored.address === updatedAccount.address);
+	// 	setAccounts([...accounts, { ...account, ...updatedAccount }]);
+	// }
 
-		if (!account){
-			console.error('No account found to update', accounts, account)
-
-			return;
-		}
-
-		setAccounts([...accounts, { ...account, ...updatedAccount }]);
-	}
-
-	function updateAccountName(updatedAccount: Partial<LockedAccount>): void {
-		_updateAccount({ ... updatedAccount });
-	}
+	// function updateAccountName(updatedAccount: Partial<LockedAccount>): void {
+	// 	_updateAccount({ ... updatedAccount });
+	// }
 
 	const isEthereumAccount = (account: LegacyAccount): boolean => {
 		const network = getNetwork(account.networkKey)
@@ -427,170 +397,170 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 
 	const getSelectedAccount = () => getAccountByAddress(selectedAccountAddress);
 
-	function getIdentityByAccountId(accountId: string): Identity | undefined {
-		const networkProtocol = accountId.split(':')[0];
-		const searchAddress =
-			networkProtocol === NetworkProtocols.SUBSTRATE
-				? extractAddressFromAccountId(accountId)
-				: accountId;
+	// function getIdentityByAccountId(accountId: string): Identity | undefined {
+	// 	const networkProtocol = accountId.split(':')[0];
+	// 	const searchAddress =
+	// 		networkProtocol === NetworkProtocols.SUBSTRATE
+	// 			? extractAddressFromAccountId(accountId)
+	// 			: accountId;
 
-		return state.identities.find(identity =>
-			identity.addresses.has(searchAddress));
-	}
+	// 	return state.identities.find(identity =>
+	// 		identity.addresses.has(searchAddress));
+	// }
 
-	function resetCurrentIdentity(): void {
-		setState({ currentIdentity: null });
-	}
+	// function resetCurrentIdentity(): void {
+	// 	setState({ currentIdentity: null });
+	// }
 
-	async function _addPathToIdentity(newPath: string,
-		createSubstrateAddress: TrySubstrateAddress,
-		updatedIdentity: Identity,
-		name: string,
-		networkParams: SubstrateNetworkParams,
-		password: string): Promise<Identity> {
-		const { pathId, prefix } = networkParams;
-		const suriSuffix = constructSuriSuffix({
-			derivePath: newPath,
-			password
-		});
+	// async function _addPathToIdentity(newPath: string,
+	// 	createSubstrateAddress: TrySubstrateAddress,
+	// 	updatedIdentity: Identity,
+	// 	name: string,
+	// 	networkParams: SubstrateNetworkParams,
+	// 	password: string): Promise<Identity> {
+	// 	const { pathId, prefix } = networkParams;
+	// 	const suriSuffix = constructSuriSuffix({
+	// 		derivePath: newPath,
+	// 		password
+	// 	});
 
-		if (updatedIdentity.meta.has(newPath)) throw new Error(accountExistedError);
-		let address = '';
+	// 	if (updatedIdentity.meta.has(newPath)) throw new Error(accountExistedError);
+	// 	let address = '';
 
-		try {
-			address = await createSubstrateAddress(suriSuffix, prefix);
-		} catch (e) {
-			throw new Error(addressGenerateError);
-		}
+	// 	try {
+	// 		address = await createSubstrateAddress(suriSuffix, prefix);
+	// 	} catch (e) {
+	// 		throw new Error(addressGenerateError);
+	// 	}
 
-		if (address === '') throw new Error(addressGenerateError);
-		const pathMeta = {
-			address,
-			createdAt: new Date().getTime(),
-			hasPassword: password !== '',
-			name,
-			networkPathId: pathId,
-			updatedAt: new Date().getTime()
-		};
+	// 	if (address === '') throw new Error(addressGenerateError);
+	// 	const pathMeta = {
+	// 		address,
+	// 		createdAt: new Date().getTime(),
+	// 		hasPassword: password !== '',
+	// 		name,
+	// 		networkPathId: pathId,
+	// 		updatedAt: new Date().getTime()
+	// 	};
 
-		updatedIdentity.meta.set(newPath, pathMeta);
-		updatedIdentity.addresses.set(address, newPath);
+	// 	updatedIdentity.meta.set(newPath, pathMeta);
+	// 	updatedIdentity.addresses.set(address, newPath);
 
-		return updatedIdentity;
-	}
+	// 	return updatedIdentity;
+	// }
 
-	async function saveNewIdentity(seedPhrase: string,
-		pin: string,
-		generateSeedRef: CreateSeedRefWithNewSeed): Promise<void> {
-		const updatedIdentity = deepCopyIdentity(state.newIdentity);
-		const suri = seedPhrase;
+	// async function saveNewIdentity(seedPhrase: string,
+	// 	pin: string,
+	// 	generateSeedRef: CreateSeedRefWithNewSeed): Promise<void> {
+	// 	const updatedIdentity = deepCopyIdentity(state.newIdentity);
+	// 	const suri = seedPhrase;
 
-		updatedIdentity.encryptedSeed = await encryptData(suri, pin);
-		//prevent duplication
-		if (
-			state.identities.find(i => i.encryptedSeed === updatedIdentity.encryptedSeed)
-		)
-			throw new Error(duplicatedIdentityError);
-		await generateSeedRef(updatedIdentity.encryptedSeed, pin);
-		const newIdentities = state.identities.concat(updatedIdentity);
+	// 	updatedIdentity.encryptedSeed = await encryptData(suri, pin);
+	// 	//prevent duplication
+	// 	if (
+	// 		state.identities.find(i => i.encryptedSeed === updatedIdentity.encryptedSeed)
+	// 	)
+	// 		throw new Error(duplicatedIdentityError);
+	// 	await generateSeedRef(updatedIdentity.encryptedSeed, pin);
+	// 	const newIdentities = state.identities.concat(updatedIdentity);
 
-		setState({
-			currentIdentity: updatedIdentity,
-			identities: newIdentities,
-			newIdentity: emptyIdentity()
-		});
-		await saveIdentities(newIdentities);
-	}
+	// 	setState({
+	// 		currentIdentity: updatedIdentity,
+	// 		identities: newIdentities,
+	// 		newIdentity: emptyIdentity()
+	// 	});
+	// 	await saveIdentities(newIdentities);
+	// }
 
-	function selectIdentity(identity: Identity): void {
-		setState({ currentIdentity: identity });
-	}
+	// function selectIdentity(identity: Identity): void {
+	// 	setState({ currentIdentity: identity });
+	// }
 
-	function clearIdentity(): void {
-		setState({ newIdentity: emptyIdentity() });
-	}
+	// function clearIdentity(): void {
+	// 	setState({ newIdentity: emptyIdentity() });
+	// }
 
-	function updateNewIdentity(identityUpdate: Partial<Identity>): void {
-		setState({ newIdentity: { ...state.newIdentity, ...identityUpdate } });
-	}
+	// function updateNewIdentity(identityUpdate: Partial<Identity>): void {
+	// 	setState({ newIdentity: { ...state.newIdentity, ...identityUpdate } });
+	// }
 
-	function updatePathName(path: string, name: string): void {
-		const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity!);
-		const updatedPathMeta = Object.assign({},
-			updatedCurrentIdentity.meta.get(path),
-			{ name });
+	// function updatePathName(path: string, name: string): void {
+	// 	const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity!);
+	// 	const updatedPathMeta = Object.assign({},
+	// 		updatedCurrentIdentity.meta.get(path),
+	// 		{ name });
 
-		updatedCurrentIdentity.meta.set(path, updatedPathMeta);
-		_updateCurrentIdentity(updatedCurrentIdentity);
-	}
+	// 	updatedCurrentIdentity.meta.set(path, updatedPathMeta);
+	// 	_updateCurrentIdentity(updatedCurrentIdentity);
+	// }
 
-	async function deriveNewPath(newPath: string,
-		createSubstrateAddress: TrySubstrateAddress,
-		networkParams: SubstrateNetworkParams,
-		name: string,
-		password: string): Promise<void> {
-		const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity!);
+	// async function deriveNewPath(newPath: string,
+	// 	createSubstrateAddress: TrySubstrateAddress,
+	// 	networkParams: SubstrateNetworkParams,
+	// 	name: string,
+	// 	password: string): Promise<void> {
+	// 	const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity!);
 
-		await _addPathToIdentity(newPath,
-			createSubstrateAddress,
-			updatedCurrentIdentity,
-			name,
-			networkParams,
-			password);
-		_updateCurrentIdentity(updatedCurrentIdentity);
-	}
+	// 	await _addPathToIdentity(newPath,
+	// 		createSubstrateAddress,
+	// 		updatedCurrentIdentity,
+	// 		name,
+	// 		networkParams,
+	// 		password);
+	// 	_updateCurrentIdentity(updatedCurrentIdentity);
+	// }
 
-	function deletePath(path: string, networkContext: NetworksContextType): void {
-		if (state.currentIdentity === null) throw new Error(emptyIdentityError);
-		const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity);
-		const pathMeta = updatedCurrentIdentity.meta.get(path)!;
+	// function deletePath(path: string, networkContext: NetworksContextType): void {
+	// 	if (state.currentIdentity === null) throw new Error(emptyIdentityError);
+	// 	const updatedCurrentIdentity = deepCopyIdentity(state.currentIdentity);
+	// 	const pathMeta = updatedCurrentIdentity.meta.get(path)!;
 
-		updatedCurrentIdentity.meta.delete(path);
-		updatedCurrentIdentity.addresses.delete(getAddressKeyByPath(path, pathMeta, networkContext));
-		_updateCurrentIdentity(updatedCurrentIdentity);
-	}
+	// 	updatedCurrentIdentity.meta.delete(path);
+	// 	updatedCurrentIdentity.addresses.delete(getAddressKeyByPath(path, pathMeta, networkContext));
+	// 	_updateCurrentIdentity(updatedCurrentIdentity);
+	// }
 
-	async function deleteCurrentIdentity(): Promise<void> {
-		const newIdentities = deepCopyIdentities(state.identities);
-		const identityIndex = newIdentities.findIndex((identity: Identity) =>
-			identity.encryptedSeed === state.currentIdentity!.encryptedSeed);
+	// async function deleteCurrentIdentity(): Promise<void> {
+	// 	const newIdentities = deepCopyIdentities(state.identities);
+	// 	const identityIndex = newIdentities.findIndex((identity: Identity) =>
+	// 		identity.encryptedSeed === state.currentIdentity!.encryptedSeed);
 
-		newIdentities.splice(identityIndex, 1);
-		setState({
-			currentIdentity: newIdentities.length >= 1 ? newIdentities[0] : null,
-			identities: newIdentities
-		});
-		await saveIdentities(newIdentities);
-	}
+	// 	newIdentities.splice(identityIndex, 1);
+	// 	setState({
+	// 		currentIdentity: newIdentities.length >= 1 ? newIdentities[0] : null,
+	// 		identities: newIdentities
+	// 	});
+	// 	await saveIdentities(newIdentities);
+	// }
 
 	return (
 		<AccountsContext.Provider value={{
 			accounts,
 			accountsLoaded,
-			clearIdentity,
+			// clearIdentity,
 			deleteAccount,
-			deleteCurrentIdentity,
-			deletePath,
-			deriveEthereumAccount,
-			deriveNewPath,
+			// deleteCurrentIdentity,
+			// deletePath,
+			// deriveEthereumAccount,
+			// deriveNewPath,
 			getAccountByAddress,
-			getIdentityByAccountId,
+			// getIdentityByAccountId,
 			getSelectedAccount,
 			lockAccount,
 			newAccount,
-			resetCurrentIdentity,
+			// resetCurrentIdentity,
 			saveAccount,
-			saveNewIdentity,
+			// saveNewIdentity,
 			selectAccount,
-			selectIdentity,
-			state,
+			// selectIdentity,
+			// state,
 			submitNew,
 			unlockAccount,
-			updateAccountName,
-			updateIdentityName,
-			updateNew,
-			updateNewIdentity,
-			updatePathName
+			// updateAccountName,
+			// updateIdentityName,
+			updateNew
+			// updateNewIdentity,
+			// updatePathName
 		}}>
 			{children}
 		</AccountsContext.Provider>

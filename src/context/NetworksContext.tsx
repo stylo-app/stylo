@@ -17,16 +17,15 @@
 import { dummySubstrateNetworkParams, ETHEREUM_NETWORK_LIST, UnknownNetworkKeys, unknownNetworkParams, unknownNetworkPathId } from 'constants/networkSpecs';
 import { createContext, default as React, useEffect, useMemo, useState } from 'react';
 import { NetworkParams,SubstrateNetworkParams } from 'types/networkTypes';
-import { NetworkParsedData } from 'types/scannerTypes';
-import { loadNetworks, saveNetworks } from 'utils/db';
-import { deepCopyNetworks, generateNetworkParamsFromParsedData } from 'utils/networksUtils';
+// import { NetworkParsedData } from 'types/scannerTypes';
+import { loadNetworks } from 'utils/db';
 
 // https://github.com/polkadot-js/ui/blob/f2f36e2db07f5faec14ee43cf4295f5e8a6f3cfa/packages/reactnative-identicon/src/icons/Polkadot.tsx#L37.
 
 // we will need the generate function to be standardized to take an ss58 check address and isSixPoint boolean flag and returns a Circle https://github.com/polkadot-js/ui/blob/ff351a0f3160552f38e393b87fdf6e85051270de/packages/ui-shared/src/polkadotIcon.ts#L12.
 
 export interface NetworksContextType {
-	addNetwork(networkParsedData: NetworkParsedData): void;
+	// addNetwork(networkParsedData: NetworkParsedData): void;
 	networks: Map<string, SubstrateNetworkParams>;
 	allNetworks: Map<string, NetworkParams>;
 	getSubstrateNetwork: (networkKey: string) => SubstrateNetworkParams;
@@ -83,18 +82,18 @@ export function NetworksContextProvider({ children }: NetworksContextProviderPro
 		return allNetworks.get(networkKey) || dummySubstrateNetworkParams;
 	}
 
-	function addNetwork(networkParsedData: NetworkParsedData): void {
-		const newNetworkParams = generateNetworkParamsFromParsedData(networkParsedData);
-		const networkKey = newNetworkParams.genesisHash;
-		const newNetworksList = deepCopyNetworks(substrateNetworks);
+	// function addNetwork(networkParsedData: NetworkParsedData): void {
+	// 	const newNetworkParams = generateNetworkParamsFromParsedData(networkParsedData);
+	// 	const networkKey = newNetworkParams.genesisHash;
+	// 	const newNetworksList = deepCopyNetworks(substrateNetworks);
 
-		newNetworksList.set(networkKey, newNetworkParams);
-		setSubstrateNetworks(newNetworksList);
-		saveNetworks(newNetworkParams);
-	}
+	// 	newNetworksList.set(networkKey, newNetworkParams);
+	// 	setSubstrateNetworks(newNetworksList);
+	// 	saveNetworks(newNetworkParams);
+	// }
 
 	return (
-		<NetworksContext.Provider value={{ addNetwork, allNetworks, getNetwork, getSubstrateNetwork: getSubstrateNetworkParams, networks: substrateNetworks, pathIds }}>
+		<NetworksContext.Provider value={{ allNetworks, getNetwork, getSubstrateNetwork: getSubstrateNetworkParams, networks: substrateNetworks, pathIds }}>
 			{children}
 		</NetworksContext.Provider>
 	);

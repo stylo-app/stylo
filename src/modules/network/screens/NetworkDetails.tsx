@@ -14,24 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { NetworkCard } from 'components/NetworkCard';
+// import { NetworkCard } from 'components/NetworkCard';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
-import NetworkInfoCard from 'modules/network/components/NetworkInfoCard';
-import React, { useContext } from 'react';
+// import NetworkInfoCard from 'modules/network/components/NetworkInfoCard';
+import React from 'react';
 import { NavigationProps } from 'types/props';
-import { getSubstrateNetworkKeyByPathId } from 'utils/identitiesUtils';
 
-import { NetworksContext } from '../../../context';
+// import { NetworksContext } from '../../../context';
 
 export default function NetworkDetails({ route }: NavigationProps<'NetworkDetails'>): React.ReactElement {
-	const networkPathId = route.params.pathId;
-	const { getSubstrateNetwork, networks } = useContext(NetworksContext);
-	const networkKey = getSubstrateNetworkKeyByPathId(networkPathId, networks);
-	const networkParams = getSubstrateNetwork(networkKey);
+	// const networkPathId = route.params.pathId;
+	// const { getSubstrateNetwork, networks } = useContext(NetworksContext);
+	// const networkKey = getSubstrateNetworkKeyByPathId(networkPathId, networks);
+	// const networkParams = getSubstrateNetwork(networkKey);
 
 	return (
 		<SafeAreaScrollViewContainer>
-			<NetworkCard
+			{/* <NetworkCard
 				networkKey={networkParams.genesisHash}
 				title={networkParams.title}
 			/>
@@ -53,7 +52,7 @@ export default function NetworkDetails({ route }: NavigationProps<'NetworkDetail
 			<NetworkInfoCard
 				label="Address prefix"
 				text={networkParams.prefix.toString()}
-			/>
+			/> */}
 		</SafeAreaScrollViewContainer>
 	);
 }

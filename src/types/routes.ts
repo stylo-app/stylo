@@ -1,5 +1,3 @@
-import { Identity } from 'types/identityTypes';
-
 export type RootStackParamList = {
 	About: undefined;
 	AccountDetails: undefined;
@@ -23,28 +21,8 @@ export type RootStackParamList = {
 	LegacyNetworkChooser: undefined;
 	NetworkDetails: { pathId: string };
 	NetworkSettings: undefined;
-	PathDerivation: { parentPath: string };
-	PathDetails: { path: string };
-	PathManagement: { path: string };
-	PathSecret: { path: string; password?: string };
 	PathsList: { networkKey: string };
 	PinNew: { resolve: (pin: string) => void };
-	PinUnlock:
-		| {
-				identity?: Identity;
-				resolve: (seedPhrase: string) => void;
-				shouldReturnSeed: true;
-		  }
-		| {
-				identity?: Identity;
-				resolve: () => void;
-				shouldReturnSeed: false;
-		  };
-	PinUnlockWithPassword: {
-		identity?: Identity;
-		isSeedRefValid: boolean;
-		resolve: (password: string) => void;
-	};
 	PrivacyPolicy: undefined;
 	QrScanner:
 		| undefined

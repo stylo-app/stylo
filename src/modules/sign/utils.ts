@@ -33,7 +33,7 @@ import { AccountsContext, NetworksContext, ScannerContext } from '../../context'
 // }
 
 export function useProcessBarCode(showAlertMessage: (title: string, message: string, isSuccess?: boolean) => void): (txRequestData: TxRequestData) => Promise<void> {
-	const { addNetwork, networks } = useContext(NetworksContext);
+	const { networks } = useContext(NetworksContext);
 	const { getAccountByAddress } = useContext(AccountsContext);
 	const scannerStore = useContext(ScannerContext);
 	// const [seedRefs] = useContext<SeedRefsState>(SeedRefsContext);
@@ -162,20 +162,23 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 	// 	// }
 	// }
 
-	function addNewNetwork(networkParsedData: NetworkParsedData): void {
-		addNetwork(networkParsedData);
+	// function addNewNetwork(networkParsedData: NetworkParsedData): void {
+	// 	addNetwork(networkParsedData);
 
-		return showAlertMessage(strings.SUCCESS_TITLE,
-			strings.SUCCESS_ADD_NETWORK + networkParsedData.data.title,
-			true);
-	}
+	// 	return showAlertMessage(strings.SUCCESS_TITLE,
+	// 		strings.SUCCESS_ADD_NETWORK + networkParsedData.data.title,
+	// 		true);
+	// }
 
 	async function processBarCode(txRequestData: TxRequestData): Promise<void> {
 		try {
 			const parsedData = await parseQrData(txRequestData);
 
 			if (isNetworkParsedData(parsedData)) {
-				return addNewNetwork(parsedData);
+				// return addNewNetwork(parsedData);
+				return showAlertMessage('Not supported',
+					'Adding a network is not supported in Stylo as it is considered insecure',
+					false);
 			}
 
 			const unsignedData = await checkMultiFramesData(parsedData);

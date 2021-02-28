@@ -26,8 +26,6 @@ import QrScanner from 'modules/sign/screens/QrScanner';
 import SignedMessage from 'modules/sign/screens/SignedMessage';
 import SignedTx from 'modules/sign/screens/SignedTx';
 import PinNew from 'modules/unlock/screens/PinNew';
-import PinUnlock from 'modules/unlock/screens/PinUnlock';
-import PinUnlockWithPassword from 'modules/unlock/screens/PinUnlockWithPassword';
 import * as React from 'react';
 import { View } from 'react-native';
 import About from 'screens/About';
@@ -36,16 +34,9 @@ import AccountEdit from 'screens/AccountEdit';
 import AccountNew from 'screens/AccountNew';
 import AccountPin from 'screens/AccountPin';
 import { AccountUnlock, AccountUnlockAndSign } from 'screens/AccountUnlock';
-import IdentityBackup from 'screens/IdentityBackup';
 import LegacyAccountList from 'screens/LegacyAccountList';
 import LegacyMnemonic from 'screens/LegacyMnemonic';
 import LegacyNetworkChooser from 'screens/LegacyNetworkChooser';
-import PathDerivation from 'screens/PathDerivation';
-import PathDetails from 'screens/PathDetails';
-import PathManagement from 'screens/PathManagement';
-import PathSecret from 'screens/PathSecret';
-import PathsList from 'screens/PathsList';
-import PrivacyPolicy from 'screens/PrivacyPolicy';
 import RecoverAccount from 'screens/RecoverAccount';
 import Security from 'screens/Security';
 import TermsAndConditions from 'screens/TermsAndConditions';
@@ -60,8 +51,17 @@ const HeaderLeft = (): React.ReactElement => {
 	const isFirstRouteInParent = useNavigationState(state => state.routes[0].key === route.key);
 
 	return isFirstRouteInParent
-		? <HeaderLeftHome/>
+		? <></>
 		: <HeaderLeftWithBack/>;
+};
+
+const HeaderTitle = (): React.ReactElement => {
+	const route = useRoute();
+	const isFirstRouteInParent = useNavigationState(state => state.routes[0].key === route.key);
+
+	return isFirstRouteInParent
+		? <HeaderLeftHome/>
+		: <></>;
 };
 
 const globalStackNavigationOptions = {
@@ -88,7 +88,7 @@ const globalStackNavigationOptions = {
 		shadowColor: 'transparent'
 	},
 	headerTintColor: colors.text.main,
-	headerTitle: (): React.ReactNode => null
+	headerTitle: (): React.ReactElement => <HeaderTitle/>
 };
 
 const HeaderLeftWithBack = (): React.ReactElement => {
@@ -156,14 +156,6 @@ export const AppNavigator = (): React.ReactElement => (
 			name="LegacyNetworkChooser"
 		/>
 		<ScreenStack.Screen
-			component={IdentityBackup}
-			name="IdentityBackup"
-		/>
-		{/* <ScreenStack.Screen
-			component={IdentityManagement}
-			name="IdentityManagement"
-		/> */}
-		<ScreenStack.Screen
 			component={RecoverAccount}
 			name="RecoverAccount"
 		/>
@@ -176,36 +168,8 @@ export const AppNavigator = (): React.ReactElement => (
 			name="NetworkSettings"
 		/>
 		<ScreenStack.Screen
-			component={PathDerivation}
-			name="PathDerivation"
-		/>
-		<ScreenStack.Screen
-			component={PathDetails}
-			name="PathDetails"
-		/>
-		<ScreenStack.Screen
-			component={PathsList}
-			name="PathsList"
-		/>
-		<ScreenStack.Screen
-			component={PathSecret}
-			name="PathSecret"
-		/>
-		<ScreenStack.Screen
-			component={PathManagement}
-			name="PathManagement"
-		/>
-		<ScreenStack.Screen
 			component={PinNew}
 			name="PinNew"
-		/>
-		<ScreenStack.Screen
-			component={PinUnlock}
-			name="PinUnlock"
-		/>
-		<ScreenStack.Screen
-			component={PinUnlockWithPassword}
-			name="PinUnlockWithPassword"
 		/>
 		<ScreenStack.Screen
 			component={QrScanner}
@@ -226,10 +190,6 @@ export const AppNavigator = (): React.ReactElement => (
 		<ScreenStack.Screen
 			component={TermsAndConditions}
 			name="TermsAndConditions"
-		/>
-		<ScreenStack.Screen
-			component={PrivacyPolicy}
-			name="PrivacyPolicy"
 		/>
 	</ScreenStack.Navigator>
 );

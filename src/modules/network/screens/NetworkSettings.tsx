@@ -30,13 +30,9 @@ import { NetworksContext } from '../../../context';
 
 export default function NetworkSettings({ navigation }: NavigationProps<'NetworkSettings'>): React.ReactElement {
 	const { networks } = useContext(NetworksContext);
-	const networkParams = filterNetworks(networks) as Array<
-		[string, SubstrateNetworkParams]
-	>;
+	const networkParams = filterNetworks(networks) as Array<[string, SubstrateNetworkParams]>;
 
-	const renderNetwork = ({ item }: {
-		item: [string, SubstrateNetworkParams];
-	}): ReactElement => {
+	const renderNetwork = ({ item }: { item: [string, SubstrateNetworkParams]; }): ReactElement => {
 		const networkSpec = item[1];
 
 		return (

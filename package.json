@@ -1,6 +1,6 @@
 {
   "name": "stylo-app",
-  "version": "0.1.0-beta",
+  "version": "0.2.0-beta",
   "private": true,
   "license": "GPL-3.0",
   "engines": {
@@ -26,7 +26,7 @@
     "clean-rust": "(cd rust/signer && cargo clean)",
     "commit": "commit-wizard",
     "ios": "yarn run build-rust:ios && npx react-native run-ios",
-    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
+    "lint": "yarn tsc && npx eslint . --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
     "lint:fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore",
     "start": "NODE_OPTIONS=--max_old_space_size=8192 npx react-native start",
     "unit": "jest --config ./test/unit/jest.config.js",
