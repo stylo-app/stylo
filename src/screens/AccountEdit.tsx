@@ -17,7 +17,7 @@
 import { useNavigation } from '@react-navigation/native';
 import AccountCard from 'components/AccountCard';
 import Button from 'components/Button';
-import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
+import KeyboardScrollView from 'components/KeyboardScrollView';
 import TextInput from 'components/TextInput';
 import t from 'modules/unlock/strings';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
@@ -25,7 +25,6 @@ import { StyleSheet } from 'react-native';
 
 import { AccountsContext } from '../context';
 
-// TODO FIXME test this
 export default function AccountEdit(): React.ReactElement {
 	const { getSelectedAccount, saveAccount } = useContext(AccountsContext);
 	const selectedAccount = getSelectedAccount();
@@ -54,11 +53,11 @@ export default function AccountEdit(): React.ReactElement {
 	}, [newName, navigation, saveAccount, selectedAccount])
 
 	if (!selectedAccount) {
-		return <SafeAreaScrollViewContainer/>
+		return <KeyboardScrollView/>
 	}
 
 	return (
-		<SafeAreaScrollViewContainer style={styles.body}>
+		<KeyboardScrollView style={styles.body}>
 			<AccountCard
 				address={selectedAccount.address}
 				networkKey={selectedAccount.networkKey}
@@ -75,7 +74,7 @@ export default function AccountEdit(): React.ReactElement {
 				onPress={onSubmit}
 				title={t.doneButton.nameChange}
 			/>
-		</SafeAreaScrollViewContainer>
+		</KeyboardScrollView>
 	);
 }
 

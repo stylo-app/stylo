@@ -23,13 +23,10 @@ import { getSubtitle, onPinInputChange } from 'modules/unlock/utils';
 import React from 'react';
 import { NavigationTargetIdentityProps } from 'types/props';
 import { debounce } from 'utils/debounce';
-import { withTargetIdentity } from 'utils/HOC';
 import { unlockIdentitySeedWithReturn } from 'utils/identitiesUtils';
 
 function PinUnlock({ route, targetIdentity }: NavigationTargetIdentityProps<'PinUnlock'>): React.ReactElement {
 	const [state, updateState, resetState] = usePinState();
-
-	console.log('PinUnlock');
 
 	async function submit(pin: string): Promise<void> {
 		if (pin.length >= 6 && targetIdentity) {
@@ -82,4 +79,4 @@ function PinUnlock({ route, targetIdentity }: NavigationTargetIdentityProps<'Pin
 	);
 }
 
-export default withTargetIdentity(PinUnlock);
+export default PinUnlock;

@@ -45,8 +45,8 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 	const selectedNetwork = getNetwork(networkKey);
 	const isSubstrate = selectedNetwork?.protocol === NetworkProtocols.SUBSTRATE;
 
-	console.log('render');
 	useEffect((): void => {
+		// make sure all fields are reset on mount
 		updateNew(emptyAccount('', ''));
 	// we get an infinite loop if we add anything here.
 	// eslint-disable-next-line react-hooks/exhaustive-deps
