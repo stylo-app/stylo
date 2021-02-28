@@ -18,6 +18,7 @@ export type SubstrateNetworkDefaultConstant = {
 	protocol?: NetworkProtocol;
 	prefix: number;
 	secondaryColor?: string;
+	specVersion?: number;
 	title: string;
 	unit: string;
 };
@@ -47,6 +48,7 @@ export type SubstrateNetworkParams = {
 	protocol: NetworkProtocol;
 	prefix: number;
 	secondaryColor: string;
+	specVersion: number;
 	title: string;
 	unit: string;
 };

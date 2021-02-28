@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import AccountCard from 'components/AccountCard';
+import { Loader } from 'components/Loader';
 import QrView from 'components/QrView';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import Separator from 'components/Separator';
@@ -74,9 +75,9 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 			);
 		}
 
-		if (isProcessing || payload === null) {
+		if (isProcessing || payload === null || !signedData) {
 
-			return null;
+			return (<Loader label='Loading...'/>)
 		}
 
 		return (
@@ -106,8 +107,10 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 			<Text style={[fontStyles.h_subheading, { paddingHorizontal: 16 }]}>
 				{'Scan to publish'}
 			</Text>
-			<View style={styles.qr}
-				testID={testIDs.SignedTx.qrView}>
+			<View
+				style={styles.qr}
+				testID={testIDs.SignedTx.qrView}
+			>
 				<QrView data={signedData} />
 			</View>
 		</SafeAreaScrollViewContainer>

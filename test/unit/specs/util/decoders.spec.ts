@@ -16,9 +16,7 @@
 
 import { describe, expect, it } from '@jest/globals';
 import { kusamaMetadata } from 'constants/networkMetadata';
-import { SUBSTRATE_NETWORK_LIST,
-	SubstrateNetworkKeys } from 'constants/networkSpecs';
-import { getOverrideTypes } from 'stores/RegistriesContext';
+import { SUBSTRATE_NETWORK_LIST, SubstrateNetworkKeys } from 'constants/networkSpecs';
 import { SubstrateCompletedParsedData } from 'types/scannerTypes';
 import { asciiToHex,
 	constructDataFromBytes,
@@ -28,13 +26,15 @@ import { asciiToHex,
 	rawDataToU8A } from 'utils/decoders';
 import { isAscii } from 'utils/strings';
 
+import { Metadata } from '@polkadot/metadata';
 import { createType,
 	GenericExtrinsicPayload,
-	Metadata,
 	TypeRegistry } from '@polkadot/types';
 import Call from '@polkadot/types/generic/Call';
 import { hexToU8a, u8aConcat } from '@polkadot/util';
 import { checkAddress, decodeAddress } from '@polkadot/util-crypto';
+
+import { getOverrideTypes } from '../../../../src/context/RegistriesContext';
 
 const SUBSTRATE_ID = new Uint8Array([0x53]);
 const CRYPTO_SR25519 = new Uint8Array([0x01]);

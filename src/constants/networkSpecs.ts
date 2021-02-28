@@ -72,6 +72,7 @@ export const dummySubstrateNetworkParams: SubstrateNetworkParams = {
 	genesisHash: UnknownNetworkKeys.UNKNOWN,
 	logo: require('res/img/logos/Substrate_Dev.png'),
 	protocol: NetworkProtocols.SUBSTRATE,
+	specVersion: 0,
 	unit: 'UNIT'
 };
 
@@ -129,6 +130,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 2,
 		pathId: 'kusama',
 		prefix: 2,
+		specVersion: 28,
 		title: 'Kusama',
 		unit: 'KSM'
 	},
@@ -150,6 +152,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 1,
 		pathId: 'polkadot',
 		prefix: 0,
+		specVersion: 28,
 		title: 'Polkadot',
 		unit: 'DOT'
 	},
@@ -237,7 +240,8 @@ const substrateDefaultValues = {
 	deleted: false,
 	logo: require('res/img/logos/Substrate_Dev.png'),
 	protocol: NetworkProtocols.SUBSTRATE,
-	secondaryColor: colors.background.card
+	secondaryColor: colors.background.card,
+	specVersion: 0
 };
 
 function setEthereumNetworkDefault(): Record<string, EthereumNetwork> {

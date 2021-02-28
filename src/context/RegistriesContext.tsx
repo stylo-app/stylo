@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { deepCopyMap } from 'stores/utils';
 import { SubstrateNetworkParams } from 'types/networkTypes';
 import { getMetadata } from 'utils/identitiesUtils';
@@ -22,6 +22,15 @@ import { getMetadata } from 'utils/identitiesUtils';
 import { Metadata } from '@polkadot/metadata';
 import { TypeRegistry } from '@polkadot/types';
 import { getSpecTypes } from '@polkadot/types-known';
+
+import { NetworksContext } from './NetworksContext';
+
+export interface RegistriesContextType {
+	registries: Map<string, TypeRegistry>;
+	getTypeRegistry: (networkKey: string) => TypeRegistry | null;
+};
+
+export const RegistriesContext = React.createContext({} as RegistriesContextType);
 
 //Map PathId to Polkadot.js/api spec names and chain names
 type NetworkTypes = {
@@ -41,8 +50,7 @@ const networkTypesMap: NetworkTypesMap = {
 	rococo: { chains: {} }
 };
 
-export const getOverrideTypes = (registry: TypeRegistry,
-	pathId: string): any => {
+export const getOverrideTypes = (registry: TypeRegistry, pathId: string, specVersion: number): any => {
 	let specName = '',
 		chainName = '';
 
@@ -61,19 +69,18 @@ export const getOverrideTypes = (registry: TypeRegistry,
 		return true;
 	});
 
-	return getSpecTypes(registry, chainName, specName, Number.MAX_SAFE_INTEGER);
+	return getSpecTypes(registry, chainName, specName, specVersion);
 };
 
-export interface RegistriesStoreState {
-	registries: Map<string, TypeRegistry>;
-	getTypeRegistry: (networks: Map<string, SubstrateNetworkParams>, networkKey: string) => TypeRegistry | null;
-};
+interface RegistriesContextProviderProps {
+	children?: React.ReactElement;
+}
 
-export function useRegistriesStore(): RegistriesStoreState {
+export function RegistriesContextProvider({ children }: RegistriesContextProviderProps): React.ReactElement {
 	const [registries, setRegistries] = useState(new Map());
+	const { getNetwork } = useContext(NetworksContext);
 
-	function getTypeRegistry(networks: Map<string, SubstrateNetworkParams>,
-		networkKey: string): TypeRegistry | null {
+	const getTypeRegistry = useCallback((networkKey: string): TypeRegistry | null => {
 		try {
 			const networkMetadataRaw = getMetadata(networkKey);
 
@@ -81,14 +88,20 @@ export function useRegistriesStore(): RegistriesStoreState {
 
 			if (registries.has(networkKey)) return registries.get(networkKey)!;
 
-			const networkParams = networks.get(networkKey)!;
+			const network = getNetwork(networkKey) as SubstrateNetworkParams;
 			const newRegistry = new TypeRegistry();
-			const overrideTypes = getOverrideTypes(newRegistry, networkParams.pathId);
+			const overrideTypes = network && getOverrideTypes(newRegistry, network.pathId, network.specVersion);
 
 			newRegistry.register(overrideTypes);
 			const metadata = new Metadata(newRegistry, networkMetadataRaw);
 
 			newRegistry.setMetadata(metadata);
+			// this takes care of decoding the addresses etc with the right prefix
+			newRegistry.setChainProperties(newRegistry.createType('ChainProperties', {
+				ss58Format: network.prefix,
+				tokenDecimals: network.decimals,
+				tokenSymbol: network.unit
+			  }));
 			const newRegistries = deepCopyMap(registries);
 
 			newRegistries.set(networkKey, newRegistry);
@@ -100,9 +113,10 @@ export function useRegistriesStore(): RegistriesStoreState {
 
 			return null;
 		}
-	}
+	}, [getNetwork, registries]);
 
-	return { getTypeRegistry, registries };
+	return (
+		<RegistriesContext.Provider value={{ getTypeRegistry, registries }}>
+			{children}
+		</RegistriesContext.Provider>)
 }
-
-export const RegistriesContext = React.createContext({} as RegistriesStoreState);

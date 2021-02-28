@@ -17,14 +17,13 @@
 import { RouteProp } from '@react-navigation/native';
 import React, { useContext } from 'react';
 import { View } from 'react-native';
-import { RegistriesContext, RegistriesStoreState } from 'stores/RegistriesContext';
 import { AccountsStoreStateWithIdentity, Identity } from 'types/identityTypes';
 import { RootStackParamList } from 'types/routes';
 
-import { AccountsContext } from '../context';
+import { AccountsContext, RegistriesContext, RegistriesContextType } from '../context';
 
 interface RegistriesInjectedProps {
-	registriesStore: RegistriesStoreState;
+	registriesStore: RegistriesContextType;
 }
 
 export function withRegistriesStore<T extends RegistriesInjectedProps>(WrappedComponent: React.ComponentType<any>): React.ComponentType<Omit<T, keyof RegistriesInjectedProps>> {

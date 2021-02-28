@@ -1,10 +1,10 @@
 import { ExtrinsicPayloadLatestVersion } from 'constants/chainData';
 import { useContext, useEffect, useState } from 'react';
-import { RegistriesContext } from 'stores/RegistriesContext';
 
 import { GenericExtrinsicPayload } from '@polkadot/types';
 
 import { NetworksContext } from '../../context';
+import { RegistriesContext } from '../../context/RegistriesContext';
 
 export function usePayloadDetails(rawPayload: Uint8Array | string | null, networkKey?: string): [boolean, GenericExtrinsicPayload | null] {
 	const [payload, setPayload] = useState<GenericExtrinsicPayload | null>(null);
@@ -15,7 +15,7 @@ export function usePayloadDetails(rawPayload: Uint8Array | string | null, networ
 	useEffect(() => {
 		setIsProcessing(true);
 		if (getTypeRegistry === null || !networkKey) return;
-		const typeRegistry = getTypeRegistry(networks, networkKey);
+		const typeRegistry = getTypeRegistry(networkKey);
 
 		if (typeRegistry === null || typeof rawPayload === 'string') {
 			setIsProcessing(false);

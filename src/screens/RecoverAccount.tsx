@@ -51,7 +51,9 @@ import { AccountsContext, AlertContext, NetworksContext } from '../context';
 // };
 
 function RecoverAccount({ navigation, route }: NavigationProps<'RecoverAccount'>): React.ReactElement {
+	// eslint-disable-next-line no-unused-vars
 	const [derivationPath, setDerivationPath] = useState('');
+	// eslint-disable-next-line no-unused-vars
 	const [derivationPassword, setDerivationPassword] = useState('');
 	const { newAccount, updateNew } = useContext(AccountsContext);
 	const defaultSeedValidObject = validateSeed('', false);

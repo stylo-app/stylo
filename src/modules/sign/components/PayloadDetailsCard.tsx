@@ -16,24 +16,19 @@
 
 import type { Call, ExtrinsicEra } from '@polkadot/types/interfaces';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
-import { RegistriesContext, RegistriesStoreState } from 'stores/RegistriesContext';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
-import { isSubstrateNetwork } from 'types/networkTypes';
+import { isSubstrateNetwork, SubstrateNetworkParams } from 'types/networkTypes';
 import { alertDecodeError } from 'utils/alertUtils';
 import { shortString } from 'utils/strings';
 
 import { GenericExtrinsicPayload } from '@polkadot/types';
 import { AnyJson, AnyU8a, IExtrinsicEra, IMethod } from '@polkadot/types/types';
 import { formatBalance } from '@polkadot/util';
-import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 
-import { AlertContext, NetworksContext } from '../../../context';
-
-const recodeAddress = (encodedAddress: string, prefix: number): string =>
-	encodeAddress(decodeAddress(encodedAddress), prefix);
+import { AlertContext, NetworksContext, RegistriesContext } from '../../../context';
 
 type ExtrinsicPartProps = {
 	fallback?: string;
@@ -50,10 +45,10 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 	const [useFallback, setUseFallBack] = useState(false);
 	const { getTypeRegistry } = useContext(RegistriesContext);
 	const { setAlert } = useContext(AlertContext);
-	const { getSubstrateNetwork, networks } = useContext(NetworksContext);
+	const { getSubstrateNetwork } = useContext(NetworksContext);
 	const networkParams = getSubstrateNetwork(networkKey);
 	const prefix = networkParams.prefix;
-	const typeRegistry = getTypeRegistry(networks, networkKey)!;
+	const typeRegistry = useMemo(() => getTypeRegistry(networkKey)!, [getTypeRegistry, networkKey]);
 
 	useEffect(() => {
 		if (label === 'Method' && !fallback) {
@@ -77,25 +72,20 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 					for (let i = 0; i < meta.args.length; i++) {
 						let argument;
 
-						if (
-							args[i].toRawType() === 'Balance' || args[i].toRawType() === 'Compact<Balance>'
-						) {
-							argument = formatBalance(args[i].toString());
-						// } else if (
-						// 	args[i].toRawType() === 'Address' ||
-						// 		args[i].toRawType() === 'AccountId'
-						// ) {
-						// 	// encode Address and AccountId to the appropriate prefix
-						// 	argument = recodeAddress(args[i].toString(), prefix);
-						} else if ((args[i] as Call).section) {
-							argument = formatArgs(args[i] as Call, callMethodArgs, depth++); // go deeper into the nested calls
-						// } else if (
-						// 	args[i].toRawType() === 'Vec<AccountId>' ||
-						// 		args[i].toRawType() === 'Vec<Address>'
-						// ) {
-						// 	argument = (args[i] as any).map((v: any) =>
-						// 		recodeAddress(v.toString(), prefix));
+						if (args[i].toRawType().includes('Vec')) {
+							// toString is nicer than toHumand here because
+							// toHuman tends to concatenate long strings and would hide data
+							argument = (args[i] as any).map((v: any) => v.toString());
+						} else if (args[i].toRawType().includes('AccountId')) {
+							// toString is nicer than toHumand here because it removes
+							// an additionnal { "Id": ...
+							argument = args[i].toString()
+					 	} else if ((args[i] as Call).section) {
+							// go deeper into the nested calls
+							argument = formatArgs(args[i] as Call, callMethodArgs, depth++);
 						} else {
+							// toHuman takes care of the balance formating
+							// with the right chain unit
 							argument = JSON.stringify(args[i].toHuman());
 						}
 
@@ -166,7 +156,9 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 			if (formattedCallArgs) {
 				const formattedArgs: FormattedArgs = Object.entries(formattedCallArgs);
 
-				// HACK: if there's a sudo method just put it to the front. Better way would be to order by depth but currently this is only relevant for a single extrinsic, so seems like overkill.
+				// HACK: if there's a sudo method just put it to the front.
+				// A better way would be to order by depth but currently this is
+				// only relevant for a single extrinsic, so seems like overkill.
 				for (let i = 1; i < formattedArgs.length; i++) {
 					if (formattedArgs[i][0].includes('sudo')) {
 						const tmp = formattedArgs[i];
@@ -206,7 +198,7 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 								))
 							) : (
 								<Text style={styles.secondaryText}>
-									This method takes 0 arguments.
+									This method takes no argument.
 								</Text>
 							)}
 						</View>
@@ -263,6 +255,9 @@ const PayloadDetailsCard = ({ description, networkKey, payload, signature, style
 		});
 	}
 
+	console.log('payload specVersion', payload?.specVersion)
+	console.log('local specVersion', (network as SubstrateNetworkParams).specVersion)
+
 	return (
 		<View style={[styles.body, style]}>
 			{!!description && <Text style={styles.titleText}>{description}</Text>}
@@ -307,7 +302,9 @@ const styles = StyleSheet.create({
 	callDetails: {
 		marginBottom: 4
 	},
-	era: { flexDirection: 'row' },
+	era: {
+		flexDirection: 'row'
+	},
 	extrinsicContainer: {
 		paddingTop: 16
 	},

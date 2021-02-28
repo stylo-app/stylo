@@ -26,11 +26,10 @@ import { LogBox,StatusBar } from 'react-native';
 import NavigationBar from 'react-native-navbar-color';
 import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { RegistriesContext, useRegistriesStore } from 'stores/RegistriesContext';
 import { SeedRefsContext, useSeedRefStore } from 'stores/SeedRefStore';
 import colors from 'styles/colors';
 
-import { AccountsContextProvider, AlertContextProvider, NetworksContextProvider, ScannerContextProvider } from './context';
+import { AccountsContextProvider, AlertContextProvider, NetworksContextProvider, RegistriesContextProvider, ScannerContextProvider } from './context';
 import { AppNavigator } from './screens';
 
 export default function App(props: AppProps): React.ReactElement {
@@ -49,14 +48,13 @@ export default function App(props: AppProps): React.ReactElement {
 	}
 
 	const seedRefContext = useSeedRefStore();
-	const registriesContext = useRegistriesStore();
 
 	return (
 		<SafeAreaProvider>
 			<NetworksContextProvider>
 				<AccountsContextProvider>
 					<ScannerContextProvider>
-						<RegistriesContext.Provider value={registriesContext}>
+						<RegistriesContextProvider>
 							<AlertContextProvider>
 								<SeedRefsContext.Provider value={seedRefContext}>
 									<MenuProvider backHandler={true}>
@@ -71,7 +69,7 @@ export default function App(props: AppProps): React.ReactElement {
 									</MenuProvider>
 								</SeedRefsContext.Provider>
 							</AlertContextProvider>
-						</RegistriesContext.Provider>
+						</RegistriesContextProvider>
 					</ScannerContextProvider>
 				</AccountsContextProvider>
 			</NetworksContextProvider>

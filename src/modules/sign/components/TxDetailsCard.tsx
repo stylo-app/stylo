@@ -52,7 +52,7 @@ function EthAmount({ gas, gasPrice, style, value }: AmountProps): React.ReactEle
 	);
 }
 
-const TxDetailsCard = ({ description, gas, gasPrice, style, value }: Props): React.ReactNode => {
+const TxDetailsCard = ({ description, gas, gasPrice, style, value }: Props): React.ReactElement => {
 
 	return (
 		<View style={[styles.body, style]}>

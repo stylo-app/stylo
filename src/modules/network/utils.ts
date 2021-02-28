@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { defaultNetworkKey, NETWORK_LIST, NetworkProtocols, SubstrateNetworkKeys, UnknownNetworkKeys } from 'constants/networkSpecs';
-import { NetworkParams, SubstrateNetworkBasics, SubstrateNetworkParams } from 'types/networkTypes';
+import { SubstrateNetworkKeys, UnknownNetworkKeys } from 'constants/networkSpecs';
+import { NetworkParams, SubstrateNetworkBasics } from 'types/networkTypes';
 
 export const filterNetworks = (networkList: Map<string, NetworkParams>,
 	extraFilter?: (networkKey: string, shouldExclude: boolean) => boolean): Array<[string, NetworkParams]> => {
@@ -52,31 +52,31 @@ export const checkNewNetworkSpecs = (newNetworkSpec: SubstrateNetworkBasics): vo
 	}
 };
 
-function generateRandomColor(): string {
-	const letters = '0123456789ABCDEF';
-	let color = '#';
+// function generateRandomColor(): string {
+// 	const letters = '0123456789ABCDEF';
+// 	let color = '#';
 
-	for (let i = 0; i < 6; i++) {
-		color += letters[Math.floor(Math.random() * 16)];
-	}
+// 	for (let i = 0; i < 6; i++) {
+// 		color += letters[Math.floor(Math.random() * 16)];
+// 	}
 
-	return color;
-}
+// 	return color;
+// }
 
-export function getCompleteSubstrateNetworkSpec(newNetworkParams: SubstrateNetworkBasics): SubstrateNetworkParams {
-	const defaultNetworkSpec = NETWORK_LIST[
-		defaultNetworkKey
-	] as SubstrateNetworkParams;
-	const defaultNewNetworkSpecParams = {
-		color: generateRandomColor(),
-		decimals: defaultNetworkSpec.decimals,
-		deleted: false,
-		logo: defaultNetworkSpec.logo,
-		order: 102, //TODO
-		prefix: defaultNetworkSpec.prefix,
-		protocol: NetworkProtocols.SUBSTRATE,
-		secondaryColor: generateRandomColor()
-	};
+// export function getCompleteSubstrateNetworkSpec(newNetworkParams: SubstrateNetworkBasics): SubstrateNetworkParams {
+// 	const defaultNetworkSpec = NETWORK_LIST[
+// 		defaultNetworkKey
+// 	] as SubstrateNetworkParams;
+// 	const defaultNewNetworkSpecParams = {
+// 		color: generateRandomColor(),
+// 		decimals: defaultNetworkSpec.decimals,
+// 		deleted: false,
+// 		logo: defaultNetworkSpec.logo,
+// 		order: 102, //TODO
+// 		prefix: defaultNetworkSpec.prefix,
+// 		protocol: NetworkProtocols.SUBSTRATE,
+// 		secondaryColor: generateRandomColor()
+// 	};
 
-	return { ...defaultNewNetworkSpecParams, ...newNetworkParams };
-}
+// 	return { ...defaultNewNetworkSpecParams, ...newNetworkParams };
+// }

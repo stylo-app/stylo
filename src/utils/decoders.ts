@@ -164,9 +164,12 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 				const pubKeyHex = uosAfterFrames.substr(6, 64);
 				const publicKeyAsBytes = hexToU8a('0x' + pubKeyHex);
 				const hexEncodedData = '0x' + uosAfterFrames.slice(70);
-				const hexPayload = hexEncodedData.slice(0, -64);
+				const hexPayload = hexEncodedData.slice(0, -70);
+				const specVersion = parseInt(hexEncodedData.substr(-70, -64), 10);
 				const genesisHash = `0x${hexEncodedData.substr(-64)}`;
 				const rawPayload = hexToU8a(hexPayload);
+
+				data.data.specVersion = specVersion;
 
 				data.data.genesisHash = genesisHash;
 				const isOversized = rawPayload.length > 256;
@@ -188,8 +191,8 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 					data.data.data = isOversized
 						? await blake2b(u8aToHex(payload, -1, false))
 						: rawPayload;
-					data.data.account = encodeAddress(publicKeyAsBytes,
-						network.prefix); // encode to the prefix;
+					// encode to the prefix;
+					data.data.account = encodeAddress(publicKeyAsBytes, network.prefix);
 
 					break;
 				case '01': // data is a hash
