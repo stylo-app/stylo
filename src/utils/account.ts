@@ -64,7 +64,7 @@ export function emptyAccount(address = '',
 	};
 }
 
-export function validateSeed(seed: string, validBip39Seed: boolean): ValidSeed {
+export function validateSeed(seed: string | undefined, validBip39Seed: boolean): ValidSeed {
 	if (!seed || seed.length === 0) {
 		return {
 			accountRecoveryAllowed: false,

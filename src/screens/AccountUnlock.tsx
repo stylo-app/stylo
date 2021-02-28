@@ -21,7 +21,6 @@ import TextInput from 'components/TextInput';
 import React, { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import colors from 'styles/colors';
-import fontStyles from 'styles/fontStyles';
 import { NavigationProps } from 'types/props';
 
 import { AccountsContext, ScannerContext } from '../context';
@@ -46,7 +45,7 @@ function PinInput(props: any): React.ReactElement {
 			numberOfLines={1}
 			returnKeyType="next"
 			secureTextEntry
-			style={[fontStyles.t_seed, styles.pinInput]}
+			style={styles.pinInput}
 			{...props}
 		/>
 	);

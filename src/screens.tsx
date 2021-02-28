@@ -46,7 +46,6 @@ import PathManagement from 'screens/PathManagement';
 import PathSecret from 'screens/PathSecret';
 import PathsList from 'screens/PathsList';
 import PrivacyPolicy from 'screens/PrivacyPolicy';
-// import IdentityManagement from 'screens/IdentityManagement';
 import RecoverAccount from 'screens/RecoverAccount';
 import Security from 'screens/Security';
 import TermsAndConditions from 'screens/TermsAndConditions';

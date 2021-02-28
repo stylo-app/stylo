@@ -16,64 +16,43 @@
 
 import AccountIconChooser from 'components/AccountIconChooser';
 import Button from 'components/Button';
-import DerivationPathField from 'components/DerivationPathField';
+// import DerivationPathField from 'components/DerivationPathField';
 import KeyboardScrollView from 'components/KeyboardScrollView';
 import { NetworkCard } from 'components/NetworkCard';
 import TextInput from 'components/TextInput';
 import { NetworkProtocols } from 'constants/networkSpecs';
-import React, { useCallback, useContext, useEffect, useReducer } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
-import { Account, UnlockedAccount } from 'types/identityTypes';
-import { NetworkParams } from 'types/networkTypes';
 import { NavigationProps } from 'types/props';
 import { emptyAccount, validateSeed } from 'utils/account';
 import { constructSURI } from 'utils/suri';
 
 import { AccountsContext, NetworksContext } from '../context';
 
-interface State {
-	derivationPassword: string;
-	derivationPath: string;
-	isDerivationPathValid: boolean;
-	chosenAccount?: Account;
-	selectedNetwork?:NetworkParams | null;
-}
-
 export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>): React.ReactElement {
-	const initialState = {
-		chosenAccount: undefined,
-		derivationPassword: '',
-		derivationPath: '',
-		isDerivationPathValid: true,
-		selectedNetwork: undefined
-	};
-	const reducer = (state: State, delta: Partial<State>): State => ({
-		...state,
-		...delta
-	});
-	const [state, updateState] = useReducer(reducer, initialState);
-	const { chosenAccount, derivationPassword, derivationPath, isDerivationPathValid, selectedNetwork } = state;
+	// eslint-disable-next-line no-unused-vars
+	const [derivationPassword, setDerivationPassword] = useState('')
+	// eslint-disable-next-line no-unused-vars
+	const [derivationPath, setDerivationPath] = useState('')
+	// eslint-disable-next-line no-unused-vars
+	const [isDerivationPathValid, setIsDerivationPathValid] = useState(true)
 	const { newAccount, updateNew } = useContext(AccountsContext);
 	const { getNetwork } = useContext(NetworksContext);
-	const seed = (chosenAccount as UnlockedAccount)?.seed;
+	const { address, name, networkKey, seed, validBip39Seed  } = newAccount;
+	const selectedNetwork = getNetwork(networkKey);
 	const isSubstrate = selectedNetwork?.protocol === NetworkProtocols.SUBSTRATE;
 
+	console.log('render');
 	useEffect((): void => {
 		updateNew(emptyAccount('', ''));
 	// we get an infinite loop if we add anything here.
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	useEffect((): void => {
-		const selectedNetwork = getNetwork(newAccount.networkKey);
-
-		updateState({ chosenAccount: newAccount, selectedNetwork });
-	}, [newAccount, getNetwork]);
-
-	const onSelectIcon = useCallback(({ isBip39, newAddress, newSeed }): void => {
+	const updateAccountSelection = useCallback(({ isBip39, newAddress, newSeed }): void => {
 		if (newAddress && isBip39 && newSeed) {
 			if (isSubstrate) {
 				try {
@@ -103,33 +82,31 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 				});
 			}
 		}
-		// else {
-		// 	console.log('-----------> ooooooops')
-		// 	accountsStore.updateNew({
-		// 		address: '',
-		// 		seed: '',
-		// 		validBip39Seed: false
-		// 	});
-		// }
+		else {
+			updateNew({
+				address: '',
+				seed: '',
+				validBip39Seed: false
+			});
+		}
 	},[derivationPassword, derivationPath, isSubstrate, updateNew])
 
 	const onCreate = useCallback(() => {
 		navigation.navigate('LegacyMnemonic', { isNew: true })
 	}, [navigation])
 
-	const onDerivationChange = useCallback((newDerivationPath: { derivationPassword: string; derivationPath: string; isDerivationPathValid: boolean; }): void => {
-		updateState({
-			derivationPassword: newDerivationPath.derivationPassword,
-			derivationPath: newDerivationPath.derivationPath,
-			isDerivationPathValid: newDerivationPath.isDerivationPathValid
-		});
-	}, []);
+	const onNetworkNavigation = useCallback(() => {
+		updateNew({ address:'', seed: '', seedPhrase: '', validBip39Seed: false })
+		navigation.navigate('LegacyNetworkChooser')
+	}, [navigation, updateNew])
 
-	if (!chosenAccount) {
-		return <View />;
-	}
-
-	const { address, name, validBip39Seed } = chosenAccount;
+	// const onDerivationChange = useCallback((newDerivationPath: { derivationPassword: string; derivationPath: string; isDerivationPathValid: boolean; }): void => {
+	// 	updateState({
+	// 		derivationPassword: newDerivationPath.derivationPassword,
+	// 		derivationPath: newDerivationPath.derivationPath,
+	// 		isDerivationPathValid: newDerivationPath.isDerivationPathValid
+	// 	});
+	// }, []);
 
 	return (
 		<KeyboardScrollView>
@@ -148,8 +125,8 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 				<View style={styles.step}>
 					<Text style={styles.title}>NETWORK</Text>
 					<NetworkCard
-						networkKey={chosenAccount.networkKey}
-						onPress={(): void => navigation.navigate('LegacyNetworkChooser')}
+						networkKey={networkKey}
+						onPress={onNetworkNavigation}
 						title={selectedNetwork?.title || 'Select Network'}
 					/>
 				</View>
@@ -160,19 +137,19 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 							<AccountIconChooser
 								derivationPassword={derivationPassword}
 								derivationPath={derivationPath}
-								network={selectedNetwork!}
-								onSelect={onSelectIcon}
-								value={address && address}
+								network={selectedNetwork}
+								onSelect={updateAccountSelection}
+								value={address}
 							/>
 						</View>
-						{isSubstrate && (
+						{/* {isSubstrate && (
 							<View style={StyleSheet.flatten([styles.step, styles.lastStep])}>
 								<DerivationPathField
 									onChange={onDerivationChange}
 									styles={styles}
 								/>
 							</View>
-						)}
+						)} */}
 						<View style={styles.bottom}>
 							<Button
 								disabled={!validateSeed(seed, validBip39Seed).valid || !isDerivationPathValid}
