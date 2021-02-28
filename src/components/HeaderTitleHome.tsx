@@ -18,7 +18,7 @@ import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import iconLogo from 'res/img/icon.png';
 
-const HeaderLeftHome =() => (
+const HeaderTitleHome =() => (
 	<View style={styles.wrapper} >
 		<Image
 			source={iconLogo}
@@ -40,4 +40,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default HeaderLeftHome
+export default HeaderTitleHome

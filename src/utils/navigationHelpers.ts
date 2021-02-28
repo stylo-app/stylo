@@ -91,8 +91,8 @@ export const navigateToQrScanner = <RouteName extends keyof RootStackParamList>(
 	navigation: GenericNavigationProps<RouteName>
 ): void => resetNavigationTo(navigation, 'QrScanner');
 
-export const navigateToLegacyAccountList = <
+export const navigateToAccountList = <
 	RouteName extends keyof RootStackParamList
 >(
 		navigation: GenericNavigationProps<RouteName>
-	): void => resetNavigationToHome(navigation, 'LegacyAccountList');
+	): void => resetNavigationToHome(navigation, 'AccountList');

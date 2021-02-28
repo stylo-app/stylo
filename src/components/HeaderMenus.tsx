@@ -21,7 +21,7 @@ import { StyleSheet, View } from 'react-native';
 import { useTac } from '../hooks/useTac';
 import PopupMenu from './PopupMenu';
 
-const MAIN_MENUS = ['LegacyAccountList', 'Main'];
+const MAIN_MENUS = ['AccountList', 'Main'];
 
 function HeaderMenus(): React.ReactElement {
 	const { navigate } = useNavigation()

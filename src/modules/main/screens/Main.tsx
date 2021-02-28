@@ -16,7 +16,7 @@
 
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import React from 'react';
-import LegacyAccountList from 'screens/LegacyAccountList';
+import AccountList from 'screens/AccountList';
 import TermsAndConditions from 'screens/TermsAndConditions';
 
 import { useTac } from '../../../hooks/useTac';
@@ -27,6 +27,6 @@ export default function Main(): React.ReactElement {
 	if (!dataLoaded) return <SafeAreaViewContainer />;
 
 	return ppAndTaCAccepted
-		? <LegacyAccountList />
+		? <AccountList />
 		: <TermsAndConditions />
 }

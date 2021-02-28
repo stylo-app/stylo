@@ -92,12 +92,12 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 	},[derivationPassword, derivationPath, isSubstrate, updateNew])
 
 	const onCreate = useCallback(() => {
-		navigation.navigate('LegacyMnemonic', { isNew: true })
+		navigation.navigate('Mnemonic', { isNew: true })
 	}, [navigation])
 
 	const onNetworkNavigation = useCallback(() => {
 		updateNew({ address:'', seed: '', seedPhrase: '', validBip39Seed: false })
-		navigation.navigate('LegacyNetworkChooser')
+		navigation.navigate('NetworkList')
 	}, [navigation, updateNew])
 
 	// const onDerivationChange = useCallback((newDerivationPath: { derivationPassword: string; derivationPath: string; isDerivationPathValid: boolean; }): void => {

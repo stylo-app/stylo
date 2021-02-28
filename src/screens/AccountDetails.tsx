@@ -29,7 +29,7 @@ import fontStyles from 'styles/fontStyles';
 import { EthereumNetwork, isSubstrateNetwork } from 'types/networkTypes';
 import { NavigationProps } from 'types/props';
 import { alertDeleteLegacyAccount } from 'utils/alertUtils';
-import { navigateToLegacyAccountList } from 'utils/navigationHelpers';
+import { navigateToAccountList } from 'utils/navigationHelpers';
 
 import { AccountsContext, AlertContext, NetworksContext } from '../context';
 
@@ -71,7 +71,7 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 			async () => {
 				await deleteAccount(address);
 
-				navigateToLegacyAccountList(navigation);
+				navigateToAccountList(navigation);
 			});
 	};
 
@@ -100,7 +100,7 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 							menuItems={[
 								{ text: 'Change name', value: 'AccountEdit' },
 								{ text: 'Change pin', value: 'AccountPin' },
-								{ text: 'View recovery phrase', value: 'LegacyMnemonic' },
+								{ text: 'View recovery phrase', value: 'Mnemonic' },
 								{ text: 'Delete', textStyle: styles.deleteText, value: 'AccountDelete' }
 							]}
 							menuTriggerIconName={'more-vert'}

@@ -14,19 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { useNavigation } from '@react-navigation/native';
 import { NetworkCard } from 'components/NetworkCard';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import { SubstrateNetworkKeys, UnknownNetworkKeys } from 'constants/networkSpecs';
 import React, { useContext } from 'react';
 import { NetworkParams } from 'types/networkTypes';
-import { NavigationProps } from 'types/props';
 
 import { AccountsContext, NetworksContext } from '../context';
 
-export default function LegacyNetworkChooserView({ navigation }: NavigationProps<'LegacyNetworkChooser'>): React.ReactElement {
+export default function NetworkListView(): React.ReactElement {
 	const accountsStore = useContext(AccountsContext);
 	const { allNetworks } = useContext(NetworksContext);
 	const excludedNetworks = [UnknownNetworkKeys.UNKNOWN];
+	const { goBack } = useNavigation()
 
 	if (!__DEV__) {
 		excludedNetworks.push(SubstrateNetworkKeys.SUBSTRATE_DEV);
@@ -38,16 +39,13 @@ export default function LegacyNetworkChooserView({ navigation }: NavigationProps
 			{Array.from(allNetworks.entries())
 				.filter(([networkKey]: [string, any]): boolean =>
 					!excludedNetworks.includes(networkKey))
-				.map(([networkKey, networkParams]: [
-						string,
-						NetworkParams
-					]): React.ReactElement => (
+				.map(([networkKey, networkParams]: [ string, NetworkParams ]): React.ReactElement => (
 					<NetworkCard
 						key={networkKey}
 						networkKey={networkKey}
 						onPress={(): void =>{
 							accountsStore.updateNew({ networkKey });
-							navigation.goBack();
+							goBack();
 						}}
 						title={networkParams.title}
 					/>

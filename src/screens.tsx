@@ -16,8 +16,8 @@
 
 import { useNavigation, useNavigationState, useRoute } from '@react-navigation/native';
 import { CardStyleInterpolators, createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
-import HeaderLeftHome from 'components/HeaderLeftHome';
 import HeaderMenus from 'components/HeaderMenus';
+import HeaderTitleHome from 'components/HeaderTitleHome';
 import testIDs from 'e2e/testIDs';
 import Main from 'modules/main/screens/Main';
 import NetworkDetails from 'modules/network/screens/NetworkDetails';
@@ -31,12 +31,12 @@ import { View } from 'react-native';
 import About from 'screens/About';
 import AccountDetails from 'screens/AccountDetails';
 import AccountEdit from 'screens/AccountEdit';
+import AccountList from 'screens/AccountList';
 import AccountNew from 'screens/AccountNew';
 import AccountPin from 'screens/AccountPin';
 import { AccountUnlock, AccountUnlockAndSign } from 'screens/AccountUnlock';
-import LegacyAccountList from 'screens/LegacyAccountList';
-import LegacyMnemonic from 'screens/LegacyMnemonic';
-import LegacyNetworkChooser from 'screens/LegacyNetworkChooser';
+import Mnemonic from 'screens/Mnemonic';
+import NetworkList from 'screens/NetworkList';
 import RecoverAccount from 'screens/RecoverAccount';
 import Security from 'screens/Security';
 import TermsAndConditions from 'screens/TermsAndConditions';
@@ -60,7 +60,7 @@ const HeaderTitle = (): React.ReactElement => {
 	const isFirstRouteInParent = useNavigationState(state => state.routes[0].key === route.key);
 
 	return isFirstRouteInParent
-		? <HeaderLeftHome/>
+		? <HeaderTitleHome/>
 		: <></>;
 };
 
@@ -144,16 +144,16 @@ export const AppNavigator = (): React.ReactElement => (
 			name="AccountUnlockAndSign"
 		/>
 		<ScreenStack.Screen
-			component={LegacyMnemonic}
-			name="LegacyMnemonic"
+			component={Mnemonic}
+			name="Mnemonic"
 		/>
 		<ScreenStack.Screen
-			component={LegacyAccountList}
-			name="LegacyAccountList"
+			component={AccountList}
+			name="AccountList"
 		/>
 		<ScreenStack.Screen
-			component={LegacyNetworkChooser}
-			name="LegacyNetworkChooser"
+			component={NetworkList}
+			name="NetworkList"
 		/>
 		<ScreenStack.Screen
 			component={RecoverAccount}

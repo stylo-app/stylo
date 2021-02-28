@@ -14,17 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import CustomScrollView from 'components/CustomScrollView';
+import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import iconLogo from 'res/img/icon.png';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 
 import { version } from '../../package.json';
 
 const About = () => (
-	<CustomScrollView contentContainerStyle={{ padding: 20 }}>
-		<Text style={styles.title}>Stylo v{version}</Text>
+	<SafeAreaViewContainer style={styles.wrapper}>
+		<Image
+			source={iconLogo}
+			style={styles.logo}
+		/>
+		<Text style={styles.version}>version {version}</Text>
 		<View>
 			<Text style={styles.text}>
 				The code of this application is available on GitHub: https://github.com/stylo-app/stylo
@@ -46,7 +51,7 @@ const About = () => (
 				The development of this application was supported by the Polkadot treasury.
 			</Text>
 		</View>
-	</CustomScrollView>
+	</SafeAreaViewContainer>
 );
 
 const styles = StyleSheet.create({
@@ -54,19 +59,31 @@ const styles = StyleSheet.create({
 		flexBasis: 50,
 		paddingBottom: 15
 	},
+
+	logo: {
+		alignSelf: 'center',
+		height: 80,
+		width: 157
+	},
 	text: {
 		color: colors.text.main,
 		fontFamily: fonts.regular,
 		fontSize: 14,
 		marginBottom: 20
 	},
-	title: {
-		color: colors.text.main,
-		fontFamily: fonts.bold,
-		fontSize: 18,
-		paddingBottom: 20
+	top: {
+		flex: 1
 	},
-	top: { flex: 1 }
+	version: {
+		color: colors.text.main,
+		fontFamily: fonts.light,
+		fontSize: 18,
+		paddingBottom: 20,
+		textAlign: 'center'
+	},
+	wrapper: {
+		padding: 20
+	}
 });
 
 export default About;

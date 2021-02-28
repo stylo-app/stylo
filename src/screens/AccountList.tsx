@@ -28,7 +28,7 @@ import { LegacyAccount } from 'types/identityTypes';
 
 import { AccountsContext } from '../context';
 
-function LegacyAccountList(): React.ReactElement {
+function AccountList(): React.ReactElement {
 	const { accounts, selectAccount } = useContext(AccountsContext);
 	const [isConnected, setIsConnected] = useState(false);
 	const navigation = useNavigation();
@@ -82,7 +82,7 @@ function LegacyAccountList(): React.ReactElement {
 	);
 }
 
-export default LegacyAccountList;
+export default AccountList;
 
 const styles = StyleSheet.create({
 	content: {

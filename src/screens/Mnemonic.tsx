@@ -31,7 +31,7 @@ import { alertBackupDone, alertCopyBackupPhrase } from 'utils/alertUtils';
 
 import { AccountsContext, AlertContext, NetworksContext } from '../context';
 
-function LegacyMnemonic({ navigation, route }: NavigationProps<'LegacyMnemonic'>): React.ReactElement {
+function Mnemonic({ navigation, route }: NavigationProps<'Mnemonic'>): React.ReactElement {
 	const { getSelectedAccount, lockAccount,newAccount } = useContext(AccountsContext);
 	const selectedAccount = getSelectedAccount();
 	const { getNetwork } = useContext(NetworksContext);
@@ -119,7 +119,7 @@ function LegacyMnemonic({ navigation, route }: NavigationProps<'LegacyMnemonic'>
 	);
 }
 
-export default LegacyMnemonic;
+export default Mnemonic;
 
 const styles = StyleSheet.create({
 	body: {

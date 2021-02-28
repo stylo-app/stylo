@@ -183,7 +183,7 @@ function RecoverAccount(): React.ReactElement {
 				<Text style={styles.title}>NETWORK</Text>
 				<NetworkCard
 					networkKey={networkKey}
-					onPress={(): void => navigate('LegacyNetworkChooser')}
+					onPress={(): void => navigate('NetworkList')}
 					title={selectedNetwork?.title || 'Select Network'}
 				/>
 			</View>

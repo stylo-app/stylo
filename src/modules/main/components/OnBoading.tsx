@@ -59,7 +59,7 @@ export default function OnBoardingView({ hasLegacyAccount }: {hasLegacyAccount: 
 				<Text style={fontStyles.quote}>your identity to get started.</Text>
 				{hasLegacyAccount && (
 					<Button
-						onPress={(): void => navigation.navigate('LegacyAccountList')}
+						onPress={(): void => navigation.navigate('AccountList')}
 						onlyText={true}
 						small={true}
 						style={{ marginLeft: 0 }}

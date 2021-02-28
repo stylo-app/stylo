@@ -47,7 +47,7 @@ export default function TermsAndConditions(): React.ReactElement {
 						setPpAndTaCAccepted(true);
 						const resetAction = CommonActions.reset({
 							index: 0,
-							routes: [{ name: 'LegacyAccountList' }]
+							routes: [{ name: 'AccountList' }]
 						});
 
 						dispatch(resetAction);

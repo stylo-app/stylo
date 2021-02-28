@@ -24,7 +24,7 @@ import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
 import { NavigationProps } from 'types/props';
-import { navigateToLegacyAccountList } from 'utils/navigationHelpers';
+import { navigateToAccountList } from 'utils/navigationHelpers';
 
 import { AccountsContext } from '../context';
 
@@ -100,14 +100,14 @@ function AccountPin({ navigation, route }: NavigationProps<'AccountPin'>): React
 			// this is the first time a pin is created
 			await accountsStore.submitNew(pin);
 
-			return navigateToLegacyAccountList(navigation);
+			return navigateToAccountList(navigation);
 		} else {
 			// this is a pin change
 			await accountsStore.saveAccount(account, pin);
 			lockAccount(account.address);
 			const resetAction = CommonActions.reset({
 				index: 1,
-				routes: [{ name: 'LegacyAccountList' }, { name: 'AccountDetails' }]
+				routes: [{ name: 'AccountList' }, { name: 'AccountDetails' }]
 			});
 
 			navigation.dispatch(resetAction);

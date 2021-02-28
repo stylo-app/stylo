@@ -109,7 +109,7 @@ export function AccountUnlockAndSign(props: NavigationProps<'AccountUnlockAndSig
 				const resetAction = CommonActions.reset({
 					index: 1,
 					routes: [
-						{ name: 'LegacyAccountList' },
+						{ name: 'AccountList' },
 						{ name: next }
 					]
 				});
@@ -121,7 +121,7 @@ export function AccountUnlockAndSign(props: NavigationProps<'AccountUnlockAndSig
 }
 
 export function AccountUnlock({ navigation, route }: NavigationProps<'AccountUnlock'>): React.ReactElement {
-	const next = route.params.next || 'LegacyAccountList';
+	const next = route.params.next || 'AccountList';
 	const onDelete = route.params.onDelete ?? ((): any => null);
 	const { getSelectedAccount, unlockAccount } = useContext(AccountsContext);
 	const selectedAccount = getSelectedAccount();
@@ -145,7 +145,7 @@ export function AccountUnlock({ navigation, route }: NavigationProps<'AccountUnl
 					const resetAction = CommonActions.reset({
 						index: 2,
 						routes: [
-							{ name: 'LegacyAccountList' },
+							{ name: 'AccountList' },
 							{ name: 'AccountDetails' },
 							{ name: next }
 						]

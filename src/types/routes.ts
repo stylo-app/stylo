@@ -12,13 +12,13 @@ export type RootStackParamList = {
 	RecoverAccount: { isRecover: boolean } | undefined;
 	MessageDetails: undefined;
 	Loading: undefined;
-	LegacyMnemonic:
+	Mnemonic:
 		| {
 				isNew: boolean;
 		  }
 		| undefined;
-	LegacyAccountList: undefined;
-	LegacyNetworkChooser: undefined;
+	AccountList: undefined;
+	NetworkList: undefined;
 	NetworkDetails: { pathId: string };
 	NetworkSettings: undefined;
 	PathsList: { networkKey: string };
