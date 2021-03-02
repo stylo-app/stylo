@@ -165,9 +165,7 @@ function RecoverAccount(): React.ReactElement {
 	const { address, name, networkKey } = newAccount;
 
 	return (
-		<KeyboardScrollView
-			extraHeight={140}
-		>
+		<KeyboardScrollView>
 			<ScreenHeading title={'New Account'} />
 			<View style={styles.step}>
 				<Text style={styles.title}>Name</Text>

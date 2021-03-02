@@ -56,7 +56,6 @@ function Mnemonic({ navigation, route }: NavigationProps<'Mnemonic'>): React.Rea
 
 		return (): void => {
 			if (address) {
-				console.log('got selected key locking', address)
 				lockAccount(address);
 			}
 

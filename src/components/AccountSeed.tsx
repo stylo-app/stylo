@@ -123,8 +123,10 @@ export default function AccountSeed({ onChangeText, valid, ...props }: Props): R
 								onNativeChangeText(phrase);
 							}}
 						>
-							<View key={suggestion}
-								style={[styles.suggestion, sepStyle]}>
+							<View
+								key={suggestion}
+								style={[styles.suggestion, sepStyle]}
+							>
 								<Text style={styles.suggestionText}>{suggestion}</Text>
 							</View>
 						</TouchableItem>
@@ -138,6 +140,7 @@ export default function AccountSeed({ onChangeText, valid, ...props }: Props): R
 
 	return (
 		<View>
+			{value.length > 0 && !valid && renderSuggestions()}
 			<TextInput
 				autoCapitalize="none"
 				autoCompleteType="off"
@@ -152,7 +155,6 @@ export default function AccountSeed({ onChangeText, valid, ...props }: Props): R
 				value={value}
 				{...props}
 			/>
-			{value.length > 0 && !valid && renderSuggestions()}
 		</View>
 	);
 }
@@ -184,8 +186,8 @@ const styles = StyleSheet.create({
 		borderWidth: 0.5,
 		flexDirection: 'row',
 		height: 32,
+		marginBottom: -8,
 		marginHorizontal: 16,
-		marginTop: -8,
 		overflow: 'hidden'
 	},
 	validInput: {
