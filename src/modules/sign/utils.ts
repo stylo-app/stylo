@@ -46,6 +46,8 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 			// Add Network
 			const parsedJsonData = JSON.parse(txRequestData.data);
 
+			// console.log('parsedJsonData', parsedJsonData);
+
 			if (parsedJsonData.hasOwnProperty('genesisHash')) {
 				return {
 					action: 'addNetwork',
@@ -173,6 +175,8 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 	async function processBarCode(txRequestData: TxRequestData): Promise<void> {
 		try {
 			const parsedData = await parseQrData(txRequestData);
+
+			// console.log('-->parsedData', parsedData)
 
 			if (isNetworkParsedData(parsedData)) {
 				// return addNewNetwork(parsedData);

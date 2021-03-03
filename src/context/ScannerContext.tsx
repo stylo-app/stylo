@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { ETHEREUM_NETWORK_LIST } from 'constants/networkSpecs';
+// import { ETHEREUM_NETWORK_LIST } from 'constants/networkSpecs';
 import React, { useContext, useReducer } from 'react';
 import { Account } from 'types/identityTypes';
 import { isEthereumNetwork } from 'types/networkTypes';
 import { CompletedParsedData, EthereumParsedData, isEthereumCompletedParsedData, isSubstrateMessageParsedData, MessageQRInfo, MultiFramesInfo, QrInfo, SubstrateCompletedParsedData, SubstrateMessageParsedData, SubstrateTransactionParsedData, TxQRInfo } from 'types/scannerTypes';
 import { asciiToHex, constructDataFromBytes, encodeNumber } from 'utils/decoders';
 import { brainWalletSign, decryptData, ethSign, keccak, substrateSign } from 'utils/native';
-import { TryBrainWalletSignFunc, TrySignFunc } from 'utils/seedRefHooks';
+// import { TryBrainWalletSignFunc, TrySignFunc } from 'utils/seedRefHooks';
 import { isAscii } from 'utils/strings';
 import transaction, { Transaction } from 'utils/transaction';
 
@@ -69,8 +69,8 @@ export type ScannerContextType = {
 	state: ScannerStoreState;
 	setPartData: (currentFrame: number, frameCount: number, partData: string) => Promise<MultiFramesInfo | SubstrateCompletedParsedData>;
 	setData: (unsignedData: CompletedParsedData) => Promise<QrInfo>;
-	signEthereumData: (signFunction: TryBrainWalletSignFunc, qrInfo: QrInfo) => Promise<void>;
-	signSubstrateData: (signFunction: TrySignFunc, suriSuffix: string, qrInfo: QrInfo) => Promise<void>;
+	// signEthereumData: (signFunction: TryBrainWalletSignFunc, qrInfo: QrInfo) => Promise<void>;
+	// signSubstrateData: (signFunction: TrySignFunc, suriSuffix: string, qrInfo: QrInfo) => Promise<void>;
 	signDataLegacy: (pin: string) => Promise<void>;
 };
 
@@ -343,49 +343,49 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 		}
 	}
 
-	// signing ethereum data with seed reference
-	async function signEthereumData(signFunction: TryBrainWalletSignFunc, qrInfo: QrInfo): Promise<void> {
-		const { dataToSign, senderAddress } = qrInfo;
-		const sender = getAccountByAddress(senderAddress);
+	// // signing ethereum data with seed reference
+	// async function signEthereumData(signFunction: TryBrainWalletSignFunc, qrInfo: QrInfo): Promise<void> {
+	// 	const { dataToSign, senderAddress } = qrInfo;
+	// 	const sender = getAccountByAddress(senderAddress);
 
-		if (!sender || !ETHEREUM_NETWORK_LIST.hasOwnProperty(sender.networkKey))
-			throw new Error('Signing Error: sender could not be found.');
-		const signedData = await signFunction(dataToSign as string);
+	// 	if (!sender || !ETHEREUM_NETWORK_LIST.hasOwnProperty(sender.networkKey))
+	// 		throw new Error('Signing Error: sender could not be found.');
+	// 	const signedData = await signFunction(dataToSign as string);
 
-		setState({ signedData });
-	}
+	// 	setState({ signedData });
+	// }
 
-	// signing substrate data with seed reference
-	async function signSubstrateData(signFunction: TrySignFunc, suriSuffix: string, qrInfo: QrInfo): Promise<void> {
-		const { dataToSign, isHash, senderAddress } = qrInfo;
-		const sender = getAccountByAddress(senderAddress);
+	// // signing substrate data with seed reference
+	// async function signSubstrateData(signFunction: TrySignFunc, suriSuffix: string, qrInfo: QrInfo): Promise<void> {
+	// 	const { dataToSign, isHash, senderAddress } = qrInfo;
+	// 	const sender = getAccountByAddress(senderAddress);
 
-		if (!sender || !networks.has(sender.networkKey))
-			throw new Error('Signing Error: sender could not be found.');
-		let signable;
+	// 	if (!sender || !networks.has(sender.networkKey))
+	// 		throw new Error('Signing Error: sender could not be found.');
+	// 	let signable;
 
-		if (dataToSign instanceof GenericExtrinsicPayload) {
-			signable = u8aToHex(dataToSign.toU8a(true), -1, false);
-		} else if (isHash) {
-			console.log('sign substrate data type is', typeof dataToSign);
-			signable = hexStripPrefix(dataToSign.toString());
-		} else if (isU8a(dataToSign)) {
-			signable = hexStripPrefix(u8aToHex(dataToSign));
-		} else if (isAscii(dataToSign)) {
-			signable = hexStripPrefix(asciiToHex(dataToSign));
-		} else {
-			throw new Error('Signing Error: cannot signing message');
-		}
+	// 	if (dataToSign instanceof GenericExtrinsicPayload) {
+	// 		signable = u8aToHex(dataToSign.toU8a(true), -1, false);
+	// 	} else if (isHash) {
+	// 		console.log('sign substrate data type is', typeof dataToSign);
+	// 		signable = hexStripPrefix(dataToSign.toString());
+	// 	} else if (isU8a(dataToSign)) {
+	// 		signable = hexStripPrefix(u8aToHex(dataToSign));
+	// 	} else if (isAscii(dataToSign)) {
+	// 		signable = hexStripPrefix(asciiToHex(dataToSign));
+	// 	} else {
+	// 		throw new Error('Signing Error: cannot signing message');
+	// 	}
 
-		let signed = await signFunction(suriSuffix, signable);
+	// 	let signed = await signFunction(suriSuffix, signable);
 
-		signed = '0x' + signed;
-		// TODO: tweak the first byte if and when sig type is not sr25519
-		const sig = u8aConcat(SIG_TYPE_SR25519, hexToU8a(signed));
-		const signedData = u8aToHex(sig, -1, false); // the false doesn't add 0x
+	// 	signed = '0x' + signed;
+	// 	// TODO: tweak the first byte if and when sig type is not sr25519
+	// 	const sig = u8aConcat(SIG_TYPE_SR25519, hexToU8a(signed));
+	// 	const signedData = u8aToHex(sig, -1, false); // the false doesn't add 0x
 
-		setState({ signedData });
-	}
+	// 	setState({ signedData });
+	// }
 
 	// signing data with legacy account.
 	async function signDataLegacy(pin = '1'): Promise<void> {
@@ -446,7 +446,7 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 	}
 
 	return (
-		<ScannerContext.Provider value={{ cleanup, clearMultipartProgress, setBusy, setData, setPartData, setReady, signDataLegacy, signEthereumData, signSubstrateData, state } }>
+		<ScannerContext.Provider value={{ cleanup, clearMultipartProgress, setBusy, setData, setPartData, setReady, signDataLegacy, state } }>
 			{children}
 		</ScannerContext.Provider>
 	)

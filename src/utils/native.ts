@@ -15,8 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { NativeModules } from 'react-native';
-import { TryBrainWalletAddress } from 'utils/seedRefHooks';
 
+// import { TryBrainWalletAddress } from 'utils/seedRefHooks';
 import { checksummedAddress } from './checksum';
 
 const { EthkeyBridge } = NativeModules || {};
@@ -69,16 +69,16 @@ export async function brainWalletAddress(seed: string): Promise<AddressObject> {
 	};
 }
 
-export async function brainWalletAddressWithRef(createBrainWalletFn: TryBrainWalletAddress): Promise<AddressObject> {
-	const taggedAddress = await createBrainWalletFn();
-	const { address, bip39 } = untagAddress(taggedAddress);
-	const hash = await keccak(toHex(address));
+// export async function brainWalletAddressWithRef(createBrainWalletFn: TryBrainWalletAddress): Promise<AddressObject> {
+// 	const taggedAddress = await createBrainWalletFn();
+// 	const { address, bip39 } = untagAddress(taggedAddress);
+// 	const hash = await keccak(toHex(address));
 
-	return {
-		address: checksummedAddress(address, hash),
-		bip39
-	};
-}
+// 	return {
+// 		address: checksummedAddress(address, hash),
+// 		bip39
+// 	};
+// }
 
 export async function brainWalletBIP39Address(seed: string): Promise<AddressObject | null> {
 	try {

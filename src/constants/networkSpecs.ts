@@ -130,7 +130,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 2,
 		pathId: 'kusama',
 		prefix: 2,
-		specVersion: 28,
+		specVersion: 2028,
 		title: 'Kusama',
 		unit: 'KSM'
 	},
@@ -152,7 +152,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 1,
 		pathId: 'polkadot',
 		prefix: 0,
-		specVersion: 28,
+		specVersion: 2028,
 		title: 'Polkadot',
 		unit: 'DOT'
 	},
@@ -185,6 +185,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 3,
 		pathId: 'westend',
 		prefix: 42,
+		specVersion: 48,
 		title: 'Westend',
 		unit: 'WND'
 	}
