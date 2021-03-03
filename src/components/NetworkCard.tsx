@@ -55,9 +55,11 @@ export function NetworkCard({ isAdd, networkKey, onPress, testID, title }: Netwo
 							width: 40
 						}}
 					>
-						<Icon color={colors.text.main}
+						<Icon
+							color={colors.text.main}
 							name="add"
-							size={30} />
+							size={30}
+						/>
 					</View>
 				) : (networkParams && (
 					<AccountIcon

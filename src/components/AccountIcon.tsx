@@ -64,9 +64,11 @@ export default function AccountIcon({ address, network, style }: Props): ReactEl
 					/>
 				) : (
 					<View style={styles.logo}>
-						<FontAwesome color={colors.text.main}
+						<FontAwesome
+							color={colors.text.main}
 							name="question"
-							size={28} />
+							size={28}
+						/>
 					</View>
 				)}
 			</View>
@@ -100,8 +102,8 @@ export default function AccountIcon({ address, network, style }: Props): ReactEl
 	} else {
 		return (
 			<MaterialIcon
-				color={colors.signal.error}
-				name={'error'}
+				color={colors.text.main}
+				name={'help'}
 				size={44}
 			/>
 		);

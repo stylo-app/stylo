@@ -63,21 +63,24 @@ function RecoverAccount(): React.ReactElement {
 	const selectedNetwork = useMemo(() => getNetwork(newAccount.networkKey), [getNetwork, newAccount.networkKey])
 	const { navigate } = useNavigation()
 
+	console.log('isSeedValid', isSeedValid.bip39)
 	const goToPin = useCallback(() => {
 		navigate('AccountPin', { isNew: true });
 	}, [navigate])
 
 	useEffect((): void => {
-		console.log('----> empty it')
 		updateNew(emptyAccount('', ''));
 	}, [updateNew]);
 
 	const onSeedTextInput = (inputSeedPhrase: string): void => {
-		setSeedPhrase(inputSeedPhrase);
+		const trimmedSeed = inputSeedPhrase.trimEnd();
+
+		setSeedPhrase(trimmedSeed);
+
 		const addressGeneration = (): Promise<void> =>
-			brainWalletAddress(inputSeedPhrase.trimEnd())
+			brainWalletAddress(trimmedSeed)
 				.then(({ bip39 }) => {
-					setIsSeedValid(validateSeed(inputSeedPhrase, bip39));
+					setIsSeedValid(validateSeed(trimmedSeed, bip39));
 					generateAddress()
 				})
 				.catch(() => setIsSeedValid(defaultSeedValidObject));
@@ -118,10 +121,8 @@ function RecoverAccount(): React.ReactElement {
 					phrase: seedPhrase
 				});
 
-				console.log('calling', !!suri, prefix)
 				substrateAddress(suri, prefix)
 					.then(address => {
-						console.log('got address', address)
 						updateNew({
 							address,
 							derivationPassword,
@@ -209,15 +210,16 @@ function RecoverAccount(): React.ReactElement {
 					styles={styles}
 				/>
 			)} */}
-			{ isSeedValid.bip39 &&
+			{ isSeedValid.bip39 && !!networkKey && !!address &&
 				(<AccountCard
 					address={address}
 					networkKey={networkKey}
-					title={name}
+					title={name || '<no name>'}
 				/>)
 			}
 			<View style={styles.btnBox}>
 				<Button
+					disabled={!isSeedValid.bip39 || !networkKey || !address}
 					onPress={onRecoverConfirm}
 					small={true}
 					testID={testIDs.RecoverAccount.recoverButton}
@@ -238,7 +240,7 @@ const styles = StyleSheet.create({
 	},
 	btnBox: {
 		alignContent: 'center',
-		marginTop: 32
+		marginTop: 20
 	},
 	step: {
 		padding: 16
