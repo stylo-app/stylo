@@ -17,7 +17,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { NetworkCard } from 'components/NetworkCard';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
-import { SubstrateNetworkKeys, UnknownNetworkKeys } from 'constants/networkSpecs';
+import { UnknownNetworkKeys } from 'constants/networkSpecs';
 import React, { useContext } from 'react';
 import { NetworkParams } from 'types/networkTypes';
 
@@ -28,11 +28,6 @@ export default function NetworkListView(): React.ReactElement {
 	const { allNetworks } = useContext(NetworksContext);
 	const excludedNetworks = [UnknownNetworkKeys.UNKNOWN];
 	const { goBack } = useNavigation()
-
-	if (!__DEV__) {
-		excludedNetworks.push(SubstrateNetworkKeys.SUBSTRATE_DEV);
-		excludedNetworks.push(SubstrateNetworkKeys.KUSAMA_DEV);
-	}
 
 	return (
 		<SafeAreaScrollViewContainer contentContainerStyle={{ padding: 20 }}>

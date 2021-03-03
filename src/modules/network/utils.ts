@@ -14,17 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { SubstrateNetworkKeys, UnknownNetworkKeys } from 'constants/networkSpecs';
+import { UnknownNetworkKeys } from 'constants/networkSpecs';
 import { NetworkParams, SubstrateNetworkBasics } from 'types/networkTypes';
 
 export const filterNetworks = (networkList: Map<string, NetworkParams>,
 	extraFilter?: (networkKey: string, shouldExclude: boolean) => boolean): Array<[string, NetworkParams]> => {
 	const excludedNetworks = [UnknownNetworkKeys.UNKNOWN];
-
-	if (!__DEV__) {
-		excludedNetworks.push(SubstrateNetworkKeys.SUBSTRATE_DEV);
-		excludedNetworks.push(SubstrateNetworkKeys.KUSAMA_DEV);
-	}
 
 	const filterNetworkKeys = ([networkKey]: [string, any]): boolean => {
 		const shouldExclude = excludedNetworks.includes(networkKey);

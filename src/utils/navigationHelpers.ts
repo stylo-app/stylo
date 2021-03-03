@@ -28,7 +28,7 @@ RouteName extends keyof RootStackParamList>(navigation: GenericNavigationProps<R
 		index: 1,
 		routes: [
 			{
-				name: 'Main',
+				name: 'AccountList',
 				params: { isNew }
 			},
 			{
@@ -51,7 +51,7 @@ export const resetNavigationWithScanner = <
 		index: 1,
 		routes: [
 			{
-				name: 'Main',
+				name: 'AccountList',
 				params: { isNew: false }
 			},
 			{ name: 'QrScanner' },
@@ -91,8 +91,5 @@ export const navigateToQrScanner = <RouteName extends keyof RootStackParamList>(
 	navigation: GenericNavigationProps<RouteName>
 ): void => resetNavigationTo(navigation, 'QrScanner');
 
-export const navigateToAccountList = <
-	RouteName extends keyof RootStackParamList
->(
-		navigation: GenericNavigationProps<RouteName>
-	): void => resetNavigationToHome(navigation, 'AccountList');
+export const navigateToAccountList = <RouteName extends keyof RootStackParamList>(navigation: GenericNavigationProps<RouteName>): void =>
+	resetNavigationToHome(navigation, 'AccountList');

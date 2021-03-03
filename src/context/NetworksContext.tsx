@@ -45,8 +45,8 @@ export function NetworksContextProvider({ children }: NetworksContextProviderPro
 		const ethereumNetworks: Map<string, NetworkParams> = new Map(Object.entries(ETHEREUM_NETWORK_LIST));
 
 		return new Map([
-			...ethereumNetworks,
 			...substrateNetworks,
+			...ethereumNetworks,
 			[UnknownNetworkKeys.UNKNOWN, unknownNetworkParams]
 		]);
 	}, [substrateNetworks]);

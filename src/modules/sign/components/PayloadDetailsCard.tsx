@@ -237,7 +237,7 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 
 interface PayloadDetailsCardProps {
 	description?: string;
-	payload?: GenericExtrinsicPayload;
+	payload?: GenericExtrinsicPayload | null;
 	signature?: string;
 	style?: ViewStyle;
 	networkKey: string;

@@ -65,6 +65,7 @@ function SignedMessageView({ message, sender: senderAddress }: Props): React.Rea
 			/>
 			<AccountCard
 				address={senderAddress}
+				networkKey={sender.networkKey}
 				titlePrefix={'from:'}
 			/>
 			{!isEthereum && dataToSign ? (

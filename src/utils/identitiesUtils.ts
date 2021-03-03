@@ -51,7 +51,6 @@ export const getMetadata = (networkKey: string): string | null => {
 
 		return centrifugeAmberMetadata;
 	case SubstrateNetworkKeys.KUSAMA:
-	case SubstrateNetworkKeys.KUSAMA_DEV:
 
 		return kusamaMetadata;
 	case SubstrateNetworkKeys.WESTEND:

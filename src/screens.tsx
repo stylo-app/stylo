@@ -19,7 +19,6 @@ import { CardStyleInterpolators, createStackNavigator, HeaderBackButton } from '
 import HeaderMenus from 'components/HeaderMenus';
 import HeaderTitleHome from 'components/HeaderTitleHome';
 import testIDs from 'e2e/testIDs';
-import Main from 'modules/main/screens/Main';
 import NetworkDetails from 'modules/network/screens/NetworkDetails';
 import NetworkSettings from 'modules/network/screens/NetworkSettings';
 import QrScanner from 'modules/sign/screens/QrScanner';
@@ -108,13 +107,9 @@ const HeaderLeftWithBack = (): React.ReactElement => {
 
 export const AppNavigator = (): React.ReactElement => (
 	<ScreenStack.Navigator
-		initialRouteName="Main"
+		initialRouteName="AccountList"
 		screenOptions={globalStackNavigationOptions}
 	>
-		<ScreenStack.Screen
-			component={Main}
-			name="Main"
-		/>
 		<ScreenStack.Screen
 			component={About}
 			name="About"

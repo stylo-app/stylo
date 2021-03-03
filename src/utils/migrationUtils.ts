@@ -79,7 +79,6 @@
 // };
 
 export const migrateAccounts = async (): Promise<void> => {
-	console.log('migrations..')
 	// const oldAccounts_v1 = await loadAccounts(1);
 	// // get a map from old accounts
 	// // v2 accounts (up to v2.2.2) are only ethereum accounts

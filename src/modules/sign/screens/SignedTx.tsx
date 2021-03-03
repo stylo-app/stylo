@@ -76,11 +76,6 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 			);
 		}
 
-		if (isProcessing || payload === null || !signedData) {
-
-			return (<Loader label='Loading...'/>)
-		}
-
 		return (
 			<PayloadDetailsCard
 				networkKey={sender.networkKey}
@@ -90,11 +85,17 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 		);
 	}
 
+	if (isProcessing || payload === null || !signedData) {
+
+		return (<Loader label='Signing...'/>)
+	}
+
 	return (
 		<SafeAreaScrollViewContainer>
 			<Text style={styles.topTitle}>Signed transaction</Text>
 			<AccountCard
 				address={sender.address}
+				networkKey={sender.networkKey}
 			/>
 			<PayloadDetails />
 			<Separator

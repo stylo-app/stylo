@@ -36,17 +36,14 @@ function handleError(e: Error, label: string): any[] {
  *	Accounts Store
  * ========================================
  */
-const currentAccountsStore = {
-	keychainService: 'accounts_v1',
-	sharedPreferencesName: 'accounts_v1'
-};
+const ACCOUNT_STORAGE_BASE_NAME = 'account_storage'
 
 export async function loadAccounts(version = 1): Promise<LegacyAccount[]> {
 	if (!SecureStorage) {
 		return Promise.resolve([]);
 	}
 
-	const accountsStoreVersion = `accounts_v${version}`;
+	const accountsStoreVersion = `${ACCOUNT_STORAGE_BASE_NAME}_v${version}`;
 	const accountsStore = {
 		keychainService: accountsStoreVersion,
 		sharedPreferencesName: accountsStoreVersion
@@ -61,20 +58,28 @@ export async function loadAccounts(version = 1): Promise<LegacyAccount[]> {
 		});
 }
 
+const CURRENT_ACCOUNT_VERSION = 1;
+const currentAccountsStore = {
+	keychainService: `${ACCOUNT_STORAGE_BASE_NAME}_v${CURRENT_ACCOUNT_VERSION}`,
+	sharedPreferencesName: `${ACCOUNT_STORAGE_BASE_NAME}_v${CURRENT_ACCOUNT_VERSION}`
+};
+
+const ACCOUNT_BASE_KEY = 'account:'
+
 export const deleteAccount = (address: string, isEthereum: boolean): Promise<void> => {
 	const dbAddress = isEthereum
 		? address
 		: encodeAddress(address, SUSTRATE_SS58_PREFIX);
 
-	return	SecureStorage.deleteItem(dbAddress, currentAccountsStore);
+	return	SecureStorage.deleteItem(`${ACCOUNT_BASE_KEY}${dbAddress}`, currentAccountsStore);
 }
 
 export const saveAccount = (account: LegacyAccount, isEthereum: boolean): Promise<void> => {
-	const address = isEthereum
+	const dbAddress = isEthereum
 		? account.address
 		: encodeAddress(account.address, SUSTRATE_SS58_PREFIX);
 
-	return SecureStorage.setItem(address, JSON.stringify(account, null, 0), currentAccountsStore);
+	return SecureStorage.setItem(`${ACCOUNT_BASE_KEY}${dbAddress}`, JSON.stringify(account, null, 0), currentAccountsStore);
 }
 
 /*
@@ -82,18 +87,20 @@ export const saveAccount = (account: LegacyAccount, isEthereum: boolean): Promis
  *	Networks Store
  * ========================================
  */
+
+const NETWORK_STORAGE_BASE_NAME = 'networkStorage'
+const CURRENT_NETWORK_VERSION = 1;
 const networkStorage = {
-	keychainService: 'parity_signer_updated_networks',
-	sharedPreferencesName: 'parity_signer_updated_networks'
+	keychainService: NETWORK_STORAGE_BASE_NAME,
+	sharedPreferencesName: NETWORK_STORAGE_BASE_NAME
 };
-const currentNetworkStorageLabel = 'networks_v1';
+const currentNetworkStorageLabel = `${NETWORK_STORAGE_BASE_NAME}_v${CURRENT_NETWORK_VERSION}`;
 
 export async function loadNetworks(): Promise<
 	Map<string, SubstrateNetworkParams>
 	> {
 	try {
-		const networksJson = await SecureStorage.getItem(currentNetworkStorageLabel,
-			networkStorage);
+		const networksJson = await SecureStorage.getItem(currentNetworkStorageLabel, networkStorage);
 
 		if (!networksJson) return new Map(Object.entries(SUBSTRATE_NETWORK_LIST));
 		const networksEntries = JSON.parse(networksJson);
@@ -128,14 +135,15 @@ export async function saveNetworks(newNetwork: SubstrateNetworkParams): Promise<
  * ========================================
  */
 
-const VERSION = 1;
+const TAC_VERSION = 1345;
+const TAC_BASE_NAME = 'TaCAndPPConfirmation'
 
 export async function loadTaCAndPPConfirmation(): Promise<boolean> {
-	const result = await AsyncStorage.getItem(`TaCAndPPConfirmation_v${VERSION}`);
+	const result = await AsyncStorage.getItem(`${TAC_BASE_NAME}_V${TAC_VERSION}`);
 
 	return !!result;
 }
 
 export async function saveTaCAndPPConfirmation(): Promise<void> {
-	await AsyncStorage.setItem(`TaCAndPPConfirmation_v${VERSION}`, 'yes');
+	await AsyncStorage.setItem(`${TAC_BASE_NAME}_V${TAC_VERSION}`, 'yes');
 }

@@ -15,8 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import NetInfo from '@react-native-community/netinfo';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import AccountCard from 'components/AccountCard';
+import { Loader } from 'components/Loader';
 import QrScannerTab from 'components/QrScannerTab';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import testIDs from 'e2e/testIDs';
@@ -27,11 +28,24 @@ import colors from 'styles/colors';
 import { LegacyAccount } from 'types/identityTypes';
 
 import { AccountsContext } from '../context';
+import { useTac } from '../hooks/useTac';
 
 function AccountList(): React.ReactElement {
 	const { accounts, selectAccount } = useContext(AccountsContext);
 	const [isConnected, setIsConnected] = useState(false);
-	const navigation = useNavigation();
+	const { dataLoaded, ppAndTaCAccepted } = useTac();
+	const { dispatch, navigate } = useNavigation();
+
+	useEffect(() => {
+		if (!dataLoaded || ppAndTaCAccepted) return;
+
+		const resetAction = CommonActions.reset({
+			index: 0,
+			routes: [{ name: 'TermsAndConditions' }]
+		});
+
+		dispatch(resetAction);
+	}, [dataLoaded, dispatch, ppAndTaCAccepted])
 
 	useEffect(() =>
 		NetInfo.addEventListener(state => {
@@ -39,9 +53,13 @@ function AccountList(): React.ReactElement {
 		}),
 	[]);
 
+	if(!dataLoaded) {
+		return <Loader/>
+	}
+
 	const onAccountSelected = async (accountAddress: string): Promise<void> => {
 		selectAccount(accountAddress);
-		navigation.navigate('AccountDetails');
+		navigate('AccountDetails');
 	};
 
 	const renderAccountCard = ({ address, name, networkKey }: LegacyAccount): React.ReactElement => (
@@ -59,7 +77,7 @@ function AccountList(): React.ReactElement {
 		<SafeAreaViewContainer>
 			{isConnected && (
 				<TouchableWithoutFeedback
-					onPress={(): void => navigation.navigate('Security')}
+					onPress={(): void => navigate('Security')}
 				>
 					<View style={styles.insecureDeviceBanner}>
 						<Icon

@@ -40,10 +40,8 @@ export default function TermsAndConditions(): React.ReactElement {
 	const onConfirm = useCallback(async () => {
 		saveTaCAndPPConfirmation()
 			.then(() => {
-				console.log('done saving YES')
 				migrateAccounts()
 					.then(() => {
-						console.log('done migration')
 						setPpAndTaCAccepted(true);
 						const resetAction = CommonActions.reset({
 							index: 0,

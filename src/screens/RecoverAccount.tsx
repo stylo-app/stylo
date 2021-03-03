@@ -63,7 +63,6 @@ function RecoverAccount(): React.ReactElement {
 	const selectedNetwork = useMemo(() => getNetwork(newAccount.networkKey), [getNetwork, newAccount.networkKey])
 	const { navigate } = useNavigation()
 
-	console.log('isSeedValid', isSeedValid.bip39)
 	const goToPin = useCallback(() => {
 		navigate('AccountPin', { isNew: true });
 	}, [navigate])
