@@ -13,11 +13,10 @@ Stylo is built to be used offline. The mobile device used to run the app will ho
 
 ### Install the app
 The app is available in beta for Android and iOs :
-- [Android Play store](https://play.google.com/store/apps/details?id=com.styloapp)
-- [iOs app store](https://itunes.apple.com/us/app/parity-signer/id1218174838)
-- [Signed APK from GitHub](https://github.com/paritytech/parity-signer/releases)
+- Android: From the [Github releases page](https://github.com/stylo-app/stylo/releases) or [Android play store](https://play.google.com/store/apps/details?id=com.styloapp)
+<!-- - [iOs app store](https://itunes.apple.com/us/app//id1218174838)-->
 
-Please double check carefully the origin of the app, and make sure that the company distributing it is **Parity Technologies**. Usual security advice apply to this air-gapped wallet: 
+Please double check carefully the origin of the app, and make sure that the company distributing it is **Stylo app**. Usual security advice apply to this air-gapped wallet: 
 - When creating an account using Stylo Mobile app, make sure to write down the recovery phrase and store it in safe places.
 - Always double check the information of the transactions you are about to sign or send.
 - Make sure to first transfer a small amount of Ether with the app and verify that everything is working as expected before transferring larger amounts of Ether.
@@ -37,4 +36,4 @@ Once Stylo is installed, your device should never go online. This would put your
 8. Recover your accounts.
 
 ## What data does it collect?
-None, it's as simple as that. The Stylo Mobile Android and iOS apps do not send any sort of data to Parity Technologies or any partner and work completely offline once installed.
+None, it's as simple as that. The Stylo Mobile Android and iOS apps do not send any sort of data to anyone and work completely offline once installed.

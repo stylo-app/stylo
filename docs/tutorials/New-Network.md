@@ -1,4 +1,4 @@
-# Update Network Tutorial
+<!-- # Update Network Tutorial
 
 Stylo support adding a new Substrate based network or update the existing network via QR code.
 
@@ -20,4 +20,4 @@ Now on the Stylo app, click the QR scanner Button anywhere on the app, and scan 
 
 ![Network Metadata Added on Stylo](images/Network-Metadata-Added.png)
 
-Notice since the metadata is generally very big data, and currently, it is hard to sync with Stylo, so when signing the transactions on added networks, we cannot interpreter the extrinsic details at the moment. Please check on this [issue](https://github.com/paritytech/parity-signer/issues/457) for the update.
+Notice since the metadata is generally very big data, and currently, it is hard to sync with Stylo, so when signing the transactions on added networks, we cannot interpreter the extrinsic details at the moment. Please check on this [issue](https://github.com//issues/457) for the update. -->
