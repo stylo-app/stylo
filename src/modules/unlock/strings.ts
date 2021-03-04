@@ -28,7 +28,7 @@ const t = {
 	},
 	pinTooShortHint: 'Your pin must be at least 6 digits long!',
 	subtitle: {
-		pinCreation: 'Choose a PIN code with 6 or more digits',
+		pinCreation: 'Choose a PIN code with 6 digits or more',
 		pinUnlock: 'Unlock the identity to use the seed'
 	},
 	title: {

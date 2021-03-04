@@ -1,15 +1,18 @@
 import { NetworkProtocols } from 'constants/networkSpecs';
 import { createContext, default as React, useCallback, useContext, useEffect, useState } from 'react';
 import { Account, isUnlockedAccount, LegacyAccount, LockedAccount, UnlockedAccount } from 'types/identityTypes';
-import { isEthereumNetwork } from 'types/networkTypes';
+import { isEthereumNetwork, NetworkParams } from 'types/networkTypes';
 import { emptyAccount } from 'utils/account';
 import { deleteAccount as deleteDbAccount, loadAccounts, saveAccount as saveDbAccount } from 'utils/db';
 import { decryptData, encryptData } from 'utils/native';
 import { parseSURI } from 'utils/suri';
 
+import { decodeAddress } from '@polkadot/util-crypto';
+
 import { NetworksContext } from './NetworksContext';
 
 export interface AccountsContextType {
+	accountExists: (address: string | null | undefined, network: NetworkParams | null) => boolean;
 	accounts: LegacyAccount[];
 	accountsLoaded: boolean;
 	newAccount: LegacyAccount;
@@ -71,6 +74,42 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 			...accountUpdate
 		} as LegacyAccount))
 	}, [])
+
+	const accountExists = (address : string | null | undefined, network: NetworkParams | null) => {
+		if (!address){
+			return false;
+		}
+
+		const existingAddress = getAccountByAddress(address);
+
+		if (existingAddress) {
+			return true
+		}
+
+		// No need to decode anything with ETH
+		// because if there's no address found, no eth account exists with this address
+		if (network && isEthereumNetwork(network)) {
+			return false
+		}
+
+		// we're left with a substrate network, we can decode the address
+		const searchingForPubKey = decodeAddress(address).toString();
+
+		// and compare the public keys
+		const existing = accounts.filter((account) => !isEthereumAccount(account))
+			.some((substrateAccount) => {
+
+				if(searchingForPubKey === decodeAddress(substrateAccount.address).toString()){
+					// this will break the "some" iteration
+					return true
+				}
+
+				return false
+			})
+
+		return existing;
+
+	}
 
 	function _deleteSensitiveData({ address, createdAt, encryptedSeed, isLegacy, name, networkKey, recovered, updatedAt, validBip39Seed }: UnlockedAccount): LockedAccount {
 		return {
@@ -535,6 +574,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 
 	return (
 		<AccountsContext.Provider value={{
+			accountExists,
 			accounts,
 			accountsLoaded,
 			// clearIdentity,

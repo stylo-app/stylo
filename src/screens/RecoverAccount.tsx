@@ -26,6 +26,7 @@ import testIDs from 'e2e/testIDs';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
+import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
 import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
 import { emptyAccount, validateSeed } from 'utils/account';
@@ -54,7 +55,7 @@ function RecoverAccount(): React.ReactElement {
 	const [derivationPath, setDerivationPath] = useState('');
 	// eslint-disable-next-line no-unused-vars
 	const [derivationPassword, setDerivationPassword] = useState('');
-	const { newAccount, updateNew } = useContext(AccountsContext);
+	const { accountExists, newAccount, updateNew } = useContext(AccountsContext);
 	const defaultSeedValidObject = validateSeed('', false);
 	const [isSeedValid, setIsSeedValid] = useState(defaultSeedValidObject);
 	const [seedPhrase, setSeedPhrase] = useState('');
@@ -62,6 +63,7 @@ function RecoverAccount(): React.ReactElement {
 	const { getNetwork } = useContext(NetworksContext)
 	const selectedNetwork = useMemo(() => getNetwork(newAccount.networkKey), [getNetwork, newAccount.networkKey])
 	const { navigate } = useNavigation()
+	const accountAlreadyExists = useMemo(() => accountExists(newAccount.address, selectedNetwork), [accountExists, newAccount.address, selectedNetwork])
 
 	const goToPin = useCallback(() => {
 		navigate('AccountPin', { isNew: true });
@@ -209,16 +211,23 @@ function RecoverAccount(): React.ReactElement {
 					styles={styles}
 				/>
 			)} */}
-			{ isSeedValid.bip39 && !!networkKey && !!address &&
-				(<AccountCard
+			{ isSeedValid.bip39 && !!networkKey && !!address && !accountAlreadyExists && (
+				<AccountCard
 					address={address}
 					networkKey={networkKey}
 					title={name || '<no name>'}
-				/>)
-			}
+				/>
+			)}
+			{ accountAlreadyExists && (
+				<View style={styles.step}>
+					<Text style={styles.errorText}>
+						An account with this seed phrase already exists.
+					</Text>
+				</View>
+			)}
 			<View style={styles.btnBox}>
 				<Button
-					disabled={!isSeedValid.bip39 || !networkKey || !address}
+					disabled={!isSeedValid.bip39 || !networkKey || !address || accountAlreadyExists}
 					onPress={onRecoverConfirm}
 					small={true}
 					testID={testIDs.RecoverAccount.recoverButton}
@@ -240,6 +249,11 @@ const styles = StyleSheet.create({
 	btnBox: {
 		alignContent: 'center',
 		marginTop: 20
+	},
+	errorText:{
+		color: colors.signal.error,
+		fontSize: 20,
+		textAlign: 'center'
 	},
 	step: {
 		padding: 16

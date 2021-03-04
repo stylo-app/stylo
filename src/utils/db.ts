@@ -21,9 +21,7 @@ import { LegacyAccount } from 'types/identityTypes';
 import { SubstrateNetworkParams } from 'types/networkTypes';
 import { mergeNetworks, serializeNetworks } from 'utils/networksUtils';
 
-import { encodeAddress } from '@polkadot/util-crypto';
-
-const SUSTRATE_SS58_PREFIX = 42;
+import { decodeAddress } from '@polkadot/util-crypto';
 
 function handleError(e: Error, label: string): any[] {
 	console.warn(`loading ${label} error`, e);
@@ -67,19 +65,19 @@ const currentAccountsStore = {
 const ACCOUNT_BASE_KEY = 'account:'
 
 export const deleteAccount = (address: string, isEthereum: boolean): Promise<void> => {
-	const dbAddress = isEthereum
+	const dbKey = isEthereum
 		? address
-		: encodeAddress(address, SUSTRATE_SS58_PREFIX);
+		: decodeAddress(address).toString();
 
-	return	SecureStorage.deleteItem(`${ACCOUNT_BASE_KEY}${dbAddress}`, currentAccountsStore);
+	return	SecureStorage.deleteItem(`${ACCOUNT_BASE_KEY}${dbKey}`, currentAccountsStore);
 }
 
 export const saveAccount = (account: LegacyAccount, isEthereum: boolean): Promise<void> => {
-	const dbAddress = isEthereum
+	const dbKey = isEthereum
 		? account.address
-		: encodeAddress(account.address, SUSTRATE_SS58_PREFIX);
+		: decodeAddress(account.address).toString();
 
-	return SecureStorage.setItem(`${ACCOUNT_BASE_KEY}${dbAddress}`, JSON.stringify(account, null, 0), currentAccountsStore);
+	return SecureStorage.setItem(`${ACCOUNT_BASE_KEY}${dbKey}`, JSON.stringify(account, null, 0), currentAccountsStore);
 }
 
 /*
@@ -135,7 +133,7 @@ export async function saveNetworks(newNetwork: SubstrateNetworkParams): Promise<
  * ========================================
  */
 
-const TAC_VERSION = 1345;
+const TAC_VERSION = 1;
 const TAC_BASE_NAME = 'TaCAndPPConfirmation'
 
 export async function loadTaCAndPPConfirmation(): Promise<boolean> {

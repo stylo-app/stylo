@@ -49,7 +49,6 @@ export default function TermsAndConditions(): React.ReactElement {
 						});
 
 						dispatch(resetAction);
-					// 	setDataLoaded(true);
 					})
 					.catch((e) => {
 						console.error('migrateAccounts error', e);

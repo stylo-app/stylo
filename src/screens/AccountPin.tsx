@@ -127,7 +127,7 @@ function AccountPin({ navigation, route }: NavigationProps<'AccountPin'>): React
 
 		return (
 			<Text style={styles.hintText}>
-				Choose a PIN code with 6 or more digits
+				Choose a PIN code with 6 digits or more.
 			</Text>
 		);
 	};
@@ -182,14 +182,14 @@ const styles = StyleSheet.create({
 	errorText: {
 		color: colors.signal.error,
 		fontFamily: fonts.bold,
-		fontSize: 12,
+		fontSize: 14,
 		paddingBottom: 20,
 		textAlign: 'center'
 	},
 	hintText: {
 		color: colors.text.faded,
 		fontFamily: fonts.bold,
-		fontSize: 12,
+		fontSize: 14,
 		paddingBottom: 20,
 		textAlign: 'center'
 	},
