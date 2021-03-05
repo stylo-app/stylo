@@ -167,7 +167,7 @@ function RecoverAccount(): React.ReactElement {
 
 	return (
 		<KeyboardScrollView>
-			<ScreenHeading title={'New Account'} />
+			<ScreenHeading title={'Recover Account'} />
 			<View style={styles.step}>
 				<Text style={styles.title}>Name</Text>
 				<TextInput
@@ -211,11 +211,13 @@ function RecoverAccount(): React.ReactElement {
 				/>
 			)} */}
 			{ isSeedValid.bip39 && !!networkKey && !!address && !accountAlreadyExists && (
-				<AccountCard
-					address={address}
-					networkKey={networkKey}
-					title={name || '<no name>'}
-				/>
+				<View style={styles.step}>
+					<AccountCard
+						address={address}
+						networkKey={networkKey}
+						title={name || '<no name>'}
+					/>
+				</View>
 			)}
 			{ accountAlreadyExists && (
 				<View style={styles.step}>
