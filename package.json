@@ -45,9 +45,9 @@
   },
   "dependencies": {
     "@polkadot/api": "^3.11.1",
-    "@polkadot/reactnative-identicon": "^0.70.1",
+    "@polkadot/reactnative-identicon": "^0.70.2-3",
     "@polkadot/util": "^6.0.2",
-    "@polkadot/util-crypto": "^5.9.2",
+    "@polkadot/util-crypto": "^6.0.2",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.6",
     "@react-native-community/netinfo": "^6.0.0",
