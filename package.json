@@ -44,8 +44,8 @@
     "release:apk": "(cd android && ./gradlew assembleRelease)"
   },
   "dependencies": {
-    "@polkadot/api": "3.9.3",
-    "@polkadot/reactnative-identicon": "0.53.1",
+    "@polkadot/api": "3.11.1",
+    "@polkadot/reactnative-identicon": "^0.70.1",
     "@polkadot/util": "5.7.1",
     "@polkadot/util-crypto": "^5.7.1",
     "@react-native-community/async-storage": "^1.12.1",
