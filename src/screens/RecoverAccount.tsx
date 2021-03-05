@@ -92,7 +92,7 @@ function RecoverAccount(): React.ReactElement {
 	const generateAddress = useCallback(() => {
 
 		if (!selectedNetwork) {
-			console.error('No network selected')
+			console.warn('No network selected')
 
 			return null
 		}
