@@ -43,7 +43,7 @@ type NetworkTypesMap = { [key: string]: NetworkTypes };
 const networkTypesMap: NetworkTypesMap = {
 	centrifuge: {
 		alias: 'centrifuge-chain',
-		chains: { centrifuge_amber: 'centrifuge-chain-amber' }
+		chains: {}
 	},
 	kusama: { chains: {} },
 	polkadot: { chains: { westend: 'Westend' } },

@@ -48,7 +48,6 @@ export const SubstrateNetworkKeys: Record<string, string> = Object.freeze({
 	KUSAMA: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe', // https://polkascan.io/pre/kusama-cc3/block/0
 	// eslint-disable-next-line sort-keys
 	CENTRIFUGE: '0x67dddf2673b69e5f875f6f25277495834398eafd67f492e09f3f3345e003d1b5', // https://portal.chain.centrifuge.io/#/explorer/query/0
-	CENTRIFUGE_AMBER: '0x092af6e7d25178ebab1677d15f66e37b30392b44ef442f728a53dd1bf48ec110', // https://portal.chain.centrifuge.io/#/explorer/query/0
 	EDGEWARE: '0x742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b', // https://polkascan.io/pre/edgeware/block/0
 	KULUPU: '0xf7a99d3cb92853d00d5275c971c132c074636256583fee53b3bbe60d7b8769ba',
 	ROCOCO: '0x78ae7dc7e64637e01fa6a6b6e4fa252c486f62af7aa71c471ad17f015bd375ce',
@@ -113,17 +112,6 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 36,
 		title: 'Centrifuge Mainnet',
 		unit: 'RAD'
-	},
-	[SubstrateNetworkKeys.CENTRIFUGE_AMBER]: {
-		color: '#7C6136',
-		decimals: 18,
-		genesisHash: SubstrateNetworkKeys.CENTRIFUGE_AMBER,
-		logo: require('res/img/logos/Centrifuge.png'),
-		order: 8,
-		pathId: 'centrifuge_amber',
-		prefix: 42,
-		title: 'Centrifuge Testnet Amber',
-		unit: 'ARAD'
 	},
 	[SubstrateNetworkKeys.EDGEWARE]: {
 		color: '#0B95E0',

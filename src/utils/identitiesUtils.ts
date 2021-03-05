@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { centrifugeAmberMetadata, centrifugeMetadata, edgewareMetadata, kulupuMetadata, kusamaMetadata, polkadotMetaData, rococoMetadata, westendMetadata } from 'constants/networkMetadata';
+import { centrifugeMetadata, edgewareMetadata, kulupuMetadata, kusamaMetadata, polkadotMetaData, rococoMetadata, westendMetadata } from 'constants/networkMetadata';
 import { SubstrateNetworkKeys } from 'constants/networkSpecs';
 
 import { pathsRegex } from './regex';
@@ -30,9 +30,6 @@ export const getMetadata = (networkKey: string): string | null => {
 	case SubstrateNetworkKeys.CENTRIFUGE:
 
 		return centrifugeMetadata;
-	case SubstrateNetworkKeys.CENTRIFUGE_AMBER:
-
-		return centrifugeAmberMetadata;
 	case SubstrateNetworkKeys.KUSAMA:
 
 		return kusamaMetadata;
