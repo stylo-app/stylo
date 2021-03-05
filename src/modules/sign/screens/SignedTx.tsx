@@ -85,7 +85,7 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 		);
 	}
 
-	if (isProcessing || payload === null || !signedData) {
+	if (isProcessing || !signedData || (!isEthereum && payload === null)) {
 
 		return (<Loader label='Signing...'/>)
 	}

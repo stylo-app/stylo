@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useCallback, useContext, useState } from 'react';
-import { deepCopyMap } from 'stores/utils';
 import { SubstrateNetworkParams } from 'types/networkTypes';
 import { getMetadata } from 'utils/identitiesUtils';
 
@@ -24,6 +23,7 @@ import { TypeRegistry } from '@polkadot/types';
 import { getSpecTypes } from '@polkadot/types-known';
 
 import { NetworksContext } from './NetworksContext';
+import { deepCopyMap } from './utils';
 
 export interface RegistriesContextType {
 	registries: Map<string, TypeRegistry>;

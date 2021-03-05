@@ -56,7 +56,7 @@ export default function OnBoardingView({ hasLegacyAccount }: {hasLegacyAccount: 
 				<Text style={fontStyles.quote}> or </Text>
 				<TextButton isRecover={true}
 					text="recover" />
-				<Text style={fontStyles.quote}>your identity to get started.</Text>
+				<Text style={fontStyles.quote}>an account to get started.</Text>
 				{hasLegacyAccount && (
 					<Button
 						onPress={(): void => navigation.navigate('AccountList')}

@@ -22,23 +22,6 @@ import { pathsRegex } from './regex';
 //walk around to fix the regular expression support for positive look behind;
 export const removeSlash = (str: string): string => str.replace(/\//g, '');
 
-// export const verifyPassword = async (password: string, seedPhrase: string, identity: Identity, path: string, networkContextState: NetworksContextType): Promise<boolean> => {
-// 	const { networks } = networkContextState;
-// 	const suri = constructSURI({
-// 		derivePath: path,
-// 		password: password,
-// 		phrase: seedPhrase
-// 	});
-// 	const networkKey = getNetworkKey(path, identity, networkContextState);
-// 	const networkParams = networks.get(networkKey);
-
-// 	if (!networkParams) throw new Error(strings.ERROR_NO_NETWORK);
-// 	const address = await substrateAddress(suri, networkParams.prefix);
-// 	const accountMeta = identity.meta.get(path);
-
-// 	return address === accountMeta?.address;
-// };
-
 export const validateDerivedPath = (derivedPath: string): boolean =>
 	pathsRegex.validateDerivedPath.test(derivedPath);
 

@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { AccountsContextType } from '../context';
-
 export type UnlockedAccount = {
 	address: string;
 	createdAt: number;
@@ -37,7 +35,7 @@ export type LockedAccount = Omit<
 	'seedPhrase' | 'seed' | 'derivationPassword' | 'derivationPath'
 >;
 
-export type Account = UnlockedAccount | LockedAccount | LegacyAccount;
+export type Account = UnlockedAccount | LockedAccount | AccountType;
 
 export function isUnlockedAccount(account: UnlockedAccount | LockedAccount): account is UnlockedAccount {
 	return 'seed' in account || 'seedPhrase' in account;
@@ -62,7 +60,7 @@ export interface FoundIdentityAccount extends AccountMeta {
 	path: string;
 }
 
-export interface LegacyAccount {
+export interface AccountType {
 	address: string;
 	createdAt: number;
 	derivationPassword?: string;
@@ -78,17 +76,6 @@ export interface LegacyAccount {
 	updatedAt: number;
 	validBip39Seed: boolean;
 }
-
-export type FoundAccount = FoundIdentityAccount | LegacyAccount;
-
-export type Identity = {
-	// encrypted seed include seedPhrase and password
-	encryptedSeed: string;
-	derivationPassword: string;
-	meta: Map<string, AccountMeta>;
-	addresses: Map<string, string>;
-	name: string;
-};
 
 export type SerializedIdentity = {
 	encryptedSeed: string;
@@ -110,18 +97,6 @@ export interface AccountInfo {
 	networkKey: string;
 	path?: string;
 };
-
-export type AccountsStoreState = {
-	identities: Identity[];
-	currentIdentity: Identity | null;
-	newIdentity: Identity;
-};
-
-type LensSet<T, R> = Omit<T, keyof R> & R;
-export type AccountsStoreStateWithIdentity = LensSet<
-	AccountsContextType,
-	{ state: LensSet<AccountsStoreState, { currentIdentity: Identity }> }
->;
 
 export type PathGroup = {
 	paths: string[];

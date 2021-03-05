@@ -38,26 +38,22 @@ When launching the app for the first time, no account has been set up yet. At th
  
 ### Create an account
  
-Tap on the `Create` button after Stylo's first launch, you can then name your identity.
+Tap on the `+` button after Stylo's first launch, follow along to create your account.
 
 In the next step, your recovery phrase will be presented to you. Think of it as a master key. If you lose it, you lose your money.
 **Write this recovery phrase down and store it in a safe place**.
 If your phone gets stolen/broken/forgotten this will be the only way to [recover your account](#recover-an-account-with-your-recovery-phrase).
 
-You will then be asked to choose a pin code. This pin will be needed later on to unlock your account to manage the identity or sign a transaction.
-
-The next screen you will allow you to select a network for generating an account.
+You will then be asked to choose a pin code. This pin will be needed later on to unlock your account to manage the account or sign a transaction.
 
 
 ### Recover an account with your recovery phrase
 
 If you already have an account created with either Stylo or any other wallet, you can recover it by doing so:
-- Tap on the top right side user icon, and choose ` + Add Identity`.
-- Input the new identity name and tap the `Recover Identity` button.
-- Type in the recovery phrase, word suggestion helps you prevent any typo. The field will turn red if the recovery phrase is not a bip39.
-- Tap `Recover Identity`.
+- Tap on the top right side the ` +` and `Recover account`.
+- Type in the recovery phrase, word suggestion helps you prevent any typo.
+- Tap `Recover account`.
 - Select a PIN number and confirm it by typing it again.
-- Once your Identity is generated, you can select a network to create your first account.
 
 ## 3. Copy Stylo account's address
 

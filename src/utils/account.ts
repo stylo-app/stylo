@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { SubstrateNetworkKeys } from 'constants/networkSpecs';
-import { UnlockedAccount } from 'types/identityTypes';
+import { UnlockedAccount } from 'types/accountTypes';
 import { EthereumNetwork, isSubstrateNetwork, isUnknownNetworkParams, NetworkParams } from 'types/networkTypes';
 import { ValidSeed } from 'types/utilTypes';
 

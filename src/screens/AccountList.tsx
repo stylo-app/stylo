@@ -25,7 +25,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text,TouchableWithoutFeedback, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import colors from 'styles/colors';
-import { LegacyAccount } from 'types/identityTypes';
+import { AccountType } from 'types/accountTypes';
 
 import { AccountsContext } from '../context';
 import { useTac } from '../hooks/useTac';
@@ -62,7 +62,7 @@ function AccountList(): React.ReactElement {
 		navigate('AccountDetails');
 	};
 
-	const renderAccountCard = ({ address, name, networkKey }: LegacyAccount): React.ReactElement => (
+	const renderAccountCard = ({ address, name, networkKey }: AccountType): React.ReactElement => (
 		<AccountCard
 			address={address}
 			key={address}

@@ -17,7 +17,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { SUBSTRATE_NETWORK_LIST } from 'constants/networkSpecs';
 import SecureStorage from 'react-native-secure-storage';
-import { LegacyAccount } from 'types/identityTypes';
+import { AccountType } from 'types/accountTypes';
 import { SubstrateNetworkParams } from 'types/networkTypes';
 import { mergeNetworks, serializeNetworks } from 'utils/networksUtils';
 
@@ -36,7 +36,7 @@ function handleError(e: Error, label: string): any[] {
  */
 const ACCOUNT_STORAGE_BASE_NAME = 'account_storage'
 
-export async function loadAccounts(version = 1): Promise<LegacyAccount[]> {
+export async function loadAccounts(version = 1): Promise<AccountType[]> {
 	if (!SecureStorage) {
 		return Promise.resolve([]);
 	}
@@ -50,7 +50,7 @@ export async function loadAccounts(version = 1): Promise<LegacyAccount[]> {
 	return SecureStorage.getAllItems(accountsStore)
 		.then((storedAccounts: { [key: string]: string }) => {
 
-			const accounts = Object.entries(storedAccounts).map(([_, value]) => JSON.parse(value) as LegacyAccount)
+			const accounts = Object.entries(storedAccounts).map(([_, value]) => JSON.parse(value) as AccountType)
 
 			return accounts;
 		});
@@ -72,7 +72,7 @@ export const deleteAccount = (address: string, isEthereum: boolean): Promise<voi
 	return	SecureStorage.deleteItem(`${ACCOUNT_BASE_KEY}${dbKey}`, currentAccountsStore);
 }
 
-export const saveAccount = (account: LegacyAccount, isEthereum: boolean): Promise<void> => {
+export const saveAccount = (account: AccountType, isEthereum: boolean): Promise<void> => {
 	const dbKey = isEthereum
 		? account.address
 		: decodeAddress(account.address).toString();

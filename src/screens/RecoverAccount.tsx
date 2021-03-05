@@ -26,7 +26,6 @@ import testIDs from 'e2e/testIDs';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
-import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
 import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
 import { emptyAccount, validateSeed } from 'utils/account';
@@ -148,20 +147,20 @@ function RecoverAccount(): React.ReactElement {
 		isSeedValid.bip39 && generateAddress()
 	}, [generateAddress, isSeedValid.bip39])
 
-	const onRecoverIdentity = (): void => {
+	const onRecoverAccount = (): void => {
 		goToPin()
 	};
 
 	const onRecoverConfirm = (): void | Promise<void> => {
 		if (!isSeedValid.valid) {
 			if (isSeedValid.accountRecoveryAllowed) {
-				return alertRisks(setAlert, `${isSeedValid.reason}`, onRecoverIdentity);
+				return alertRisks(setAlert, `${isSeedValid.reason}`, onRecoverAccount);
 			} else {
 				return alertError(setAlert, `${isSeedValid.reason}`);
 			}
 		}
 
-		return onRecoverIdentity();
+		return onRecoverAccount();
 	};
 
 	const { address, name, networkKey } = newAccount;

@@ -10,11 +10,11 @@ When creating an account on PolkadotJs, it will give you a mnemonic phrase on th
 
 ![Create Account on PolkadotJs Apps](./images/Polkadotjs-Create-Account.png)
 
-## Recover identity with mnemonic phrase
+## Recover account with mnemonic phrase
 
-On Stylo, each mnemonic phrase represents an identity, every account starts with an identity, and identity could derive infinite accounts from it. So firstly let's recover the identity from the mnemonic phrase.
+On Stylo, each mnemonic phrase represents an account, every account starts with an account, and account could derive infinite accounts from it. So firstly let's recover the account from the mnemonic phrase.
 
-![recover the identity](./images/Recover-Identity.png).
+![recover the account](./images/Recover-Account.png).
 
 After tapping one network from the list, you will have the default account created for this network with a default path (as on the above image, `//polkadot`), **but this one is different with the one created from Polkadot.js Apps**, because the paths are different. 
 

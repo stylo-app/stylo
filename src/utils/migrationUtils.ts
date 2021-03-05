@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // import { NETWORK_LIST } from 'constants/networkSpecs';
-// import { AccountMeta, Identity, LockedAccount } from 'types/identityTypes';
+// import { AccountMeta, Identity, LockedAccount } from 'types/accountTypes';
 // import { generateAccountId } from 'utils/account';
 // import { loadAccounts, loadIdentities, saveAccount, saveIdentities } from 'utils/db';
 // import { extractAddressFromAccountId, isEthereumAccountId } from 'utils/identitiesUtils';

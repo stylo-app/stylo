@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import TouchableItem from 'components/TouchableItem';
-import testIDs from 'e2e/testIDs';
 import React, { ReactElement, ReactNode, useContext } from 'react';
 import { StyleSheet, Text, TextStyle,View, ViewStyle } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -27,7 +26,6 @@ import { ButtonListener } from 'types/props';
 
 import { NetworksContext } from '../context';
 import AccountIcon from './AccountIcon';
-import ButtonIcon from './ButtonIcon';
 
 const renderSubtitle = (subtitle?: string,
 	hasSubtitleIcon?: boolean,
@@ -72,21 +70,6 @@ const renderSubtitleIcon = (hasSubtitleIcon?: boolean): ReactNode => {
 			color={colors.text.faded}
 			name="user"
 			size={10}
-		/>
-	);
-};
-
-const renderBack = (onPress?: ButtonListener): ReactNode => {
-	if (!onPress) return;
-
-	return (
-		<ButtonIcon
-			iconBgStyle={{ backgroundColor: 'transparent' }}
-			iconName="arrowleft"
-			iconType="antdesign"
-			onPress={onPress}
-			style={StyleSheet.flatten([baseStyles.icon, { left: 0 }])}
-			testID={testIDs.Main.backButton}
 		/>
 	);
 };
@@ -149,29 +132,6 @@ export function LeftScreenHeading({ hasSubtitleIcon, headMenu, networkKey, onPre
 	);
 }
 
-export function IdentityHeading({ hasSubtitleIcon, onPressBack, subtitle, title }: {
-	title: string;
-	subtitle?: string;
-	hasSubtitleIcon?: boolean;
-	onPressBack?: ButtonListener;
-}): ReactElement {
-	return (
-		<View style={baseStyles.bodyWithIdentity}>
-			<View style={baseStyles.identityName}>
-				<Text
-					ellipsizeMode="middle"
-					numberOfLines={1}
-					style={[baseStyles.text, baseStyles.t_left]}
-				>
-					{title}
-				</Text>
-			</View>
-			{onPressBack && renderBack(onPressBack)}
-			{renderSubtitle(subtitle, hasSubtitleIcon, true, false, false)}
-		</View>
-	);
-}
-
 export default class ScreenHeading extends React.PureComponent<{
 	subtitle?: string;
 	subtitleL?: boolean;
@@ -211,25 +171,11 @@ const baseStyles = StyleSheet.create({
 		marginBottom: 16,
 		paddingRight: 16
 	},
-	bodyWithIdentity: {
-		flexDirection: 'column',
-		height: 42,
-		justifyContent: 'center',
-		paddingLeft: 72,
-		paddingRight: 32
-	},
 	icon: {
 		marginLeft: 5,
 		position: 'absolute'
 	},
-	identityName: {
-		alignItems: 'center',
-		flexDirection: 'row'
-	},
 	linkIcon: { marginLeft: 10 },
-	// menu: {
-	// 	alignSelf: 'flex-end'
-	// },
 	networkIcon: { paddingHorizontal: 16 },
 	subtitleBody: {
 		alignItems: 'center',
