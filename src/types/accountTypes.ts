@@ -75,6 +75,7 @@ export interface AccountType {
 	seedPhrase?: string; //contains only the BIP39 words, no derivation path
 	updatedAt: number;
 	validBip39Seed: boolean;
+	version?: number;
 }
 
 export type SerializedIdentity = {

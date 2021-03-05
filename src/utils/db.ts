@@ -76,8 +76,9 @@ export const saveAccount = (account: AccountType, isEthereum: boolean): Promise<
 	const dbKey = isEthereum
 		? account.address
 		: decodeAddress(account.address).toString();
+	const accountWithVersion = { ...account, version: CURRENT_ACCOUNT_VERSION }
 
-	return SecureStorage.setItem(`${ACCOUNT_BASE_KEY}${dbKey}`, JSON.stringify(account, null, 0), currentAccountsStore);
+	return SecureStorage.setItem(`${ACCOUNT_BASE_KEY}${dbKey}`, JSON.stringify(accountWithVersion, null, 0), currentAccountsStore);
 }
 
 /*
