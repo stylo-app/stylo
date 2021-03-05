@@ -171,12 +171,14 @@ export default class AccountIconChooser extends React.PureComponent<Props, { ico
 						horizontal
 						keyExtractor={(item: IconType): string => item.seed}
 						renderItem={this.renderIcon}
+						style={{}}
 					/>
 					<TouchableOpacity onPress={this.refreshIcons}>
 						<Icon
 							name={'refresh'}
 							size={35}
-							style={styles.refreshIcon} />
+							style={styles.refreshIcon}
+						/>
 					</TouchableOpacity>
 				</View>
 				{this.renderAddress()}
@@ -216,6 +218,7 @@ const styles = StyleSheet.create({
 		width: 50
 	},
 	iconBorder: {
+		borderColor: colors.background.app,
 		borderWidth: 6,
 		height: 62 // height = icon height (50) + borderWidth (6) * 2
 	},
