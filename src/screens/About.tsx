@@ -17,7 +17,7 @@
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import iconLogo from 'res/img/icon.png';
+import iconLogo from 'res/stylo-logos/stylo_logo-white-blue.png';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 
@@ -62,8 +62,9 @@ const styles = StyleSheet.create({
 
 	logo: {
 		alignSelf: 'center',
-		height: 80,
-		width: 157
+		height: 150,
+		marginBottom: -15,
+		width: 150
 	},
 	text: {
 		color: colors.text.main,
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center'
 	},
 	wrapper: {
-		padding: 20
+		paddingHorizontal: 20
 	}
 });
 

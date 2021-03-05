@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import iconLogo from 'res/img/icon.png';
+import iconLogo from 'res/stylo-logos/stylo-sig-white.png';
 
 const HeaderTitleHome =() => (
 	<View style={styles.wrapper} >

@@ -1,7 +1,7 @@
-<!-- ![Stylo](logo.jpg) -->
+![Stylo](./res/stylo-logos/stylo_logo-black-blue.png)
 
-<!-- [<img src="./res/github-badge.png" width="250"/>]()
-[<img src="./res/google-play-badge.png" width="250"/>]()
+[<img src="./res/github-badge.png" width="250"/>](https://github.com/stylo-app/stylo/releases)
+<!-- [<img src="./res/google-play-badge.png" width="250"/>]()
 [<img src="./res/app-store-badge.png" width="250"/>]() -->
 
 # Stylo - An offline wallet for your offline phone
