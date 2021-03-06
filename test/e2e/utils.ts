@@ -30,7 +30,7 @@ const substrateNetworkButtonIndex =
 	Main.networkButton +
 	SUBSTRATE_NETWORK_LIST[SubstrateNetworkKeys.KUSAMA].pathId;
 
-export const testTap = async (buttonId: string): Promise<Detox.Actions<any>> =>
+export const testTap = async (buttonId: string): Promise<void> =>
 	await element(by.id(buttonId)).tap();
 
 export const testVisible = async (componentId: string): Promise<void> =>

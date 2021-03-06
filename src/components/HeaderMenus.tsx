@@ -18,15 +18,17 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { useTac } from '../hooks/useTac';
 import PopupMenu from './PopupMenu';
 
-const MAIN_MENUS = ['AccountList'];
+const MAIN_MENUS = ['Main','AccountList'];
 
 function HeaderMenus(): React.ReactElement {
 	const { navigate } = useNavigation()
 	const { name } = useRoute();
+	const { ppAndTaCAccepted } = useTac()
 
-	const showMainMenu = MAIN_MENUS.includes(name);
+	const showMainMenu = MAIN_MENUS.includes(name) && ppAndTaCAccepted;
 
 	const onAccountCreate = useCallback((to: string) => {
 		navigate(to);

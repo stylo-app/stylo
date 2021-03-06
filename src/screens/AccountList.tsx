@@ -49,7 +49,7 @@ function AccountList(): React.ReactElement {
 
 	useEffect(() =>
 		NetInfo.addEventListener(state => {
-			setIsConnected(state.isConnected);
+			setIsConnected(state.isConnected || false);
 		}),
 	[]);
 
