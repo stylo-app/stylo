@@ -34,6 +34,7 @@ import AccountList from 'screens/AccountList';
 import AccountNew from 'screens/AccountNew';
 import AccountPin from 'screens/AccountPin';
 import { AccountUnlock, AccountUnlockAndSign } from 'screens/AccountUnlock';
+import Main from 'screens/Main';
 import Mnemonic from 'screens/Mnemonic';
 import NetworkList from 'screens/NetworkList';
 import RecoverAccount from 'screens/RecoverAccount';
@@ -107,9 +108,13 @@ const HeaderLeftWithBack = (): React.ReactElement => {
 
 export const AppNavigator = (): React.ReactElement => (
 	<ScreenStack.Navigator
-		initialRouteName="AccountList"
+		initialRouteName="Main"
 		screenOptions={globalStackNavigationOptions}
 	>
+		<ScreenStack.Screen
+			component={Main}
+			name="Main"
+		/>
 		<ScreenStack.Screen
 			component={About}
 			name="About"

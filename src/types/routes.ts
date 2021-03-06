@@ -11,6 +11,7 @@ export type RootStackParamList = {
 	RecoverAccount: { isRecover: boolean } | undefined;
 	MessageDetails: undefined;
 	Loading: undefined;
+	Main: { isNew: boolean } | undefined;
 	Mnemonic:
 		| {
 				isNew: boolean;
