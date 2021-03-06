@@ -133,9 +133,9 @@ android {
     defaultConfig {
         applicationId "com.styloapp"
         multiDexEnabled true
-        minSdkVersion 18
+        minSdkVersion 21
         missingDimensionStrategy 'react-native-camera', 'general'
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 000306
         versionName "0.3.6"
         ndk {
@@ -217,6 +217,7 @@ dependencies {
     }
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.flipper'
+        exclude group:'com.squareup.okhttp3', module:'okhttp'
     }
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.flipper'
