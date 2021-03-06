@@ -59,7 +59,7 @@ If you already have an account created with either Stylo or any other wallet, yo
 
 To be able to follow this tutorial and send Ether from a freshly created account on Stylo mobile app, you will need to get some Ether on this account first. A convenient way to copy the address of a new Stylo account is to use the `View & Send` option of MyCrypto Desktop App. Download, install and launch [MyCrypto Desktop App](https://download.mycrypto.com/).
 
-- On MyCrypto App, click on Stylo.
+- On MyCrypto App, click on Parity Signer.
 - On Stylo account list, select the account you want to copy the address .
 - Scan the QR code displayed on your phone with your computer's webcam. Make sure the QR code is fully displayed on your mobile's screen.
 - You can now copy the address of your account in MyCrypto and send Ether to it from another account using your favourite Wallet application.
@@ -69,7 +69,7 @@ To be able to follow this tutorial and send Ether from a freshly created account
 
 Assuming that your Stylo account now has funds, you will be able to send some Ether securely to anyone, without transferring your private key, and without needing any internet connection on your mobile phone.
 
-- To do so, click on `Stylo` from MyCrypto Desktop app.
+- To do so, click on "Parity Signer" from MyCrypto Desktop app.
 
 - On your phone, select in the account list the account you want to send funds from of and tap `Show account QR code`.
 - Scan the QR code displayed on your phone with your computer's webcam. Make sure the QR code is fully displayed on your mobile's screen.
