@@ -133,7 +133,7 @@ android {
     defaultConfig {
         applicationId "com.styloapp"
         multiDexEnabled true
-        minSdkVersion 21
+        minSdkVersion 23
         missingDimensionStrategy 'react-native-camera', 'general'
         targetSdkVersion 30
         versionCode 310
