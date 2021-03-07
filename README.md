@@ -1,5 +1,10 @@
-![](./res/stylo-logos/stylo_logo-black-blue.png)  
-[<img src="./res/github-badge.png" width="250"/>](https://github.com/stylo-app/stylo/releases)
+<p align="center" style="margin-bottom: 0px !important;">
+<img src="./res/stylo-logos/stylo_logo-black-blue.png" alt="stylo app logo offline signer"/>
+</p>
+<div align="center">
+[![Github release](./res/github-badge.png)](https://github.com/stylo-app/stylo/releases)
+</div>
+
 <!-- [<img src="./res/google-play-badge.png" width="250"/>]()
 [<img src="./res/app-store-badge.png" width="250"/>]() -->
 
