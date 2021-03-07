@@ -2,7 +2,9 @@
 <img src="./res/stylo-logos/stylo_logo-black-blue.png" alt="stylo app logo offline signer"/>
 </p>
 <div align="center">
+
 [![Github release](./res/github-badge.png)](https://github.com/stylo-app/stylo/releases)
+
 </div>
 
 <!-- [<img src="./res/google-play-badge.png" width="250"/>]()
