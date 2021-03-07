@@ -1,6 +1,6 @@
 {
   "name": "stylo-app",
-  "version": "0.3.11-beta",
+  "version": "0.3.12-beta",
   "private": true,
   "license": "GPL-3.0",
   "engines": {
@@ -41,7 +41,8 @@
     "test-e2e:ci": "detox test -c ios.sim.release -l info --noStackTrace  --cleanup",
     "e2e:ios": "yarn run build-e2e:ios && yarn run test-e2e:ios",
     "e2e": "yarn e2e:ios && yarn e2e:android",
-    "release:apk": "(cd android && ./gradlew assembleRelease)"
+    "release:apk": "(cd android && ./gradlew assembleRelease)",
+    "release:aab": "(cd android && ./gradlew bundleRelease)"
   },
   "dependencies": {
     "@polkadot/api": "^3.11.1",
