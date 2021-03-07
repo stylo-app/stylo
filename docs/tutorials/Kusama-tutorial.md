@@ -9,7 +9,7 @@ This tutorial will walk you through setting up a Kusama account with the Stylo A
 - [2. Setup or recover an account](#2-setup-or-recover-an-account)
   - [Create an account](#create-an-account)
   - [Recover an account with your recovery phrase](#recover-an-account-with-your-recovery-phrase)
-- [3. Add Stylo's account to Polkadot-js apps](#3-add-stylo-account-to-polkadot-js-apps)
+- [3. Add Stylo's account to Polkadot-js apps](#3-add-stylos-account-to-polkadot-js-apps)
 - [4. Sign a transaction](#4-sign-a-transaction)
 
 
@@ -69,7 +69,7 @@ To be able to follow this tutorial and interact with the Blockchain from a fresh
 - Scan the QR code displayed on your phone with your computer's webcam. Make sure the QR code is fully displayed on your mobile's screen.
 - You can now name this account on Polkadot-js apps.
 
-### 4. Sign a transaction
+## 4. Sign a transaction
 
 Assuming that your Stylo account now has funds, you will be able to send some funds securely to anyone, without transferring your private key, and without needing any internet connection on your mobile phone.
 
