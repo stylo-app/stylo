@@ -1,5 +1,5 @@
-<div style="text-align:center"><img src="./res/stylo-logos/stylo_logo-black-blue.png"/></div>
-<div style="text-align:center"><a hreff="https://github.com/stylo-app/stylo/releases"><img src="./res/github-badge.png" width="250"/></a></div>
+<div align="center"><img src="./res/stylo-logos/stylo_logo-black-blue.png"/></div>
+<div align="center"><a hreff="https://github.com/stylo-app/stylo/releases"><img src="./res/github-badge.png" width="250"/></a></div>
 <!-- [<img src="./res/google-play-badge.png" width="250"/>]()
 [<img src="./res/app-store-badge.png" width="250"/>]() -->
 
