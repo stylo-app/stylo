@@ -1,4 +1,4 @@
-![Stylo](./res/stylo-logos/stylo_logo-black-blue.png)
+<div style="text-align:center"><img src="./res/stylo-logos/stylo_logo-black-blue.png"/></div>
 
 [<img src="./res/github-badge.png" width="250"/>](https://github.com/stylo-app/stylo/releases)
 <!-- [<img src="./res/google-play-badge.png" width="250"/>]()
