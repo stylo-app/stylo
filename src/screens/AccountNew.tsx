@@ -19,6 +19,7 @@ import Button from 'components/Button';
 // import DerivationPathField from 'components/DerivationPathField';
 import KeyboardScrollView from 'components/KeyboardScrollView';
 import { NetworkCard } from 'components/NetworkCard';
+import ScreenHeading from 'components/ScreenHeading';
 import TextInput from 'components/TextInput';
 import { NetworkProtocols } from 'constants/networkSpecs';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
@@ -110,39 +111,38 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 
 	return (
 		<KeyboardScrollView>
-			<View style={styles.bodyContainer}>
-				<Text style={styles.titleTop}>CREATE ACCOUNT</Text>
-				<View style={styles.step}>
-					<Text style={styles.title}>NAME</Text>
-					<TextInput
-						onChangeText={(input: string): void =>
-							updateNew({ name: input })
-						}
-						placeholder="new name"
-						value={name}
-					/>
-				</View>
-				<View style={styles.step}>
-					<Text style={styles.title}>NETWORK</Text>
-					<NetworkCard
-						networkKey={networkKey}
-						onPress={onNetworkNavigation}
-						title={selectedNetwork?.title || 'Select Network'}
-					/>
-				</View>
-				{selectedNetwork && (
-					<View>
-						<View style={styles.step}>
-							<Text style={styles.title}>ICON & ADDRESS</Text>
-							<AccountIconChooser
-								derivationPassword={derivationPassword}
-								derivationPath={derivationPath}
-								network={selectedNetwork}
-								onSelect={updateAccountSelection}
-								value={address}
-							/>
-						</View>
-						{/* {isSubstrate && (
+			<ScreenHeading title={'Create Account'} />
+			<View style={styles.step}>
+				<Text style={styles.title}>NAME</Text>
+				<TextInput
+					onChangeText={(input: string): void =>
+						updateNew({ name: input })
+					}
+					placeholder="new name"
+					value={name}
+				/>
+			</View>
+			<View style={styles.step}>
+				<Text style={styles.title}>NETWORK</Text>
+				<NetworkCard
+					networkKey={networkKey}
+					onPress={onNetworkNavigation}
+					title={selectedNetwork?.title || 'Select Network'}
+				/>
+			</View>
+			{selectedNetwork && (
+				<View>
+					<View style={styles.step}>
+						<Text style={styles.title}>ICON & ADDRESS</Text>
+						<AccountIconChooser
+							derivationPassword={derivationPassword}
+							derivationPath={derivationPath}
+							network={selectedNetwork}
+							onSelect={updateAccountSelection}
+							value={address}
+						/>
+					</View>
+					{/* {isSubstrate && (
 							<View style={StyleSheet.flatten([styles.step, styles.lastStep])}>
 								<DerivationPathField
 									onChange={onDerivationChange}
@@ -150,26 +150,20 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 								/>
 							</View>
 						)} */}
-						<View style={styles.bottom}>
-							<Button
-								disabled={!validateSeed(seed, validBip39Seed).valid || !isDerivationPathValid}
-								onPress={onCreate}
-								title="Next Step"
-							/>
-						</View>
+					<View style={styles.bottom}>
+						<Button
+							disabled={!validateSeed(seed, validBip39Seed).valid || !isDerivationPathValid}
+							onPress={onCreate}
+							title="Next Step"
+						/>
 					</View>
-				)}
-			</View>
+				</View>
+			)}
 		</KeyboardScrollView>
 	);
 }
 
 const styles = StyleSheet.create({
-	bodyContainer: {
-		flex: 1,
-		flexDirection: 'column',
-		justifyContent: 'space-between'
-	},
 	bottom: {
 		flexBasis: 50,
 		paddingBottom: 15
