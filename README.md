@@ -4,11 +4,11 @@
 <div align="center">
 
 [![Github release](./res/github-badge.png)](https://github.com/stylo-app/stylo/releases)
+[![Github release](./res/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.styloapp)
 
 </div>
 
-<!-- [<img src="./res/google-play-badge.png" width="250"/>]()
-[<img src="./res/app-store-badge.png" width="250"/>]() -->
+<!--[<img src="./res/app-store-badge.png" width="250"/>]() -->
 
 # Stylo - An offline wallet for your offline phone
 
