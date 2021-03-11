@@ -1,5 +1,5 @@
 <p align="center" style="margin-bottom: 0px !important;">
-<img src="./res/stylo-logos/stylo_logo-black-blue.png" alt="stylo app logo offline signer"/>
+    <img src="./res/stylo-logos/stylo_logo-black-blue.png" alt="stylo app logo offline signer"/>
 </p>
 <div align="center">
 
@@ -23,6 +23,10 @@ You must turn off or even physically remove the smartphone's wifi, mobile networ
 Have a look at the tutorial to learn how to use [Stylo together with Polkadot-js app](./docs/tutorials/Kusama-tutorial.md),  or [MyCrypto app](./docs/tutorials/MyCrypto-tutorial.md).
 
 Any data transfer from or to the app happens using QR code. By doing so, the most sensitive piece of information, the private keys, will never leave the phone. The Stylo mobile app can be used to store any Polkadot or Ethereum account, this includes KSM, ETH, ETC as well as Ether from various testnets (Kovan, Ropsten...).
+
+<p align="center">
+    <img src="./docs/screens.jpg" alt="stylo app screenshots"/>
+</p>
 
 ## Getting Start
 
