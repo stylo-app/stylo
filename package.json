@@ -45,7 +45,7 @@
     "release:aab": "(cd android && ./gradlew bundleRelease)"
   },
   "dependencies": {
-    "@polkadot/api": "^3.11.1",
+    "@polkadot/api": "^4.0.3",
     "@polkadot/reactnative-identicon": "^0.71.1",
     "@polkadot/util": "^6.0.3",
     "@polkadot/util-crypto": "^6.0.3",

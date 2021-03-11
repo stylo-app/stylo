@@ -153,7 +153,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 3,
 		pathId: 'westend',
 		prefix: 42,
-		specVersion: 48,
+		specVersion: 49,
 		title: 'Westend',
 		unit: 'WND'
 	}
