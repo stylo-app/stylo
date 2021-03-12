@@ -98,7 +98,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 2,
 		pathId: 'kusama',
 		prefix: 2,
-		specVersion: 2028,
+		specVersion: 2029,
 		title: 'Kusama',
 		unit: 'KSM'
 	},
@@ -146,7 +146,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		unit: 'ROC'
 	},
 	[SubstrateNetworkKeys.WESTEND]: {
-		color: '#660D35',
+		color: '#da68a7',
 		decimals: 12,
 		genesisHash: SubstrateNetworkKeys.WESTEND,
 		logo: require('res/img/logos/Polkadot.png'),
