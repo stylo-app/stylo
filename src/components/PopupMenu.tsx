@@ -17,7 +17,7 @@
 import React from 'react';
 import { Text, TextStyle } from 'react-native';
 import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Feather';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 
@@ -43,7 +43,7 @@ export default class PopupMenu extends React.PureComponent<Props> {
 			<Icon
 				color={colors.text.main}
 				name={menuTriggerIconName}
-				size={35}
+				size={25}
 				testID={testID}
 			/>
 		);

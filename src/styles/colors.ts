@@ -18,7 +18,7 @@ export default {
 	background: {
 		alert: '#444444',
 		app: '#151515',
-		button: 'C0C0C0',
+		button: '#C0C0C0',
 		card: '#262626',
 		os: '#000000'
 	},
@@ -38,3 +38,28 @@ export default {
 		white: 'white'
 	}
 };
+
+// export default {
+// 	background: {
+// 		alert: '#C0C0C0',
+// 		app: '#F5F5F5',
+// 		button: '#C0C0C0',
+// 		card: '#F5F5F5',
+// 		os: '#FFFFFF'
+// 	},
+// 	border: {
+// 		dark: '#FFFFFF',
+// 		light: '#666666',
+// 		signal: '#8E1F40',
+// 		valid: '#4d7e31'
+// 	},
+// 	signal: {
+// 		error: '#D73400',
+// 		main: '#FF4077'
+// 	},
+// 	text: {
+// 		faded: '#C0C0C0',
+// 		main: '#444444',
+// 		white: 'white'
+// 	}
+// };

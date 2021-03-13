@@ -89,13 +89,31 @@ function AccountList(): React.ReactElement {
 					</View>
 				</TouchableWithoutFeedback>
 			)}
-			<ScrollView
-				style={styles.content}
-				testID={testIDs.AccountListScreen.accountList}
-			>
-				{accounts.map(renderAccountCard)}
-			</ScrollView>
-			<QrScannerTab />
+			{
+				!accounts.length
+					? (
+						<>
+							<ScrollView
+								style={styles.content}
+								testID={testIDs.AccountListScreen.accountList}
+							>
+								{accounts.map(renderAccountCard)}
+							</ScrollView>
+							<QrScannerTab />
+						</>
+					)
+					:(
+						<View style={styles.emptyContainer}>
+							<Icon
+								color={colors.text.faded}
+								name="inbox"
+								size={100}
+							/>
+							<Text style={styles.emptyTextTitle}>Welcome!</Text>
+							<Text style={styles.emptyText}>Add accounts to get started</Text>
+						</View>
+					)
+			}
 		</SafeAreaViewContainer>
 	);
 }
@@ -106,6 +124,20 @@ const styles = StyleSheet.create({
 	content: {
 		flex: 1,
 		paddingBottom: 40
+	},
+	emptyContainer:{
+		alignItems:'center',
+		flex:1,
+		justifyContent:'center'
+	},
+	emptyText:{
+		color: colors.text.faded,
+		fontSize: 15
+	},
+	emptyTextTitle:{
+		color: colors.text.faded,
+		fontSize: 32,
+		paddingBottom: 10
 	},
 	insecureDeviceBanner: {
 		alignItems: 'center',

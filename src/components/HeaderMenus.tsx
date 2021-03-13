@@ -43,7 +43,7 @@ function HeaderMenus(): React.ReactElement {
 						{ text: 'Recover account', value: 'RecoverAccount' },
 						{ text: 'About', value: 'About' }
 					]}
-					menuTriggerIconName={'add'}
+					menuTriggerIconName={'plus-circle'}
 					onSelect={onAccountCreate}
 				/>
 			)}

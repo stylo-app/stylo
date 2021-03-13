@@ -103,7 +103,7 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 								{ text: 'View recovery phrase', value: 'Mnemonic' },
 								{ text: 'Delete', textStyle: styles.deleteText, value: 'AccountDelete' }
 							]}
-							menuTriggerIconName={'more-vert'}
+							menuTriggerIconName={'more-vertical'}
 							onSelect={onOptionSelect}
 						/>
 					</View>
