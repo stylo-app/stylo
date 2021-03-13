@@ -64,9 +64,7 @@ function RecoverAccount(): React.ReactElement {
 	const { navigate } = useNavigation()
 	const accountAlreadyExists = useMemo(() => accountExists(newAccount.address, selectedNetwork), [accountExists, newAccount.address, selectedNetwork])
 
-	const goToPin = useCallback(() => {
-		navigate('AccountPin', { isNew: true });
-	}, [navigate])
+	const goToPin = useCallback(() => navigate('AccountPin', { isNew: true }), [navigate])
 
 	useEffect((): void => {
 		updateNew(emptyAccount('', ''));
@@ -249,7 +247,7 @@ const styles = StyleSheet.create({
 	},
 	btnBox: {
 		alignContent: 'center',
-		marginTop: 20
+		marginTop: 10
 	},
 	errorText:{
 		color: colors.signal.error,

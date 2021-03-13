@@ -31,6 +31,7 @@ export default function CustomAlert(): React.ReactElement {
 
 	useEffect(() => {
 		if (alertIndex === 0) return;
+
 		setAlertDisplay(true);
 
 		if (actions.length === 0) {

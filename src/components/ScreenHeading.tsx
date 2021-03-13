@@ -79,9 +79,13 @@ const renderIcon = (iconName?: string, iconType?: string): ReactNode => {
 
 	return (
 		<View style={[baseStyles.icon, { paddingLeft: 16 }]}>
-			<Icon color={colors.text.main}
+			<Icon
+				accessibilityComponentType={'button'}
+				accessibilityTraits={'button'}
+				color={colors.text.main}
 				name={iconName}
-				type={iconType} />
+				type={iconType}
+			/>
 		</View>
 	);
 };

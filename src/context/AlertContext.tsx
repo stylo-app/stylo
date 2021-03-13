@@ -44,7 +44,7 @@ export const AlertContext = createContext(defaultAlertContext);
 export function AlertContextProvider({ children }: AlertContextProviderProps): React.ReactElement  {
 	const [alertState, setAlertState] = useState<AlertBase>(defaultAlertBase);
 
-	const setAlert = useCallback((title, message, actions = []): void => {
+	const setAlert = useCallback((title: string, message: string, actions: Action[] = []): void => {
 		setAlertState({
 			actions,
 			alertIndex: alertState.alertIndex + 1,

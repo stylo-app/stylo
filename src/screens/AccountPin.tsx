@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { CommonActions } from '@react-navigation/native';
 import Button from 'components/Button';
 import KeyboardScrollView from 'components/KeyboardScrollView';
 import TextInput from 'components/TextInput';
@@ -24,9 +23,9 @@ import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
 import { NavigationProps } from 'types/props';
-import { navigateToAccountList } from 'utils/navigationHelpers';
 
 import { AccountsContext } from '../context';
+import { useHelperNavigation } from '../hooks/useNavigationHelpers';
 
 interface State {
 	confirmation: string;
@@ -62,8 +61,9 @@ const initialState: State = {
 	pinTooShort: false
 };
 
-function AccountPin({ navigation, route }: NavigationProps<'AccountPin'>): React.ReactElement {
-	const accountsStore = useContext(AccountsContext);
+function AccountPin({ route }: NavigationProps<'AccountPin'>): React.ReactElement {
+	const { getSelectedAccount, lockAccount, newAccount, saveAccount, submitNew } = useContext(AccountsContext);
+	const { navigateToAccountDetails, navigateToAccountList } = useHelperNavigation()
 
 	const reducer = (state: State, delta: Partial<State>): State => ({
 		...state,
@@ -72,7 +72,6 @@ function AccountPin({ navigation, route }: NavigationProps<'AccountPin'>): React
 	const [state, setState] = useReducer(reducer, initialState);
 
 	const submit = async (): Promise<void> => {
-		const { getSelectedAccount, lockAccount, newAccount } = accountsStore;
 		const selectedAccount = getSelectedAccount();
 		const { confirmation, pin } = state;
 		const accountCreation = route.params?.isNew;
@@ -98,19 +97,14 @@ function AccountPin({ navigation, route }: NavigationProps<'AccountPin'>): React
 
 		if (accountCreation) {
 			// this is the first time a pin is created
-			await accountsStore.submitNew(pin);
+			await submitNew(pin);
 
-			return navigateToAccountList(navigation);
+			return navigateToAccountList();
 		} else {
 			// this is a pin change
-			await accountsStore.saveAccount(account, pin);
+			await saveAccount(account, pin);
 			lockAccount(account.address);
-			const resetAction = CommonActions.reset({
-				index: 1,
-				routes: [{ name: 'AccountList' }, { name: 'AccountDetails' }]
-			});
-
-			navigation.dispatch(resetAction);
+			navigateToAccountDetails();
 		}
 	};
 

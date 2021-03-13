@@ -29,9 +29,9 @@ import fontStyles from 'styles/fontStyles';
 import { EthereumNetwork, isSubstrateNetwork } from 'types/networkTypes';
 import { NavigationProps } from 'types/props';
 import { alertDeleteLegacyAccount } from 'utils/alertUtils';
-import { navigateToAccountList } from 'utils/navigationHelpers';
 
 import { AccountsContext, AlertContext, NetworksContext } from '../context';
+import { useHelperNavigation } from '../hooks/useNavigationHelpers';
 
 export default function AccountDetails({ navigation }: NavigationProps<'AccountDetails'>): React.ReactElement {
 	const { deleteAccount, getSelectedAccount } = useContext(AccountsContext);
@@ -40,6 +40,7 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 	const { getNetwork } = useContext(NetworksContext);
 	const { setAlert } = useContext(AlertContext);
 	const network = getNetwork(networkKey);
+	const { navigateToAccountList } = useHelperNavigation()
 
 	const accountId = useMemo((): string => {
 		if (!network){
@@ -71,7 +72,7 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 			async () => {
 				await deleteAccount(address);
 
-				navigateToAccountList(navigation);
+				navigateToAccountList();
 			});
 	};
 

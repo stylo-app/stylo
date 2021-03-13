@@ -70,6 +70,8 @@ const ButtonIcon: FunctionComponent<Props> = ({ iconName, iconType, iconColor, o
 
 		return (
 			<Icon
+				accessibilityComponentType={'button'}
+				accessibilityTraits={'button'}
 				color={iconColor || colors.text.main}
 				name={iconName}
 				size={size - 6}

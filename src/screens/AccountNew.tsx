@@ -131,7 +131,7 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 				/>
 			</View>
 			{selectedNetwork && (
-				<View>
+				<>
 					<View style={styles.step}>
 						<Text style={styles.title}>ICON & ADDRESS</Text>
 						<AccountIconChooser
@@ -154,10 +154,11 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 						<Button
 							disabled={!validateSeed(seed, validBip39Seed).valid || !isDerivationPathValid}
 							onPress={onCreate}
+							small
 							title="Next Step"
 						/>
 					</View>
-				</View>
+				</>
 			)}
 		</KeyboardScrollView>
 	);
@@ -165,7 +166,6 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 
 const styles = StyleSheet.create({
 	bottom: {
-		flexBasis: 50,
 		paddingBottom: 15
 	},
 	lastStep: {

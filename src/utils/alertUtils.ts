@@ -32,9 +32,7 @@ export const alertPathDerivationError = (setAlert: SetAlert,
 	errorMessage: string): void =>
 	alertError(setAlert, "Can't derive account from the seed: " + errorMessage);
 
-const buildAlertButtons = (onConfirm: () => any,
-	confirmText: string,
-	testID?: string): Action[] => [
+const buildAlertButtons = (onConfirm: () => any, confirmText: string, testID?: string): Action[] => [
 	{
 		onPress: (): void => {
 			onConfirm();
@@ -45,28 +43,18 @@ const buildAlertButtons = (onConfirm: () => any,
 	{ text: 'Cancel' }
 ];
 
-const buildAlertDeleteButtons = (onDelete: () => any,
-	testID?: string): Action[] => buildAlertButtons(onDelete, 'Delete', testID);
-
-export const alertDeleteAccount = (setAlert: SetAlert,
-	accountName: string,
-	onDelete: () => any): void => {
-	setAlert('Delete Account',
-		`Do you really want to delete ${accountName}?`,
-		buildAlertDeleteButtons(onDelete, alertTestIDs.deleteAccount));
-};
+const buildAlertDeleteButtons = (onDelete: () => any, testID?: string): Action[] => buildAlertButtons(onDelete, 'Delete', testID);
 
 export const alertDeleteLegacyAccount = (setAlert: SetAlert,
 	accountName: string,
 	onDelete: () => any): void => {
 	setAlert('Delete Account',
 		`Do you really want to delete ${accountName}?
-The account can only be recovered with its associated recovery phrase.`,
+This account can only be recovered with its associated recovery phrase.`,
 		buildAlertDeleteButtons(onDelete));
 };
 
-export const alertCopyBackupPhrase = (setAlert: SetAlert,
-	seedPhrase: string): void =>
+export const alertCopyBackupPhrase = (setAlert: SetAlert, seedPhrase: string): void =>
 	setAlert('Write this recovery phrase on paper',
 		'It is not recommended to transfer or store a recovery phrase digitally and unencrypted. Anyone in possession of this recovery phrase is able to spend funds from this account.',
 		[
@@ -79,9 +67,7 @@ export const alertCopyBackupPhrase = (setAlert: SetAlert,
 			{ text: 'Cancel' }
 		]);
 
-export const alertRisks = (setAlert: SetAlert,
-	message: string,
-	onPress: () => any): void =>
+export const alertRisks = (setAlert: SetAlert, message: string, onPress: () => any): void =>
 	setAlert('Warning', message, [
 		{
 			onPress,

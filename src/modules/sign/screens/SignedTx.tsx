@@ -25,14 +25,15 @@ import TxDetailsCard from 'modules/sign/components/TxDetailsCard';
 import { usePayloadDetails } from 'modules/sign/hooks';
 import strings from 'modules/sign/strings';
 import styles from 'modules/sign/styles';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Text, View } from 'react-native';
 import fontStyles from 'styles/fontStyles';
-import { isEthereumNetwork } from 'types/networkTypes';
+import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
 import { NavigationProps, NavigationScannerProps } from 'types/props';
 import { Transaction } from 'utils/transaction';
 
-import { AccountsContext, NetworksContext, ScannerContext } from '../../../context';
+import { AccountsContext, AlertContext, NetworksContext, ScannerContext } from '../../../context';
+import { useHelperNavigation } from '../../../hooks/useNavigationHelpers';
 
 interface Props extends NavigationScannerProps<'SignedTx'> {
 	senderAddress: string;
@@ -49,12 +50,29 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 	const [isProcessing, payload] = usePayloadDetails(rawPayload, sender?.networkKey);
 	const senderNetwork = getNetwork(sender?.networkKey);
 	const isEthereum = !!senderNetwork && isEthereumNetwork(senderNetwork);
+	const { setAlert } = useContext(AlertContext);
+	const { navigateToAccountList } = useHelperNavigation()
+	const [isAlerted, setIsAlerted] = useState(false);
 
 	if (!sender) {
 		console.error('no sender');
 
 		return <View/>;
 	}
+
+	const showSpecVersionMismatchAlert = () =>	setAlert('Warning', `This version of Stylo is not up to date with the latest version of ${senderNetwork?.title} network.
+
+The transaction details can be wrong or meaningless.
+
+You should stop right here, cancel this transaction by tapping "Back" and update Stylo.
+
+If you proceed you may put your funds at risk.`, [
+		{ text: 'Proceed' },
+		{
+			onPress: navigateToAccountList,
+			text: 'Back'
+		}
+	])
 
 	const PayloadDetails = () => {
 		if (isEthereum) {
@@ -88,6 +106,11 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 	if (isProcessing || !signedData || (!isEthereum && payload === null)) {
 
 		return (<Loader label='Signing...'/>)
+	}
+
+	if(!isAlerted && !isEthereum && (Number(payload?.specVersion) > (senderNetwork as SubstrateNetworkParams).specVersion)){
+		setIsAlerted(true);
+		showSpecVersionMismatchAlert();
 	}
 
 	return (

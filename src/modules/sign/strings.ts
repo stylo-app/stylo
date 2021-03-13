@@ -1,6 +1,6 @@
 const strings = {
 	ERROR_ADDRESS_MESSAGE:
-		'Please create a transaction using software such as MyCrypto so that Stylo can sign it.',
+		'QR code not supported, please make sure you are scanning a transaction from a supported software.',
 	ERROR_NO_NETWORK:
 		'Stylo does not currently recognize a chain with genesis hash, please add the network first',
 	ERROR_NO_RAW_DATA: 'There is no raw data from the request',

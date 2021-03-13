@@ -27,9 +27,9 @@ import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 import { NavigationProps } from 'types/props';
 import { Frames, TxRequestData } from 'types/scannerTypes';
-import { navigateToNetworkSettings } from 'utils/navigationHelpers';
 
 import { AlertContext, ScannerContext } from '../../../context';
+import { useHelperNavigation } from '../../../hooks/useNavigationHelpers';
 
 export default function Scanner({ navigation }: NavigationProps<'QrScanner'>): React.ReactElement {
 	const scannerStore = useContext(ScannerContext);
@@ -44,6 +44,7 @@ export default function Scanner({ navigation }: NavigationProps<'QrScanner'>): R
 		missingFramesMessage: '',
 		totalFramesCount: 0
 	});
+	const { navigateToNetworkSettings } = useHelperNavigation()
 
 	function showAlertMessage(title: string, message: string, isAddNetworkSuccess?: boolean): void {
 		const clearByTap = async (): Promise<void> => {
@@ -60,7 +61,7 @@ export default function Scanner({ navigation }: NavigationProps<'QrScanner'>): R
 				{
 					onPress: async (): Promise<void> => {
 						await clearByTap();
-						navigateToNetworkSettings(navigation);
+						navigateToNetworkSettings();
 					},
 					testID: testIDs.QrScanner.networkAddSuccessButton,
 					text: 'Done'

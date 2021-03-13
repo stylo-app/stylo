@@ -20,7 +20,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
-import { isSubstrateNetwork, SubstrateNetworkParams } from 'types/networkTypes';
+import { isSubstrateNetwork } from 'types/networkTypes';
 import { alertDecodeError } from 'utils/alertUtils';
 import { shortString } from 'utils/strings';
 
@@ -254,9 +254,6 @@ const PayloadDetailsCard = ({ description, networkKey, payload, signature, style
 			unit: network.unit
 		});
 	}
-
-	console.log('payload specVersion', payload?.specVersion)
-	console.log('local specVersion', (network as SubstrateNetworkParams).specVersion)
 
 	return (
 		<View style={[styles.body, style]}>
