@@ -14,9 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { centrifugeMetadata, edgewareMetadata, kulupuMetadata, kusamaMetadata, polkadotMetaData, rococoMetadata, westendMetadata } from 'constants/networkMetadata';
-import { SubstrateNetworkKeys } from 'constants/networkSpecs';
-
 import { pathsRegex } from './regex';
 
 //walk around to fix the regular expression support for positive look behind;
@@ -24,32 +21,3 @@ export const removeSlash = (str: string): string => str.replace(/\//g, '');
 
 export const validateDerivedPath = (derivedPath: string): boolean =>
 	pathsRegex.validateDerivedPath.test(derivedPath);
-
-export const getMetadata = (networkKey: string): string | null => {
-	switch (networkKey) {
-	case SubstrateNetworkKeys.CENTRIFUGE:
-
-		return centrifugeMetadata;
-	case SubstrateNetworkKeys.KUSAMA:
-
-		return kusamaMetadata;
-	case SubstrateNetworkKeys.WESTEND:
-
-		return westendMetadata;
-	case SubstrateNetworkKeys.EDGEWARE:
-
-		return edgewareMetadata;
-	case SubstrateNetworkKeys.KULUPU:
-
-		return kulupuMetadata;
-	case SubstrateNetworkKeys.POLKADOT:
-
-		return polkadotMetaData;
-	case SubstrateNetworkKeys.ROCOCO:
-
-		return rococoMetadata;
-	default:
-
-		return null;
-	}
-};

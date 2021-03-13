@@ -13,6 +13,7 @@ export type SubstrateNetworkDefaultConstant = {
 	deleted?: boolean;
 	genesisHash: string;
 	logo?: number;
+	metadata?: string;
 	order: number;
 	pathId: string;
 	protocol?: NetworkProtocol;
@@ -43,6 +44,7 @@ export type SubstrateNetworkParams = {
 	deleted: boolean;
 	genesisHash: string;
 	logo: number;
+	metadata?: string;
 	order: number;
 	pathId: string;
 	protocol: NetworkProtocol;

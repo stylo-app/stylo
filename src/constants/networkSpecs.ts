@@ -17,6 +17,8 @@
 import colors from 'styles/colors';
 import { EthereumNetwork, EthereumNetworkDefaultConstants, NetworkParams, NetworkProtocol, SubstrateNetworkDefaultConstant, SubstrateNetworkParams, UnknownNetworkParams } from 'types/networkTypes';
 
+import { centrifugeMetadata, edgewareMetadata, kulupuMetadata, kusamaMetadata, polkadotMetaData, rococoMetadata, westendMetadata } from './networkMetadata';
+
 export const unknownNetworkPathId = '';
 
 export const NetworkProtocols: Record<string, NetworkProtocol> = Object.freeze({
@@ -83,6 +85,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 10,
 		genesisHash: SubstrateNetworkKeys.POLKADOT,
 		logo: require('res/img/logos/Polkadot.png'),
+		metadata: polkadotMetaData,
 		order: 1,
 		pathId: 'polkadot',
 		prefix: 0,
@@ -95,6 +98,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 12,
 		genesisHash: SubstrateNetworkKeys.KUSAMA,
 		logo: require('res/img/logos/Kusama.png'),
+		metadata: kusamaMetadata,
 		order: 2,
 		pathId: 'kusama',
 		prefix: 2,
@@ -107,6 +111,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 18,
 		genesisHash: SubstrateNetworkKeys.CENTRIFUGE,
 		logo: require('res/img/logos/Centrifuge.png'),
+		metadata: centrifugeMetadata,
 		order: 7,
 		pathId: 'centrifuge',
 		prefix: 36,
@@ -118,6 +123,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 18,
 		genesisHash: SubstrateNetworkKeys.EDGEWARE,
 		logo: require('res/img/logos/Edgeware.png'),
+		metadata: edgewareMetadata,
 		order: 6,
 		pathId: 'edgeware',
 		prefix: 7,
@@ -128,6 +134,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		color: '#003366',
 		decimals: 18,
 		genesisHash: SubstrateNetworkKeys.KULUPU,
+		metadata: kulupuMetadata,
 		order: 5,
 		pathId: 'kulupu',
 		prefix: 16,
@@ -139,6 +146,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 12,
 		genesisHash: SubstrateNetworkKeys.ROCOCO,
 		logo: require('res/img/logos/Rococo.png'),
+		metadata: rococoMetadata,
 		order: 4,
 		pathId: 'rococo',
 		prefix: 0,
@@ -150,6 +158,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 12,
 		genesisHash: SubstrateNetworkKeys.WESTEND,
 		logo: require('res/img/logos/Polkadot.png'),
+		metadata: westendMetadata,
 		order: 3,
 		pathId: 'westend',
 		prefix: 42,

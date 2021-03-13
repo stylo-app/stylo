@@ -16,7 +16,6 @@
 
 import React, { useCallback, useContext, useState } from 'react';
 import { SubstrateNetworkParams } from 'types/networkTypes';
-import { getMetadata } from 'utils/identitiesUtils';
 
 import { Metadata } from '@polkadot/metadata';
 import { TypeRegistry } from '@polkadot/types';
@@ -82,13 +81,13 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 
 	const getTypeRegistry = useCallback((networkKey: string): TypeRegistry | null => {
 		try {
-			const networkMetadataRaw = getMetadata(networkKey);
+			const network = getNetwork(networkKey) as SubstrateNetworkParams;
+			const networkMetadataRaw = network.metadata;
 
-			if (networkMetadataRaw === null) return null;
+			if (!networkMetadataRaw) return null;
 
 			if (registries.has(networkKey)) return registries.get(networkKey)!;
 
-			const network = getNetwork(networkKey) as SubstrateNetworkParams;
 			const newRegistry = new TypeRegistry();
 			const overrideTypes = network && getOverrideTypes(newRegistry, network.pathId, network.specVersion);
 
