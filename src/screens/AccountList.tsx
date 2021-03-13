@@ -90,7 +90,7 @@ function AccountList(): React.ReactElement {
 				</TouchableWithoutFeedback>
 			)}
 			{
-				!accounts.length
+				accounts.length
 					? (
 						<>
 							<ScrollView

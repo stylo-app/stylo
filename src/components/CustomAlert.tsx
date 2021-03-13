@@ -60,30 +60,29 @@ export default function CustomAlert(): React.ReactElement {
 			small={true}
 			style={styles.button}
 			testID={action.testID}
-			textStyles={
-				action.onPress ? styles.buttonBoldText : styles.buttonLightText
-			}
+			textStyles={action.onPress ? styles.buttonBoldText : styles.buttonLightText}
 			title={action.text}
 		/>
 	);
 
-	if (alertDisplay) {
-		return (
-			<Animated.View style={{ ...styles.background, opacity: animatedValue }}>
-				<View style={styles.body}>
-					{title !== '' && <Text style={styles.textTitle}>{title}</Text>}
-					<Text style={styles.textMessage}>{message}</Text>
-					{actions !== [] && (
-						<View style={styles.actionsContainer}>
-							{actions.map(renderActions)}
-						</View>
-					)}
-				</View>
-			</Animated.View>
-		);
-	} else {
+	if (!alertDisplay){
 		return <View />;
 	}
+
+	return (
+		<Animated.View style={{ ...styles.background, opacity: animatedValue }}>
+			<View style={styles.body}>
+				{title && <Text style={styles.textTitle}>{title}</Text>}
+				<Text style={styles.textMessage}>{message}</Text>
+				{actions.length && (
+					<View style={styles.actionsContainer}>
+						{actions.map(renderActions)}
+					</View>
+				)}
+			</View>
+		</Animated.View>
+	);
+
 }
 
 const styles = StyleSheet.create({

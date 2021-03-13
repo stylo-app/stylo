@@ -83,6 +83,7 @@
     "@babel/plugin-transform-runtime": "^7.13.9",
     "@babel/preset-typescript": "^7.13.0",
     "@babel/runtime": "^7.13.9",
+    "@react-native-community/clipboard": "^1.5.1",
     "@types/detox": "^17.14.0",
     "@types/jasmine": "^3.6.4",
     "@types/jest": "^26.0.20",

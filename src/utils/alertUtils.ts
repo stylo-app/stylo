@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import Clipboard from '@react-native-community/clipboard';
 import testIDs from 'e2e/testIDs';
-import { Clipboard } from 'react-native';
 
 import { Action, SetAlert } from '../context/AlertContext';
 
@@ -63,14 +63,6 @@ export const alertDeleteLegacyAccount = (setAlert: SetAlert,
 		`Do you really want to delete ${accountName}?
 The account can only be recovered with its associated recovery phrase.`,
 		buildAlertDeleteButtons(onDelete));
-};
-
-export const alertDeleteIdentity = (setAlert: SetAlert,
-	onDelete: () => any): void => {
-	setAlert('Delete Identity',
-		`Do you really want to delete this Identity and all the related accounts?
-This identity can only be recovered with its associated recovery phrase.`,
-		buildAlertDeleteButtons(onDelete, alertTestIDs.deleteIdentity));
 };
 
 export const alertCopyBackupPhrase = (setAlert: SetAlert,
