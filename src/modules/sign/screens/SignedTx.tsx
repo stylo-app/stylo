@@ -32,6 +32,7 @@ import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
 import { NavigationProps, NavigationScannerProps } from 'types/props';
 import { Transaction } from 'utils/transaction';
 
+import metadataJson from '../../../constants/metadata.json';
 import { AccountsContext, AlertContext, NetworksContext, ScannerContext } from '../../../context';
 import { useHelperNavigation } from '../../../hooks/useNavigationHelpers';
 
@@ -108,7 +109,9 @@ If you proceed you may put your funds at risk.`, [
 		return (<Loader label='Signing...'/>)
 	}
 
-	if(!isAlerted && !isEthereum && (Number(payload?.specVersion) > (senderNetwork as SubstrateNetworkParams).specVersion)){
+	const metadataSpecVersion = (metadataJson as Record<any, any>)[(senderNetwork as SubstrateNetworkParams).metadataKey].specVersion
+
+	if(!isAlerted && !isEthereum && (Number(payload?.specVersion) > metadataSpecVersion)){
 		setIsAlerted(true);
 		showSpecVersionMismatchAlert();
 	}

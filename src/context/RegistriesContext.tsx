@@ -21,6 +21,7 @@ import { Metadata } from '@polkadot/metadata';
 import { TypeRegistry } from '@polkadot/types';
 import { getSpecTypes } from '@polkadot/types-known';
 
+import metadataJson from '../constants/metadata.json';
 import { NetworksContext } from './NetworksContext';
 import { deepCopyMap } from './utils';
 
@@ -82,14 +83,15 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 	const getTypeRegistry = useCallback((networkKey: string): TypeRegistry | null => {
 		try {
 			const network = getNetwork(networkKey) as SubstrateNetworkParams;
-			const networkMetadataRaw = network.metadata;
+			const networkMetadataRaw: string = (metadataJson as Record<any, any>)[network.metadataKey].hex;
 
 			if (!networkMetadataRaw) return null;
 
 			if (registries.has(networkKey)) return registries.get(networkKey)!;
 
 			const newRegistry = new TypeRegistry();
-			const overrideTypes = network && getOverrideTypes(newRegistry, network.pathId, network.specVersion);
+			const specVersion = (metadataJson as Record<any, any>)[network.metadataKey].specVersion;
+			const overrideTypes = network && getOverrideTypes(newRegistry, network.pathId, specVersion);
 
 			newRegistry.register(overrideTypes);
 			const metadata = new Metadata(newRegistry, networkMetadataRaw);

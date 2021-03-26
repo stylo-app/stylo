@@ -17,7 +17,7 @@
 import colors from 'styles/colors';
 import { EthereumNetwork, EthereumNetworkDefaultConstants, NetworkParams, NetworkProtocol, SubstrateNetworkDefaultConstant, SubstrateNetworkParams, UnknownNetworkParams } from 'types/networkTypes';
 
-import { centrifugeMetadata, edgewareMetadata, kulupuMetadata, kusamaMetadata, polkadotMetaData, rococoMetadata, westendMetadata } from './networkMetadata';
+// import { centrifugeMetadata, edgewareMetadata, kulupuMetadata, kusamaMetadata, polkadotMetaData, rococoMetadata, westendMetadata } from './networkMetadata';
 
 export const unknownNetworkPathId = '';
 
@@ -52,7 +52,7 @@ export const SubstrateNetworkKeys: Record<string, string> = Object.freeze({
 	CENTRIFUGE: '0x67dddf2673b69e5f875f6f25277495834398eafd67f492e09f3f3345e003d1b5', // https://portal.chain.centrifuge.io/#/explorer/query/0
 	EDGEWARE: '0x742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b', // https://polkascan.io/pre/edgeware/block/0
 	KULUPU: '0xf7a99d3cb92853d00d5275c971c132c074636256583fee53b3bbe60d7b8769ba',
-	ROCOCO: '0x78ae7dc7e64637e01fa6a6b6e4fa252c486f62af7aa71c471ad17f015bd375ce',
+	ROCOCO: '0x47381ee0697153d64404fc578392c8fd5cba9073391908f46c888498415647bd',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e'
 });
 
@@ -72,8 +72,8 @@ export const dummySubstrateNetworkParams: SubstrateNetworkParams = {
 	deleted: false,
 	genesisHash: UnknownNetworkKeys.UNKNOWN,
 	logo: require('res/img/logos/Substrate_Dev.png'),
+	metadataKey: '',
 	protocol: NetworkProtocols.SUBSTRATE,
-	specVersion: 0,
 	unit: 'UNIT'
 };
 
@@ -85,11 +85,10 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 10,
 		genesisHash: SubstrateNetworkKeys.POLKADOT,
 		logo: require('res/img/logos/Polkadot.png'),
-		metadata: polkadotMetaData,
+		metadataKey: 'polkadotMetaData',
 		order: 1,
 		pathId: 'polkadot',
 		prefix: 0,
-		specVersion: 2028,
 		title: 'Polkadot',
 		unit: 'DOT'
 	},
@@ -98,11 +97,10 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 12,
 		genesisHash: SubstrateNetworkKeys.KUSAMA,
 		logo: require('res/img/logos/Kusama.png'),
-		metadata: kusamaMetadata,
+		metadataKey: 'kusamaMetadata',
 		order: 2,
 		pathId: 'kusama',
 		prefix: 2,
-		specVersion: 2029,
 		title: 'Kusama',
 		unit: 'KSM'
 	},
@@ -111,7 +109,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 18,
 		genesisHash: SubstrateNetworkKeys.CENTRIFUGE,
 		logo: require('res/img/logos/Centrifuge.png'),
-		metadata: centrifugeMetadata,
+		metadataKey: 'centrifugeMetadata',
 		order: 7,
 		pathId: 'centrifuge',
 		prefix: 36,
@@ -123,7 +121,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 18,
 		genesisHash: SubstrateNetworkKeys.EDGEWARE,
 		logo: require('res/img/logos/Edgeware.png'),
-		metadata: edgewareMetadata,
+		metadataKey: 'edgewareMetadata',
 		order: 6,
 		pathId: 'edgeware',
 		prefix: 7,
@@ -134,7 +132,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		color: '#003366',
 		decimals: 18,
 		genesisHash: SubstrateNetworkKeys.KULUPU,
-		metadata: kulupuMetadata,
+		metadataKey: 'kulupuMetadata',
 		order: 5,
 		pathId: 'kulupu',
 		prefix: 16,
@@ -146,7 +144,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 12,
 		genesisHash: SubstrateNetworkKeys.ROCOCO,
 		logo: require('res/img/logos/Rococo.png'),
-		metadata: rococoMetadata,
+		metadataKey: 'rococoMetadata',
 		order: 4,
 		pathId: 'rococo',
 		prefix: 0,
@@ -158,11 +156,10 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 12,
 		genesisHash: SubstrateNetworkKeys.WESTEND,
 		logo: require('res/img/logos/Polkadot.png'),
-		metadata: westendMetadata,
+		metadataKey: 'westendMetadata',
 		order: 3,
 		pathId: 'westend',
 		prefix: 42,
-		specVersion: 49,
 		title: 'Westend',
 		unit: 'WND'
 	}
