@@ -17,8 +17,10 @@ sudo sysctl -p;
 - `Xcode` (tested on `Version 11.3.1 (9F2000)`)
 
 #### Android
-- `Android Studio` (only for Android, tested on `Version 4.1`)
-- In Android studio, install 
+- Install Android Studio (only for Android, tested on `Version 4.1`), [e.g like here](https://trendoceans.com/how-to-install-configure-android-studio-on-linux-ubuntu-20-04/#Install-Android-Studio-using-tar.gz)
+- In Android studio, let the sdk point to `~/Android/Sdk/`
+- 
+- On linux make sure you have installed `build-essential`
 - Set environment variable for`$JAVA_HOME` set to java home directory, `$ANDROID_HOME` set to Android SDK directory and `$NDK_HOME` to point to the ndk directory and version installed by Android Studio.
 
 example of `~/.bashrc` or `~/.zhrc`:
