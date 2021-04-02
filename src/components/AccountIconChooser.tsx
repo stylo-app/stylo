@@ -35,8 +35,8 @@ interface IconType {
 }
 
 interface Props {
-	derivationPassword: string;
-	derivationPath: string;
+	derivationPassword?: string;
+	derivationPath?: string;
 	network: NetworkParams;
 	onSelect: (icon: { isBip39: boolean; newAddress: string; newSeed: string; }) => void;
 	value: string;

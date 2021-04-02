@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import AccountCard from 'components/AccountCard';
 import AccountSeed from 'components/AccountSeed';
 import Button from 'components/Button';
+import DerivationPathField from 'components/DerivationPathField';
 import KeyboardScrollView from 'components/KeyboardScrollView';
 import { NetworkCard } from 'components/NetworkCard';
 import ScreenHeading from 'components/ScreenHeading';
@@ -27,7 +28,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
-import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
+import { isSubstrateNetwork, SubstrateNetworkParams  } from 'types/networkTypes';
 import { emptyAccount, validateSeed } from 'utils/account';
 import { alertError, alertRisks } from 'utils/alertUtils';
 import { debounce } from 'utils/debounce';
@@ -36,24 +37,16 @@ import { constructSURI } from 'utils/suri';
 
 import { AccountsContext, AlertContext, NetworksContext } from '../context';
 
-// interface State {
-// 	derivationPassword: string;
-// 	derivationPath: string;
-// 	isDerivationPathValid: boolean;
-// 	newAccount?: Account;
-// }
-
-// const initialState = {
-// 	derivationPassword: '',
-// 	derivationPath: '',
-// 	isDerivationPathValid: true
-// };
+interface OnDerivationType {
+	derivationPassword: string;
+	derivationPath: string;
+	isDerivationPathValid: boolean;
+}
 
 function RecoverAccount(): React.ReactElement {
-	// eslint-disable-next-line no-unused-vars
 	const [derivationPath, setDerivationPath] = useState('');
-	// eslint-disable-next-line no-unused-vars
 	const [derivationPassword, setDerivationPassword] = useState('');
+	const [isDerivationPathValid, setIsDerivationPathValid] = useState(true);
 	const { accountExists, newAccount, updateNew } = useContext(AccountsContext);
 	const defaultSeedValidObject = validateSeed('', false);
 	const [isSeedValid, setIsSeedValid] = useState(defaultSeedValidObject);
@@ -63,6 +56,7 @@ function RecoverAccount(): React.ReactElement {
 	const selectedNetwork = useMemo(() => getNetwork(newAccount.networkKey), [getNetwork, newAccount.networkKey])
 	const { navigate } = useNavigation()
 	const accountAlreadyExists = useMemo(() => accountExists(newAccount.address, selectedNetwork), [accountExists, newAccount.address, selectedNetwork])
+	const isSubstrate = useMemo(() => isSubstrateNetwork(selectedNetwork), [selectedNetwork])
 
 	const goToPin = useCallback(() => navigate('AccountPin', { isNew: true }), [navigate])
 
@@ -95,15 +89,16 @@ function RecoverAccount(): React.ReactElement {
 			return null
 		}
 
-		if (isEthereumNetwork(selectedNetwork)) {
+		if (!isSubstrate) {
 			brainWalletAddress(seedPhrase)
-				.then(({ address, bip39 }) =>
+				.then(({ address, bip39 }) => {
 					updateNew({
 						address,
 						seed: seedPhrase,
 						seedPhrase,
 						validBip39Seed: bip39
-					}))
+					})
+				})
 				.catch(console.error);
 		} else {
 			if (!seedPhrase){
@@ -139,11 +134,11 @@ function RecoverAccount(): React.ReactElement {
 				console.error('invalid phrase or path', e)
 			}
 		}
-	}, [derivationPassword, derivationPath, seedPhrase, selectedNetwork, updateNew]);
+	}, [derivationPassword, derivationPath, isSubstrate, seedPhrase, selectedNetwork, updateNew]);
 
 	useEffect(() => {
-		isSeedValid.bip39 && generateAddress()
-	}, [generateAddress, isSeedValid.bip39])
+		isSeedValid.bip39 && isDerivationPathValid && generateAddress()
+	}, [generateAddress, isDerivationPathValid, isSeedValid.bip39, derivationPath, derivationPassword])
 
 	const onRecoverAccount = (): void => {
 		goToPin()
@@ -160,6 +155,12 @@ function RecoverAccount(): React.ReactElement {
 
 		return onRecoverAccount();
 	};
+
+	const onDerivationChange = useCallback(({ derivationPassword, derivationPath, isDerivationPathValid }: OnDerivationType) => {
+		setDerivationPassword(derivationPassword)
+		setDerivationPath(derivationPath)
+		setIsDerivationPathValid(isDerivationPathValid)
+	}, [])
 
 	const { address, name, networkKey } = newAccount;
 
@@ -193,21 +194,13 @@ function RecoverAccount(): React.ReactElement {
 					valid={isSeedValid.bip39}
 				/>
 			</View>
-			{/* {isSubstrate && (
+			{isSubstrate && (
 				<DerivationPathField
-					onChange={newDerivationPath => {
-						this.debouncedAddressGeneration(seedPhrase,
-							newDerivationPath.derivationPath,
-							newDerivationPath.derivationPassword);
-						this.setState({
-							derivationPassword: newDerivationPath.derivationPassword,
-							derivationPath: newDerivationPath.derivationPath,
-							isDerivationPathValid: newDerivationPath.isDerivationPathValid
-						});
-					}}
+					onChange={onDerivationChange}
 					styles={styles}
+					value={`${derivationPath}${derivationPassword ? '///' : '' }${derivationPassword}`}
 				/>
-			)} */}
+			)}
 			{ isSeedValid.bip39 && !!networkKey && !!address && !accountAlreadyExists && (
 				<View style={styles.step}>
 					<AccountCard
@@ -224,9 +217,16 @@ function RecoverAccount(): React.ReactElement {
 					</Text>
 				</View>
 			)}
+			{ !isDerivationPathValid && (
+				<View style={styles.step}>
+					<Text style={styles.errorText}>
+						Invalid derivation path.
+					</Text>
+				</View>
+			)}
 			<View style={styles.btnBox}>
 				<Button
-					disabled={!isSeedValid.bip39 || !networkKey || !address || accountAlreadyExists}
+					disabled={!isSeedValid.bip39 || !networkKey || !address || accountAlreadyExists || !isDerivationPathValid}
 					onPress={onRecoverConfirm}
 					small={true}
 					testID={testIDs.RecoverAccount.recoverButton}

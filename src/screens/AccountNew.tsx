@@ -22,7 +22,7 @@ import { NetworkCard } from 'components/NetworkCard';
 import ScreenHeading from 'components/ScreenHeading';
 import TextInput from 'components/TextInput';
 import { NetworkProtocols } from 'constants/networkSpecs';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
@@ -33,13 +33,16 @@ import { constructSURI } from 'utils/suri';
 
 import { AccountsContext, NetworksContext } from '../context';
 
+// interface OnDerivationType {
+// 	derivationPassword: string;
+// 	derivationPath: string;
+// 	isDerivationPathValid: boolean;
+// }
+
 export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>): React.ReactElement {
-	// eslint-disable-next-line no-unused-vars
-	const [derivationPassword, setDerivationPassword] = useState('')
-	// eslint-disable-next-line no-unused-vars
-	const [derivationPath, setDerivationPath] = useState('')
-	// eslint-disable-next-line no-unused-vars
-	const [isDerivationPathValid, setIsDerivationPathValid] = useState(true)
+	// const [derivationPassword, setDerivationPassword] = useState('')
+	// const [derivationPath, setDerivationPath] = useState('')
+	// const [isDerivationPathValid, setIsDerivationPathValid] = useState(true)
 	const { newAccount, updateNew } = useContext(AccountsContext);
 	const { getNetwork } = useContext(NetworksContext);
 	const { address, name, networkKey, seed, validBip39Seed  } = newAccount;
@@ -58,15 +61,15 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 			if (isSubstrate) {
 				try {
 					const suri = constructSURI({
-						derivePath: derivationPath,
-						password: derivationPassword,
+						// derivePath: derivationPath,
+						// password: derivationPassword,
 						phrase: newSeed
 					});
 
 					updateNew({
 						address: newAddress,
-						derivationPassword,
-						derivationPath,
+						// derivationPassword,
+						// derivationPath,
 						seed: suri,
 						seedPhrase: newSeed,
 						validBip39Seed: isBip39
@@ -90,7 +93,7 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 				validBip39Seed: false
 			});
 		}
-	},[derivationPassword, derivationPath, isSubstrate, updateNew])
+	},[isSubstrate, updateNew])
 
 	const onCreate = useCallback(() => {
 		navigation.navigate('Mnemonic', { isNew: true })
@@ -101,12 +104,11 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 		navigation.navigate('NetworkList')
 	}, [navigation, updateNew])
 
-	// const onDerivationChange = useCallback((newDerivationPath: { derivationPassword: string; derivationPath: string; isDerivationPathValid: boolean; }): void => {
-	// 	updateState({
-	// 		derivationPassword: newDerivationPath.derivationPassword,
-	// 		derivationPath: newDerivationPath.derivationPath,
-	// 		isDerivationPathValid: newDerivationPath.isDerivationPathValid
-	// 	});
+	// const onDerivationChange = useCallback(({derivationPassword, derivationPath, isDerivationPathValid}: OnDerivationType): void => {
+	// 	console.log('derivationPassword, derivationPath, isDerivationPathValid', derivationPassword, derivationPath, isDerivationPathValid)
+	// 	setDerivationPassword(derivationPassword)
+	// 	setDerivationPath(derivationPath)
+	// 	setIsDerivationPathValid(isDerivationPathValid)
 	// }, []);
 
 	return (
@@ -135,24 +137,25 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 					<View style={styles.step}>
 						<Text style={styles.title}>ICON & ADDRESS</Text>
 						<AccountIconChooser
-							derivationPassword={derivationPassword}
-							derivationPath={derivationPath}
+							// derivationPassword={derivationPassword}
+							// derivationPath={derivationPath}
 							network={selectedNetwork}
 							onSelect={updateAccountSelection}
 							value={address}
 						/>
 					</View>
 					{/* {isSubstrate && (
-							<View style={StyleSheet.flatten([styles.step, styles.lastStep])}>
-								<DerivationPathField
-									onChange={onDerivationChange}
-									styles={styles}
-								/>
-							</View>
-						)} */}
+						<View style={StyleSheet.flatten([styles.step, styles.lastStep])}>
+							<DerivationPathField
+								onChange={onDerivationChange}
+								styles={styles}
+							/>
+						</View>
+					)} */}
 					<View style={styles.bottom}>
 						<Button
-							disabled={!validateSeed(seed, validBip39Seed).valid || !isDerivationPathValid}
+							// disabled={!validateSeed(seed, validBip39Seed).valid || !isDerivationPathValid}
+							disabled={!validateSeed(seed, validBip39Seed).valid}
 							onPress={onCreate}
 							small
 							title="Next Step"

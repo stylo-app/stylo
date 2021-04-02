@@ -15,48 +15,61 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
+import fontStyles from 'styles/fontStyles';
 
 import TextInput from './TextInput';
 
-export default function DerivationPasswordVerify(props: {
+interface Props {
 	password: string;
-}): React.ReactElement {
-	const { password } = props;
+}
+
+export default function DerivationPasswordVerify({ password }: Props): React.ReactElement {
 	const [enteredPassword, setEnteredPassword] = useState('');
 	const [verifyField, setVerifyField] = useState(false);
 	const isMatching = enteredPassword === password;
 
 	const toggleVerifyField = (): void => {
+		setEnteredPassword('')
 		setVerifyField(!verifyField);
 	};
 
 	return (
 		<>
-			<TouchableOpacity onPress={toggleVerifyField}>
-				<Text style={styles.passwordText}>
-					<Icon color={colors.text.faded}
-						name={'info'}
-						size={14} /> This
-					account countains a derivation password.{' '}
-					<Text onPress={toggleVerifyField}
-						style={styles.link}>
-						Verify it here
+			<Text style={styles.passwordText}>
+				<Icon
+					color={colors.text.faded}
+					name={'info'}
+					size={16}
+				/>
+					This account uses a derivation password.{' '}
+			</Text>
+			<TouchableOpacity
+				onPress={toggleVerifyField}
+			>
+				<View style={styles.container}>
+					<Text
+						onPress={toggleVerifyField}
+						style={{ ...styles.passwordText, ...styles.link }}
+					>
+					Verify it here
 					</Text>
 					<Icon
 						name={verifyField ? 'arrow-drop-up' : 'arrow-drop-down'}
 						size={20}
+						style={styles.icon}
 					/>
-				</Text>
+				</View>
 			</TouchableOpacity>
 			{verifyField && (
 				<TextInput
 					onChangeText={setEnteredPassword}
-					placeholder="derivation password"
-					style={isMatching ? styles.validInput : styles.invalidInput}
+					placeholder="password without ///"
+					style={isMatching ? { ...styles.input, ...styles.validInput } : { ...styles.input, ...styles.invalidInput }}
+					value={enteredPassword}
 				/>
 			)}
 		</>
@@ -64,15 +77,39 @@ export default function DerivationPasswordVerify(props: {
 }
 
 const styles = StyleSheet.create({
-	invalidInput: { backgroundColor: '#fee3e3' },
-	link: { textDecorationLine: 'underline' },
+	container: {
+		alignItems: 'center',
+		flexDirection: 'row'
+	},
+	icon: {
+		color: colors.text.faded
+	},
+	input: {
+		...fontStyles.t_seed,
+		color: colors.text.faded,
+		lineHeight: 18,
+		minHeight: 1,
+		paddingHorizontal: 16,
+		paddingVertical: 0
+	},
+	invalidInput: {
+		borderBottomColor: colors.signal.error,
+		borderColor: colors.signal.error
+	},
+	link: {
+		marginTop: 0,
+		textDecorationLine: 'underline'
+	},
 	passwordText: {
 		color: colors.text.faded,
 		fontFamily: fonts.regular,
 		fontSize: 18,
-		marginBottom: 10,
 		marginTop: 20,
 		paddingBottom: 0
 	},
-	validInput: { backgroundColor: '#e4fee4' }
+	validInput: {
+		borderBottomColor: colors.border.valid,
+		borderColor: colors.border.valid,
+		color: colors.border.valid
+	}
 });

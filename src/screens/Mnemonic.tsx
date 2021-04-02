@@ -24,7 +24,6 @@ import { NetworkProtocols } from 'constants/networkSpecs';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { AppState, AppStateStatus, StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
-import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
 import { NavigationProps } from 'types/props';
 import { alertBackupDone, alertCopyBackupPhrase } from 'utils/alertUtils';
@@ -83,6 +82,7 @@ function Mnemonic({ navigation, route }: NavigationProps<'Mnemonic'>): React.Rea
 				title={name}
 			/>
 			<View style={styles.bodyContent}>
+				<Text style={styles.title}>Mnemonic</Text>
 				<TouchableItem
 					onPress={(): void => {
 						// only allow the copy of the recovery phrase in dev environment
@@ -97,14 +97,17 @@ function Mnemonic({ navigation, route }: NavigationProps<'Mnemonic'>): React.Rea
 						}
 					}}
 				>
-					<Text style={fontStyles.t_seed}>
+					<Text style={styles.seed}>
 						{seedPhrase === '' ? seed : seedPhrase}
 					</Text>
 				</TouchableItem>
-				{derivationPath !== '' && (
-					<Text style={styles.derivationText}>{derivationPath || ''}</Text>
+				{!!derivationPath && (
+					<>
+						<Text style={styles.title}>Derivation path</Text>
+						<Text style={styles.derivationText}>{derivationPath}</Text>
+					</>
 				)}
-				{derivationPassword !== '' && (
+				{!!derivationPassword && (
 					<DerivationPasswordVerify password={derivationPassword} />
 				)}
 				{isNew && (
@@ -123,23 +126,28 @@ export default Mnemonic;
 const styles = StyleSheet.create({
 	body: {
 		alignContent: 'flex-start',
-		paddingBottom: 40,
-		paddingTop: 24
+		paddingBottom: 20
 	},
-	bodyContent: { padding: 16 },
+	bodyContent: {
+		padding: 16
+	},
 	derivationText: {
-		backgroundColor: colors.background.card,
-		fontFamily: fonts.regular,
-		fontSize: 20,
-		lineHeight: 26,
-		marginTop: 20,
-		minHeight: 30,
-		padding: 10
+		...fontStyles.t_seed,
+		color: colors.text.faded,
+		lineHeight: 20,
+		minHeight: 1,
+		paddingHorizontal: 16,
+		paddingVertical: 8
+	},
+	seed: {
+		...fontStyles.t_seed,
+		color: colors.text.faded,
+		marginBottom: 20,
+		minHeight: 1
 	},
 	title: {
-		color: colors.text.faded,
-		fontFamily: fonts.bold,
-		fontSize: 18,
-		paddingBottom: 20
+		...fontStyles.h_subheading,
+		color: colors.text.main,
+		marginBottom: 10
 	}
 });

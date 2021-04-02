@@ -26,17 +26,21 @@ import TextInput from './TextInput';
 interface Props {
 	onChange: (derivationEvent: { derivationPassword: string; derivationPath: string; isDerivationPathValid: boolean; }) => void;
 	styles: { title: TextStyle; };
+	value?: string
 }
 
-export default function DerivationPathField({ onChange, styles }: Props): React.ReactElement {
-	const [showAdvancedField, setShowAdvancedField] = useState(false);
+export default function DerivationPathField({ onChange, styles, value }: Props): React.ReactElement {
+	const [showAdvancedField, setShowAdvancedField] = useState(!!value || false);
 	const [isValidPath, setIsValidPath] = useState(true);
+	const [derivationPath, setDerivationPath] = useState(value)
 
 	const toggleShowAdvancedField = (): void => {
 		setShowAdvancedField(!showAdvancedField);
 	};
 
 	const onChangeText = useCallback((text: string): void => {
+		setDerivationPath(text)
+
 		try {
 			const derivationPath = parseDerivationPath(text);
 
@@ -81,6 +85,7 @@ export default function DerivationPathField({ onChange, styles }: Props): React.
 						fontStyles.h2,
 						isValidPath ? {} : ownStyles.invalidInput
 					])}
+					value={derivationPath}
 				/>
 			)}
 		</>
@@ -94,7 +99,6 @@ const ownStyles = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 		flexDirection: 'row'
-
 	},
 	invalidInput: {
 		borderBottomColor: colors.signal.error
