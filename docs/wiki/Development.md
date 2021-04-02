@@ -11,6 +11,7 @@
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf;
 sudo sysctl -p;
 ```
+- if node was installed with nvm you may need to run `sudo ln -s "$(which node)" /usr/local/bin/node`
 
 #### iOS
 - `cocoapods` (`$ sudo gem install cocoapods`)
