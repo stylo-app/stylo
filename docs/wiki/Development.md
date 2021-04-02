@@ -19,7 +19,10 @@ sudo sysctl -p;
 #### Android
 - Install Android Studio (only for Android, tested on `Version 4.1`), [e.g like here](https://trendoceans.com/how-to-install-configure-android-studio-on-linux-ubuntu-20-04/#Install-Android-Studio-using-tar.gz)
 - In Android studio, let the sdk point to `~/Android/Sdk/`
-- 
+- Example of what sdk and tools to install
+![Selection_009](https://user-images.githubusercontent.com/33178835/113449339-e8ff8180-93fd-11eb-80a0-e9fb381352c1.png)
+![Selection_010](https://user-images.githubusercontent.com/33178835/113449342-eb61db80-93fd-11eb-8993-269c1aa6023e.png)
+![Selection_011](https://user-images.githubusercontent.com/33178835/113449345-edc43580-93fd-11eb-9f88-f0c88a31fe99.png)
 - On linux make sure you have installed `build-essential`
 - Set environment variable for`$JAVA_HOME` set to java home directory, `$ANDROID_HOME` set to Android SDK directory and `$NDK_HOME` to point to the ndk directory and version installed by Android Studio.
 
