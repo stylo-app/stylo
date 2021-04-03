@@ -16,35 +16,7 @@
 
 import { SubstrateNetworkKeys } from 'constants/networkSpecs';
 import { UnlockedAccount } from 'types/accountTypes';
-import { EthereumNetwork, isSubstrateNetwork, isUnknownNetworkParams, NetworkParams } from 'types/networkTypes';
 import { ValidSeed } from 'types/utilTypes';
-
-export function generateAccountId(address: string,
-	networkKey: string,
-	allNetworks: Map<string, NetworkParams>): string {
-	if (typeof address !== 'string' || address.length === 0 || !networkKey) {
-		throw new Error("Couldn't create an accountId. Address or networkKey missing, or network key was invalid.");
-	}
-
-	const networkParams = allNetworks.get(networkKey);
-
-	if (networkParams === undefined)
-		return `substrate:${address}:${networkKey ?? ''}`;
-
-	const { protocol } = networkParams;
-
-	if (isSubstrateNetwork(networkParams)) {
-		const { genesisHash } = networkParams;
-
-		return `${protocol}:${address}:${genesisHash ?? ''}`;
-	} else if (isUnknownNetworkParams(networkParams)) {
-		return `substrate:${address}:${networkKey ?? ''}`;
-	} else {
-		const { ethereumChainId } = networkParams as EthereumNetwork;
-
-		return `${protocol}:0x${address}@${ethereumChainId}`;
-	}
-}
 
 export function emptyAccount(address = '',
 	networkKey: string = SubstrateNetworkKeys.KUSAMA): UnlockedAccount {

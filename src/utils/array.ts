@@ -67,33 +67,3 @@ export function binarySearch(array: Array<any>,
 
 	return { hit: false, index: min };
 }
-
-export function zip(left: any[], right: any[]): any[] {
-	let lindex = 0;
-	let rindex = 0;
-	let oindex = 0;
-
-	// allocate enough memory to merge two arrays
-	const out = new Array(left.length + right.length);
-
-	while (lindex < left.length && rindex < right.length) {
-		const lword = left[lindex];
-		const rword = right[rindex];
-
-		if (lword < rword) {
-			out[oindex] = lword;
-			lindex += 1;
-		} else if (lword > rword) {
-			out[oindex] = rword;
-			rindex += 1;
-		} else {
-			out[oindex] = lword;
-			lindex += 1;
-			rindex += 1;
-		}
-
-		oindex += 1;
-	}
-
-	return out.slice(0, oindex);
-}

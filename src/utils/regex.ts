@@ -14,13 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-export const pathsRegex: {[key: string]: RegExp} = {
-	allPath: /(\/|\/\/)[\w-.]+(?=(\/?))/g,
-	firstPath: /(\/|\/\/)[\w-.]+(?=(\/)?)/,
-	networkPath: /(\/\/)[\w-.]+(?=(\/)?)/,
-	validateDerivedPath: /^(\/\/?[\w-.]+)*$/
-};
-
 export const passwordRegex = /^[^\s/]{0,1024}$/;
 
 export const onlyNumberRegex = /^\d+$|^$/;

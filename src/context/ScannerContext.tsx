@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useContext, useReducer } from 'react';
-import { Account } from 'types/accountTypes';
+import { AccountType } from 'types/accountTypes';
 import { isEthereumNetwork } from 'types/networkTypes';
 import { CompletedParsedData, EthereumParsedData, isEthereumCompletedParsedData, isSubstrateMessageParsedData, MessageQRInfo, MultiFramesInfo, QrInfo, SubstrateCompletedParsedData, SubstrateMessageParsedData, SubstrateTransactionParsedData, TxQRInfo } from 'types/scannerTypes';
 import { asciiToHex, constructDataFromBytes, encodeNumber } from 'utils/decoders';
@@ -32,8 +32,8 @@ import { NetworksContext } from './NetworksContext';
 type TXRequest = Record<string, any>;
 
 type SignedTX = {
-	recipient: Account;
-	sender: Account;
+	recipient: AccountType;
+	sender: AccountType;
 	txRequest: TXRequest;
 };
 

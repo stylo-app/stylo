@@ -46,8 +46,8 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 	const { getTypeRegistry } = useContext(RegistriesContext);
 	const { setAlert } = useContext(AlertContext);
 	const { getSubstrateNetwork } = useContext(NetworksContext);
-	const networkParams = getSubstrateNetwork(networkKey);
-	const prefix = networkParams.prefix;
+	const network = getSubstrateNetwork(networkKey);
+	const { color: networkColor, prefix } = network
 	const typeRegistry = useMemo(() => getTypeRegistry(networkKey)!, [getTypeRegistry, networkKey]);
 
 	useEffect(() => {
@@ -218,7 +218,7 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 		return (
 			<View style={[{ alignItems: 'baseline', justifyContent: 'flex-start' }]}>
 				<View style={{ marginBottom: 12, width: '100%' }}>
-					<Text style={styles.label}>{label}</Text>
+					<Text style={[styles.label, { backgroundColor: networkColor }]}>{label}</Text>
 					{label === 'Method' && !useFallback ? (
 						renderMethodDetails()
 					) : label === 'Era' ? (
@@ -284,7 +284,7 @@ const PayloadDetailsCard = ({ description, networkKey, payload, signature, style
 			)}
 			{!!signature && (
 				<View style={styles.extrinsicContainer}>
-					<Text style={styles.label}>Signature</Text>
+					<Text style={[styles.label, { backgroundColor: network?.color }]}>Signature</Text>
 					<Text style={styles.secondaryText}>{signature}</Text>
 				</View>
 			)}
@@ -307,21 +307,21 @@ const styles = StyleSheet.create({
 	},
 	label: {
 		...fontStyles.t_label,
-		backgroundColor: colors.signal.main,
-		color: colors.text.main,
+		color: colors.text.white,
 		marginBottom: 10,
 		paddingLeft: 8,
 		textAlign: 'left'
 	},
 	secondaryText: {
 		...fontStyles.t_codeS,
-		color: colors.signal.main,
+		color: colors.text.faded,
 		paddingHorizontal: 8,
 		textAlign: 'left'
 	},
 	titleText: {
 		...fontStyles.t_codeS,
-		color: colors.text.main
+		color: colors.text.white,
+		fontWeight: 'bold'
 	}
 });
 

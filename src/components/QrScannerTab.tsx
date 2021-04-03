@@ -34,8 +34,8 @@ export default function QrScannerTab(): React.ReactElement {
 			testID={testIDs.SecurityHeader.scanButton}
 		>
 			<Icon
-				accessibilityComponentType={'button'}
-				accessibilityTraits={'button'}
+				// accessibilityComponentType={'button'}
+				// accessibilityTraits={'button'}
 				color={colors.text.main}
 				name="qrcode-scan"
 				size={fontStyles.i_large.fontSize}

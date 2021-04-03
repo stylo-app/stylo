@@ -32,32 +32,13 @@ export type UnlockedAccount = {
 
 export type LockedAccount = Omit<
 	UnlockedAccount,
-	'seedPhrase' | 'seed' | 'derivationPassword' | 'derivationPath'
+	'seedPhrase' | 'seed' | 'derivationPassword'
 >;
 
-export type Account = UnlockedAccount | LockedAccount | AccountType;
+// export type Account = UnlockedAccount | LockedAccount | AccountType;
 
-export function isUnlockedAccount(account: UnlockedAccount | LockedAccount): account is UnlockedAccount {
+export function isUnlockedAccount(account: UnlockedAccount | LockedAccount | AccountType): account is UnlockedAccount {
 	return 'seed' in account || 'seedPhrase' in account;
-}
-
-export type AccountMeta = {
-	address: string;
-	createdAt: number;
-	hasPassword?: boolean;
-	name: string;
-	updatedAt: number;
-	networkPathId?: string;
-};
-
-export interface FoundIdentityAccount extends AccountMeta {
-	accountId: string;
-	encryptedSeed: string;
-	hasPassword: boolean;
-	validBip39Seed: true;
-	isLegacy?: boolean;
-	networkKey: string;
-	path: string;
 }
 
 export interface AccountType {
@@ -77,29 +58,3 @@ export interface AccountType {
 	validBip39Seed: boolean;
 	version?: number;
 }
-
-export type SerializedIdentity = {
-	encryptedSeed: string;
-	derivationPassword: string;
-	meta: Array<[string, AccountMeta]>;
-	addresses: Array<[string, string]>;
-	name: string;
-};
-
-export interface AccountInfo {
-	address: string;
-	accountId: string;
-	createdAt: number;
-	name: string;
-	updatedAt: number;
-	encryptedSeed: string;
-	validBip39Seed: boolean;
-	isLegacy?: boolean;
-	networkKey: string;
-	path?: string;
-};
-
-export type PathGroup = {
-	paths: string[];
-	title: string;
-};

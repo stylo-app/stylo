@@ -1,6 +1,6 @@
 import { NetworkProtocols } from 'constants/networkSpecs';
 import { createContext, default as React, useCallback, useContext, useEffect, useState } from 'react';
-import { Account, AccountType, isUnlockedAccount, LockedAccount, UnlockedAccount } from 'types/accountTypes';
+import { AccountType, isUnlockedAccount, LockedAccount, UnlockedAccount } from 'types/accountTypes';
 import { isEthereumNetwork, NetworkParams } from 'types/networkTypes';
 import { emptyAccount } from 'utils/account';
 import { deleteAccount as deleteDbAccount, loadAccounts, saveAccount as saveDbAccount } from 'utils/db';
@@ -20,7 +20,7 @@ export interface AccountsContextType {
 	getAccountByAddress: (address: string) => AccountType | undefined;
 	getSelectedAccount: () => AccountType | undefined;
 	lockAccount: (accountKey: string) => void;
-	saveAccount: (account: Account, pin?: string) => Promise<void>;
+	saveAccount: (account: AccountType, pin?: string) => Promise<void>;
 	selectAccount: (accountAddress: string) => void;
 	submitNew: (pin: string) => Promise<void>;
 	unlockAccount: (accountKey: string, pin: string) => Promise<boolean>;
@@ -95,10 +95,11 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 
 	}
 
-	function _deleteSensitiveData({ address, createdAt, encryptedSeed, isLegacy, name, networkKey, recovered, updatedAt, validBip39Seed }: UnlockedAccount): LockedAccount {
+	function _deleteSensitiveData({ address, createdAt, derivationPath, encryptedSeed, isLegacy, name, networkKey, recovered, updatedAt, validBip39Seed }: UnlockedAccount): LockedAccount {
 		return {
 			address,
 			createdAt,
+			derivationPath,
 			encryptedSeed,
 			isLegacy,
 			name,

@@ -181,25 +181,25 @@ const ethereumNetworkBase: Record<string, EthereumNetworkDefaultConstants> = {
 		order: 102,
 		pathId: 'classic',
 		secondaryColor: colors.background.card,
-		title: 'Ethereum Classic'
+		title: 'Eth Classic'
 	},
 	[EthereumNetworkKeys.ROPSTEN]: {
 		ethereumChainId: EthereumNetworkKeys.ROPSTEN,
 		order: 104,
 		pathId: 'ropsten',
-		title: 'Ropsten Testnet'
+		title: 'Ropsten'
 	},
 	[EthereumNetworkKeys.GOERLI]: {
 		ethereumChainId: EthereumNetworkKeys.GOERLI,
 		order: 105,
 		pathId: 'goerli',
-		title: 'Görli Testnet'
+		title: 'Görli'
 	},
 	[EthereumNetworkKeys.KOVAN]: {
 		ethereumChainId: EthereumNetworkKeys.KOVAN,
 		order: 103,
 		pathId: 'kovan',
-		title: 'Kovan Testnet'
+		title: 'Kovan'
 	}
 };
 

@@ -29,23 +29,22 @@ import TouchableItem from './TouchableItem';
 
 interface AccountCardProps{
 	address: string;
+	derivationPath?: string;
 	networkKey?: string;
 	onPress?: ButtonListener;
-	seedType?: string;
 	style?: ViewStyle;
 	testID?: string;
 	title?: string;
 	titlePrefix?: string;
 };
 
-export default function AccountCard({ address, networkKey, onPress, seedType, style, testID, title, titlePrefix }: AccountCardProps): ReactElement {
+export default function AccountCard({ address, derivationPath, networkKey, onPress, style, testID, title, titlePrefix }: AccountCardProps): ReactElement {
 	const { getNetwork } = useContext(NetworksContext);
 	const { getAccountByAddress } = useContext(AccountsContext);
 
 	const account = getAccountByAddress(address)
-
+	const derivation = derivationPath || account?.derivationPath
 	const displayTitle = title ||account?.name || 'Unknown';
-	const seedTypeDisplay = seedType || '';
 	const network = getNetwork(networkKey) || getNetwork(account?.networkKey);
 
 	return (
@@ -59,16 +58,18 @@ export default function AccountCard({ address, networkKey, onPress, seedType, st
 					address={account?.address || address}
 					network={network}
 					style={styles.icon} />
-				<View style={styles.desc}>
-					<View>
-						<Text style={[fontStyles.t_regular, { color: colors.text.faded }]}>
-							{`${network?.title}${seedTypeDisplay} `}
-						</Text>
-					</View>
+				<View style={[styles.desc ]}>
 					<AccountPrefixedTitle
 						title={displayTitle}
 						titlePrefix={titlePrefix}
 					/>
+					{derivation && (
+						<View>
+							<Text style={[fontStyles.t_regular, styles.derivationPath]}>
+								{derivation}
+							</Text>
+						</View>
+					)}
 					{address !== '' && (
 						<Address
 							address={address}
@@ -76,7 +77,10 @@ export default function AccountCard({ address, networkKey, onPress, seedType, st
 						/>
 					)}
 				</View>
-				<NetworkFooter color={network?.color} />
+				<NetworkFooter
+					color={network?.color}
+					text={network?.title}
+				/>
 			</View>
 		</TouchableItem>
 	);
@@ -86,7 +90,11 @@ const styles = StyleSheet.create({
 	content: {
 		alignItems: 'center',
 		flexDirection: 'row',
+		marginTop: 8,
 		paddingLeft: 16
+	},
+	derivationPath: {
+		color: colors.text.faded
 	},
 	desc: {
 		flex: 1,

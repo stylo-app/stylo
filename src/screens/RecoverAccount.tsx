@@ -205,6 +205,7 @@ function RecoverAccount(): React.ReactElement {
 				<View style={styles.step}>
 					<AccountCard
 						address={address}
+						derivationPath={derivationPath}
 						networkKey={networkKey}
 						title={name || '<no name>'}
 					/>
