@@ -17,12 +17,13 @@
 import NetInfo from '@react-native-community/netinfo';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import AccountCard from 'components/AccountCard';
+import InsecureDeviceBanner from 'components/InsecureDeviceBanner';
 import { Loader } from 'components/Loader';
 import QrScannerTab from 'components/QrScannerTab';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import testIDs from 'e2e/testIDs';
 import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text,TouchableWithoutFeedback, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import colors from 'styles/colors';
 import { AccountType } from 'types/accountTypes';
@@ -75,20 +76,7 @@ function AccountList(): React.ReactElement {
 
 	return (
 		<SafeAreaViewContainer>
-			{isConnected && (
-				<TouchableWithoutFeedback
-					onPress={(): void => navigate('Security')}
-				>
-					<View style={styles.insecureDeviceBanner}>
-						<Icon
-							color={colors.text.white}
-							name="shield-off"
-							size={22}
-						/>
-						<Text style={styles.warningText}>Insecure device</Text>
-					</View>
-				</TouchableWithoutFeedback>
-			)}
+			{isConnected && <InsecureDeviceBanner onPress={(): void => navigate('Security')}/>}
 			{
 				accounts.length
 					? (

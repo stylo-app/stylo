@@ -27,11 +27,7 @@ import { ButtonListener } from 'types/props';
 import { NetworksContext } from '../context';
 import AccountIcon from './AccountIcon';
 
-const renderSubtitle = (subtitle?: string,
-	hasSubtitleIcon?: boolean,
-	isAlignLeft?: boolean,
-	isError?: boolean,
-	multiline?: boolean): ReactNode => {
+const renderSubtitle = (subtitle?: string, hasSubtitleIcon?: boolean, isAlignLeft?: boolean, isError?: boolean, multiline?: boolean): ReactNode => {
 	if (!subtitle || subtitle === '') return;
 	const subtitleBodyStyle: ViewStyle[] = [baseStyles.subtitleBody],
 		subtitleTextStyle: TextStyle[] = [
@@ -80,8 +76,8 @@ const renderIcon = (iconName?: string, iconType?: string): ReactNode => {
 	return (
 		<View style={[baseStyles.icon, { paddingLeft: 16 }]}>
 			<Icon
-				accessibilityComponentType={'button'}
-				accessibilityTraits={'button'}
+				// accessibilityComponentType={'button'}
+				// accessibilityTraits={'button'}
 				color={colors.text.main}
 				name={iconName}
 				type={iconType}
