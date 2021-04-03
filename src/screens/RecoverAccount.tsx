@@ -195,11 +195,13 @@ function RecoverAccount(): React.ReactElement {
 				/>
 			</View>
 			{isSubstrate && (
-				<DerivationPathField
-					onChange={onDerivationChange}
-					styles={styles}
-					value={`${derivationPath}${derivationPassword ? '///' : '' }${derivationPassword}`}
-				/>
+				<View style={styles.step}>
+					<DerivationPathField
+						onChange={onDerivationChange}
+						styles={styles}
+						value={`${derivationPath}${derivationPassword ? '///' : '' }${derivationPassword}`}
+					/>
+				</View>
 			)}
 			{ isSeedValid.bip39 && !!networkKey && !!address && !accountAlreadyExists && (
 				<View style={styles.step}>

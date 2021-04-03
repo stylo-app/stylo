@@ -1,6 +1,6 @@
 {
   "name": "stylo-app",
-  "version": "0.4.2-beta",
+  "version": "0.5.0-beta",
   "private": true,
   "license": "GPL-3.0",
   "engines": {
