@@ -63,7 +63,7 @@ export default function AccountCard({ address, derivationPath, networkKey, onPre
 						title={displayTitle}
 						titlePrefix={titlePrefix}
 					/>
-					{derivation && (
+					{!!derivation && (
 						<View>
 							<Text style={[fontStyles.t_regular, styles.derivationPath]}>
 								{derivation}

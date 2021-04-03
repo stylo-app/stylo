@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 // from https://medium.com/@agungsurya/view-with-fading-background-in-react-native-ae37dcf6ddd3
 
-const divisor = 10;
+const divisor = 100;
 const step = 1/divisor;
 
 interface Props {

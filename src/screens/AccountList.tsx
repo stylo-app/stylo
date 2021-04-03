@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import NetInfo from '@react-native-community/netinfo';
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AccountCard from 'components/AccountCard';
 import InsecureDeviceBanner from 'components/InsecureDeviceBanner';
 import { Loader } from 'components/Loader';
@@ -34,19 +34,8 @@ import { useTac } from '../hooks/useTac';
 function AccountList(): React.ReactElement {
 	const { accounts, selectAccount } = useContext(AccountsContext);
 	const [isConnected, setIsConnected] = useState(false);
-	const { dataLoaded, ppAndTaCAccepted } = useTac();
-	const { dispatch, navigate } = useNavigation();
-
-	useEffect(() => {
-		if (!dataLoaded || ppAndTaCAccepted) return;
-
-		const resetAction = CommonActions.reset({
-			index: 0,
-			routes: [{ name: 'TermsAndConditions' }]
-		});
-
-		dispatch(resetAction);
-	}, [dataLoaded, dispatch, ppAndTaCAccepted])
+	const { dataLoaded } = useTac();
+	const { navigate } = useNavigation();
 
 	useEffect(() =>
 		NetInfo.addEventListener(state => {

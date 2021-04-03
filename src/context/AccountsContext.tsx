@@ -48,7 +48,8 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 	};
 
 	useEffect(() => {
-		loadAccountsFromDb();
+		loadAccountsFromDb()
+			.catch((e) => console.error('Error while loading accounts from db', e));
 	}, []);
 
 	const updateNew = useCallback((accountUpdate: Partial<AccountType>): void => {

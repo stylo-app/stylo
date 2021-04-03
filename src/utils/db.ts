@@ -37,6 +37,7 @@ function handleError(e: Error, label: string): any[] {
 const ACCOUNT_STORAGE_BASE_NAME = 'account_storage'
 
 export async function loadAccounts(version = 1): Promise<AccountType[]> {
+
 	if (!SecureStorage) {
 		return Promise.resolve([]);
 	}
