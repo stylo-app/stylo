@@ -17,6 +17,7 @@
 import Button from 'components/Button';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Animated, Easing,StyleSheet, Text, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
@@ -74,7 +75,9 @@ export default function CustomAlert(): React.ReactElement {
 		<Animated.View style={{ ...styles.background, opacity: animatedValue }}>
 			<View style={styles.body}>
 				{title && <Text style={styles.textTitle}>{title}</Text>}
-				<Text style={styles.textMessage}>{message}</Text>
+				<ScrollView style={styles.textWrapper}>
+					<Text style={styles.textMessage}>{message}</Text>
+				</ScrollView>
 				{actions.length && (
 					<View style={styles.actionsContainer}>
 						{actions.map(renderActions)}
@@ -94,14 +97,16 @@ const styles = StyleSheet.create({
 	},
 	background: {
 		alignItems: 'center',
+		height: '100%',
 		justifyContent: 'center',
 		position: 'absolute',
-		top: 80,
 		width: '100%',
 		zIndex: 100
 	},
 	body: {
 		backgroundColor: colors.background.alert,
+		display: 'flex',
+		height: '80%',
 		paddingHorizontal: 20,
 		paddingVertical: 20,
 		width: '90%'
@@ -118,9 +123,15 @@ const styles = StyleSheet.create({
 
 	buttonBoldText: { fontFamily: fonts.robotoMonoMedium },
 	buttonLightText: { fontFamily: fonts.robotoMono },
-	textMessage: { ...fontStyles.h2 },
+	textMessage: {
+		...fontStyles.h2
+	},
 	textTitle: {
 		paddingVertical: 10,
 		...fontStyles.h1
+	},
+	textWrapper: {
+		flex: 1,
+		height: 200
 	}
 });

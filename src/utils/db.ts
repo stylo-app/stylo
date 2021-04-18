@@ -96,9 +96,7 @@ const networkStorage = {
 };
 const currentNetworkStorageLabel = `${NETWORK_STORAGE_BASE_NAME}_v${CURRENT_NETWORK_VERSION}`;
 
-export async function loadNetworks(): Promise<
-	Map<string, SubstrateNetworkParams>
-	> {
+export async function loadNetworks(): Promise<Map<string, SubstrateNetworkParams>> {
 	try {
 		const networksJson = await SecureStorage.getItem(currentNetworkStorageLabel, networkStorage);
 

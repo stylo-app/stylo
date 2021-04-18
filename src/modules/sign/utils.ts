@@ -50,9 +50,7 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 			const strippedData = rawDataToU8A(txRequestData.rawData);
 
 			if (strippedData === null) throw new Error(strings.ERROR_NO_RAW_DATA);
-			const parsedData = await constructDataFromBytes(strippedData,
-				false,
-				networks);
+			const parsedData = await constructDataFromBytes(strippedData, false, networks);
 
 			return parsedData;
 		} else {
@@ -90,6 +88,7 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 			if (unsignedData === null) return;
 			const qrInfo = await scannerStore.setData(unsignedData);
 
+			console.log('qrInfo', qrInfo)
 			scannerStore.clearMultipartProgress();
 
 			const { senderAddress, type } = qrInfo;
@@ -103,6 +102,8 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 			navigation.navigate('AccountUnlockAndSign', { next: type === 'transaction' ? 'SignedTx' : 'SignedMessage' });
 
 		} catch (e) {
+			console.error(e.message);
+
 			return showAlertMessage(strings.ERROR_TITLE, e.message);
 		}
 	}

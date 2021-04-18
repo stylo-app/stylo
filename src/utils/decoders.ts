@@ -143,7 +143,8 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 			} else if (action === 'signTransaction') {
 				data.data.data = uosAfterFrames[13];
 			} else {
-				throw new Error('Could not determine action type.');
+				console.error('Could not determine action type.')
+				throw new Error();
 			}
 
 			return data;
@@ -176,7 +177,8 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 				const network = networks.get(genesisHash);
 
 				if (!network) {
-					throw new Error(strings.ERROR_NO_NETWORK);
+					console.error(strings.ERROR_NO_NETWORK)
+					throw new Error();
 				}
 
 				switch (secondByte) {
@@ -207,17 +209,17 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 					break;
 				}
 			} catch (e) {
-				throw new Error('Error: something went wrong decoding the Substrate UOS payload: ' + uosAfterFrames);
+				throw new Error('Something went wrong decoding the Substrate UOS payload: ' + uosAfterFrames);
 			}
 
 			return data;
 		}
 
 		default:
-			throw new Error('Error: Payload is not formatted correctly: ' + bytes);
+			throw new Error('Payload is not formated correctly: ' + bytes);
 		}
 	} catch (e) {
-		throw new Error('we cannot handle the payload: ' + bytes);
+		throw new Error(e);
 	}
 }
 

@@ -60,13 +60,10 @@ export function NetworksContextProvider({ children }: NetworksContextProviderPro
 	}, [substrateNetworks]);
 
 	useEffect(() => {
-		const refreshList = async function (): Promise<void> {
-			const initNetworkSpecs = await loadNetworks();
-
-			setSubstrateNetworks(initNetworkSpecs);
-		};
-
-		refreshList();
+		loadNetworks()
+			.then((networks) => {
+				setSubstrateNetworks(networks);
+			}).catch(console.error);
 	}, []);
 
 	function getSubstrateNetworkParams(networkKey: string): SubstrateNetworkParams {
