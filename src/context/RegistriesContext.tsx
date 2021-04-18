@@ -86,9 +86,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 			const networkMetadataRaw: string = (metadataJson as Record<any, any>)[network.metadataKey].hex;
 
 			if (!networkMetadataRaw) return null;
-
 			if (registries.has(networkKey)) return registries.get(networkKey)!;
-
 			const newRegistry = new TypeRegistry();
 			const specVersion = (metadataJson as Record<any, any>)[network.metadataKey].specVersion;
 			const overrideTypes = network && getOverrideTypes(newRegistry, network.pathId, specVersion);

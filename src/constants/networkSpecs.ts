@@ -17,8 +17,6 @@
 import colors from 'styles/colors';
 import { EthereumNetwork, EthereumNetworkDefaultConstants, NetworkParams, NetworkProtocol, SubstrateNetworkDefaultConstant, SubstrateNetworkParams, UnknownNetworkParams } from 'types/networkTypes';
 
-// import { centrifugeMetadata, edgewareMetadata, kulupuMetadata, kusamaMetadata, polkadotMetaData, rococoMetadata, westendMetadata } from './networkMetadata';
-
 export const unknownNetworkPathId = '';
 
 export const NetworkProtocols: Record<string, NetworkProtocol> = Object.freeze({
@@ -147,7 +145,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		metadataKey: 'rococoMetadata',
 		order: 4,
 		pathId: 'rococo',
-		prefix: 0,
+		prefix: 42,
 		title: 'Rococo',
 		unit: 'ROC'
 	},

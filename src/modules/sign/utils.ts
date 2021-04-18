@@ -88,7 +88,6 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 			if (unsignedData === null) return;
 			const qrInfo = await scannerStore.setData(unsignedData);
 
-			console.log('qrInfo', qrInfo)
 			scannerStore.clearMultipartProgress();
 
 			const { senderAddress, type } = qrInfo;
