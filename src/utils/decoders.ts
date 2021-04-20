@@ -184,12 +184,13 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 				switch (secondByte) {
 				case '00': // sign mortal extrinsic
 				case '02': // sign immortal extrinsic
-					data.action = isOversized ? 'signData' : 'signTransaction';
+					data.action = 'signTransaction';
 					data.oversized = isOversized;
 					data.isHash = isOversized;
 					const [offset] = compactFromU8a(rawPayload);
 					const payload = rawPayload.subarray(offset);
 
+					data.data.rawPayload = rawPayload;
 					data.data.data = isOversized
 						? await blake2b(u8aToHex(payload, -1, false))
 						: rawPayload;
@@ -202,8 +203,7 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 					data.oversized = false;
 					data.isHash = true;
 					data.data.data = hexPayload;
-					data.data.account = encodeAddress(publicKeyAsBytes,
-						network.prefix); // default to Kusama
+					data.data.account = encodeAddress(publicKeyAsBytes, network.prefix); // default to Kusama
 					break;
 				default:
 					break;

@@ -35,14 +35,3 @@ export function hexToAscii(hexx: string): string {
 
 	return str;
 }
-
-/*
- * @dev Take a long string and output the first and last 10 chars.
- */
-
-export function shortString(original: string): string {
-	return original
-		.substr(0, 20)
-		.concat('......')
-		.concat(original.substr(original.length - 20));
-}

@@ -22,7 +22,6 @@ import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
 import { isSubstrateNetwork } from 'types/networkTypes';
 import { alertDecodeError } from 'utils/alertUtils';
-import { shortString } from 'utils/strings';
 
 import { GenericExtrinsicPayload } from '@polkadot/types';
 import { AnyJson, AnyU8a, IExtrinsicEra, IMethod } from '@polkadot/types/types';
@@ -187,17 +186,15 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 						</Text>
 						{paramArgs ? (
 							paramArgs.map(([param, arg]) => (
-								<View key={param}
-									style={styles.callDetails}>
+								<View
+									key={param}
+									style={styles.callDetails}
+								>
 									<Text style={styles.titleText}>
-										{' { '}
 										{param}:{' '}
-										{arg && arg.length > 50
-											? shortString(arg)
-											: arg instanceof Array
-												? arg.join(', ')
-												: arg}{' '}
-										{'}'}
+										{arg && arg instanceof Array
+											? arg.join(', ')
+											: arg}{' '}
 									</Text>
 								</View>
 							))

@@ -252,12 +252,18 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 			// For Substrate, only sign the blake2 hash if payload bytes length > 256 bytes (handled in decoder.js).
 			dataToSign = await keccak(txRequest.data.rlp);
 		} else {
-			const payloadU8a = txRequest.data.data;
-			const [offset] = compactFromU8a(payloadU8a);
+			if(txRequest.oversized) {
+				dataToSign = txRequest.data.data;
+			} else {
+				const payloadU8a = txRequest.data.data;
+				const [offset] = compactFromU8a(payloadU8a);
 
-			tx = payloadU8a;
-			recipientAddress = txRequest.data.account;
-			dataToSign = payloadU8a.subarray(offset);
+				dataToSign = payloadU8a.subarray(offset);
+			}
+
+			// those 2 only make sense for ETH
+			recipientAddress = '';
+			tx = '';
 		}
 
 		const sender = getAccountByAddress(txRequest.data.account);
@@ -267,8 +273,8 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 		}
 
 		const qrInfo: TxQRInfo = {
-			dataToSign: dataToSign,
-			isHash: false,
+			dataToSign,
+			isHash: (txRequest as SubstrateTransactionParsedData)?.isHash || false,
 			isOversized,
 			recipientAddress,
 			senderAddress: sender.address,
@@ -278,7 +284,7 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 
 		const specVersion = (txRequest as SubstrateTransactionParsedData).data.specVersion || Number.MAX_SAFE_INTEGER;
 
-		setState({ ...qrInfo, rawPayload: txRequest.data.data, specVersion });
+		setState({ ...qrInfo, rawPayload: (txRequest as SubstrateTransactionParsedData)?.data.rawPayload, specVersion });
 
 		return qrInfo;
 	}
@@ -307,7 +313,7 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 		const sender = getAccountByAddress(address);
 
 		if (!sender) {
-			throw new Error(`No private key found for address: ${address}.`);
+			throw new Error(`No account found in Stylo for: ${address}.`);
 		}
 
 		const qrInfo: MessageQRInfo = {

@@ -74,6 +74,7 @@ export type SubstrateTransactionParsedData = {
 		data: Uint8Array;
 		genesisHash: string;
 		specVersion?: number;
+		rawPayload?: Uint8Array;
 	};
 	action: 'signTransaction';
 	oversized: boolean;
@@ -87,6 +88,7 @@ export type SubstrateMessageParsedData = {
 		data: string;
 		genesisHash: string;
 		specVersion?: number;
+		rawPayload?: string;
 	};
 	action: 'signData';
 	oversized: boolean;

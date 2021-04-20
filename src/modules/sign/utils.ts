@@ -85,7 +85,12 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 
 			const unsignedData = await checkMultiFramesData(parsedData);
 
-			if (unsignedData === null) return;
+			if (unsignedData === null) {
+				console.error('Unsigned data is null')
+
+				return;
+			}
+
 			const qrInfo = await scannerStore.setData(unsignedData);
 
 			scannerStore.clearMultipartProgress();
@@ -101,7 +106,7 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 			navigation.navigate('AccountUnlockAndSign', { next: type === 'transaction' ? 'SignedTx' : 'SignedMessage' });
 
 		} catch (e) {
-			console.error(e.message);
+			console.error(e);
 
 			return showAlertMessage(strings.ERROR_TITLE, e.message);
 		}
