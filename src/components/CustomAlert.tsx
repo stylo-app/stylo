@@ -74,11 +74,11 @@ export default function CustomAlert(): React.ReactElement {
 	return (
 		<Animated.View style={{ ...styles.background, opacity: animatedValue }}>
 			<View style={styles.body}>
-				{title && <Text style={styles.textTitle}>{title}</Text>}
+				{!!title && <Text style={styles.textTitle}>{title}</Text>}
 				<ScrollView style={styles.textWrapper}>
 					<Text style={styles.textMessage}>{message}</Text>
 				</ScrollView>
-				{actions.length && (
+				{!!actions.length && (
 					<View style={styles.actionsContainer}>
 						{actions.map(renderActions)}
 					</View>

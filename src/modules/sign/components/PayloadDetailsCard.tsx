@@ -31,13 +31,12 @@ import { formatBalance } from '@polkadot/util';
 import { AlertContext, NetworksContext, RegistriesContext } from '../../../context';
 
 type ExtrinsicPartProps = {
-	fallback?: string;
 	label: string;
 	networkKey: string;
 	value: AnyJson | AnyU8a | IMethod | IExtrinsicEra;
 };
 
-const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProps): React.ReactElement => {
+const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.ReactElement => {
 	const [period, setPeriod] = useState<string>();
 	const [phase, setPhase] = useState<string>();
 	const [formattedCallArgs, setFormattedCallArgs] = useState<any>();
@@ -51,7 +50,12 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 	const typeRegistry = useMemo(() => getTypeRegistry(networkKey)!, [getTypeRegistry, networkKey]);
 
 	useEffect(() => {
-		if (label === 'Method' && !fallback) {
+		if (useFallback) {
+			return
+		}
+
+		if (label === 'Method') {
+
 			try {
 				const call = typeRegistry.createType('Call', value);
 				const methodArgs = {};
@@ -72,11 +76,11 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 					for (let i = 0; i < meta.args.length; i++) {
 						let argument;
 
-						if (args[i].toRawType().includes('Vec')) {
-							// toString is nicer than toHumand here because
+						if (args[i].toRawType().startsWith('Vec')) {
+							// toString is nicer than toHuman here because
 							// toHuman tends to concatenate long strings and would hide data
 							argument = (args[i] as any).map((v: any) => v.toString());
-						} else if (args[i].toRawType().includes('AccountId')) {
+						} else if (args[i].toRawType().startsWith('AccountId')) {
 							// toString is nicer than toHumand here because it removes
 							// an additionnal { "Id": ...
 							argument = args[i].toString()
@@ -99,32 +103,33 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 				formatArgs(call, methodArgs, 0);
 				setFormattedCallArgs(methodArgs);
 			} catch (e) {
+				console.error(e)
 				alertDecodeError(setAlert);
 				setUseFallBack(true);
 			}
 		}
 
-		if (label === 'Era' && !fallback) {
+		if (label === 'Era') {
 			if ((value as ExtrinsicEra).isMortalEra) {
 				setPeriod((value as ExtrinsicEra).asMortalEra.period.toString());
 				setPhase((value as ExtrinsicEra).asMortalEra.phase.toString());
 			}
 		}
 
-		if (label === 'Tip' && !fallback) {
+		if (label === 'Tip') {
 			setTip(formatBalance(value as any));
 		}
-	}, [fallback, label, prefix, setAlert, typeRegistry, value]);
+	}, [label, prefix, setAlert, typeRegistry, useFallback, value]);
 
 	const renderEraDetails = (): React.ReactElement => {
 		if (period && phase) {
 			return (
 				<View style={styles.era}>
 					<Text style={{ ...styles.secondaryText, flex: 1 }}>
-							phase: {phase}{' '}
+						phase: {phase}{' '}
 					</Text>
 					<Text style={{ ...styles.secondaryText, flex: 1 }}>
-							period: {period}
+						period: {period}
 					</Text>
 				</View>
 			);
@@ -138,7 +143,7 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 					}}
 				>
 					<Text style={{ ...styles.secondaryText, flex: 1 }}>
-							Immortal Era
+						Immortal Era
 					</Text>
 					<Text style={{ ...styles.secondaryText, flex: 3 }}>
 						{value?.toString()}
@@ -148,91 +153,91 @@ const ExtrinsicPart = ({ fallback, label, networkKey, value }: ExtrinsicPartProp
 		}
 	};
 
-		type ArgsList = Array<[string, any]>;
-		type MethodCall = [string, ArgsList];
-		type FormattedArgs = Array<MethodCall>;
+	type ArgsList = Array<[string, any]>;
+	type MethodCall = [string, ArgsList];
+	type FormattedArgs = Array<MethodCall>;
 
-		const renderMethodDetails = (): React.ReactNode => {
-			if (formattedCallArgs) {
-				const formattedArgs: FormattedArgs = Object.entries(formattedCallArgs);
+	const renderMethodDetails = (): React.ReactNode => {
+		if (formattedCallArgs) {
+			const formattedArgs: FormattedArgs = Object.entries(formattedCallArgs);
 
-				// HACK: if there's a sudo method just put it to the front.
-				// A better way would be to order by depth but currently this is
-				// only relevant for a single extrinsic, so seems like overkill.
-				for (let i = 1; i < formattedArgs.length; i++) {
-					if (formattedArgs[i][0].includes('sudo')) {
-						const tmp = formattedArgs[i];
+			// HACK: if there's a sudo method just put it to the front.
+			// A better way would be to order by depth but currently this is
+			// only relevant for a single extrinsic, so seems like overkill.
+			for (let i = 1; i < formattedArgs.length; i++) {
+				if (formattedArgs[i][0].includes('sudo')) {
+					const tmp = formattedArgs[i];
 
-						formattedArgs.splice(i, 1);
-						formattedArgs.unshift(tmp);
-						break;
-					}
+					formattedArgs.splice(i, 1);
+					formattedArgs.unshift(tmp);
+					break;
 				}
-
-				return formattedArgs.map((entry, index) => {
-					const sectionMethod = entry[0];
-					const paramArgs: Array<[any, any]> = entry[1];
-
-					return (
-						<View key={index}
-							style={styles.callDetails}>
-							<Text style={styles.secondaryText}>
-								Call <Text style={styles.titleText}>{sectionMethod}</Text> with
-								the following arguments:
-							</Text>
-							{paramArgs ? (
-								paramArgs.map(([param, arg]) => (
-									<View key={param}
-										style={styles.callDetails}>
-										<Text style={styles.titleText}>
-											{' { '}
-											{param}:{' '}
-											{arg && arg.length > 50
-												? shortString(arg)
-												: arg instanceof Array
-													? arg.join(', ')
-													: arg}{' '}
-											{'}'}
-										</Text>
-									</View>
-								))
-							) : (
-								<Text style={styles.secondaryText}>
-									This method takes no argument.
-								</Text>
-							)}
-						</View>
-					);
-				});
 			}
-		};
 
-		const renderTipDetails = (): React.ReactElement => {
-			return (
-				<View style={{ display: 'flex', flexDirection: 'column' }}>
-					<Text style={styles.secondaryText}>{tip}</Text>
-				</View>
-			);
-		};
+			return formattedArgs.map((entry, index) => {
+				const sectionMethod = entry[0];
+				const paramArgs: Array<[any, any]> = entry[1];
 
-		return (
-			<View style={[{ alignItems: 'baseline', justifyContent: 'flex-start' }]}>
-				<View style={{ marginBottom: 12, width: '100%' }}>
-					<Text style={[styles.label, { backgroundColor: networkColor }]}>{label}</Text>
-					{label === 'Method' && !useFallback ? (
-						renderMethodDetails()
-					) : label === 'Era' ? (
-						renderEraDetails()
-					) : label === 'Tip' ? (
-						renderTipDetails()
-					) : (
+				return (
+					<View key={index}
+						style={styles.callDetails}>
 						<Text style={styles.secondaryText}>
-							{useFallback ? value?.toString() : value}
+							Call <Text style={styles.titleText}>{sectionMethod}</Text> with
+							the following arguments:
 						</Text>
-					)}
-				</View>
+						{paramArgs ? (
+							paramArgs.map(([param, arg]) => (
+								<View key={param}
+									style={styles.callDetails}>
+									<Text style={styles.titleText}>
+										{' { '}
+										{param}:{' '}
+										{arg && arg.length > 50
+											? shortString(arg)
+											: arg instanceof Array
+												? arg.join(', ')
+												: arg}{' '}
+										{'}'}
+									</Text>
+								</View>
+							))
+						) : (
+							<Text style={styles.secondaryText}>
+								This method takes no argument.
+							</Text>
+						)}
+					</View>
+				);
+			});
+		}
+	};
+
+	const renderTipDetails = (): React.ReactElement => {
+		return (
+			<View style={{ display: 'flex', flexDirection: 'column' }}>
+				<Text style={styles.secondaryText}>{tip}</Text>
 			</View>
 		);
+	};
+
+	return (
+		<View style={[{ alignItems: 'baseline', justifyContent: 'flex-start' }]}>
+			<View style={{ marginBottom: 12, width: '100%' }}>
+				<Text style={[styles.label, { backgroundColor: networkColor }]}>{label}</Text>
+				{label === 'Method' && !useFallback ? (
+					renderMethodDetails()
+				) : label === 'Era' ? (
+					renderEraDetails()
+				) : label === 'Tip' ? (
+					renderTipDetails()
+				) : (
+					<Text style={styles.secondaryText}>
+						{useFallback ? value?.toString() : value}
+					</Text>
+				)}
+			</View>
+		</View>
+	);
 };
 
 interface PayloadDetailsCardProps {
