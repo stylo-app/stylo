@@ -83,12 +83,12 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 	const getTypeRegistry = useCallback((networkKey: string): TypeRegistry | null => {
 		try {
 			const network = getNetwork(networkKey) as SubstrateNetworkParams;
-			const networkMetadataRaw: string = (metadataJson as Record<any, any>)[network.metadataKey].hex;
+			const networkMetadataRaw: string = (metadataJson as Record<string, any>)[network.metadataKey].hex;
 
 			if (!networkMetadataRaw) return null;
 			if (registries.has(networkKey)) return registries.get(networkKey)!;
 			const newRegistry = new TypeRegistry();
-			const specVersion = (metadataJson as Record<any, any>)[network.metadataKey].specVersion;
+			const specVersion = (metadataJson as Record<string, any>)[network.metadataKey].specVersion;
 			const overrideTypes = network && getOverrideTypes(newRegistry, network.pathId, specVersion);
 
 			newRegistry.register(overrideTypes);
@@ -108,7 +108,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 
 			return newRegistry;
 		} catch (e) {
-			console.log('oops', e);
+			console.error('oops', e);
 
 			return null;
 		}

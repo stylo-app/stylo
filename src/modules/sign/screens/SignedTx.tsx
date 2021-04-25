@@ -109,7 +109,7 @@ If you proceed you may put your funds at risk.`, [
 		return (<Loader label='Signing...'/>)
 	}
 
-	const metadataSpecVersion = (metadataJson as Record<any, any>)[(senderNetwork as SubstrateNetworkParams).metadataKey].specVersion
+	const metadataSpecVersion = (metadataJson as Record<string, any>)[(senderNetwork as SubstrateNetworkParams).metadataKey].specVersion
 
 	if(!isAlerted && !isEthereum && (Number(payload?.specVersion) > metadataSpecVersion)){
 		setIsAlerted(true);

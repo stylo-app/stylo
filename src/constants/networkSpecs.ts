@@ -83,7 +83,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		decimals: 10,
 		genesisHash: SubstrateNetworkKeys.POLKADOT,
 		logo: require('res/img/logos/Polkadot.png'),
-		metadataKey: 'polkadotMetaData',
+		metadataKey: 'polkadotMetadata',
 		order: 1,
 		pathId: 'polkadot',
 		prefix: 0,
