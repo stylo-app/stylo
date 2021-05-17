@@ -198,10 +198,11 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 					data.data.account = encodeAddress(publicKeyAsBytes, network.prefix);
 
 					break;
-				case '01': // data is a hash
+				case '01': // data is a message
+				case '03': // data is a hash
 					data.action = 'signData';
 					data.oversized = false;
-					data.isHash = true;
+					data.isHash = secondByte === '01' ? true : false;
 					data.data.data = hexPayload;
 					data.data.account = encodeAddress(publicKeyAsBytes, network.prefix); // default to Kusama
 					break;
@@ -209,6 +210,7 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 					break;
 				}
 			} catch (e) {
+				console.log(e)
 				throw new Error('Something went wrong decoding the Substrate UOS payload: ' + uosAfterFrames);
 			}
 
@@ -239,17 +241,6 @@ export function asciiToHex(message: string): string {
 	}
 
 	return result.join('');
-}
-
-export function hexToAscii(hexBytes: string): string {
-	const hex = hexBytes.toString();
-	let str = '';
-
-	for (let n = 0; n < hex.length; n += 2) {
-		str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
-	}
-
-	return str;
 }
 
 export function isJsonString(str: any): boolean {

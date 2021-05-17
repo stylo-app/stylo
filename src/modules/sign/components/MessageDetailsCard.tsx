@@ -19,7 +19,9 @@ import React from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
-import { hexToAscii, isAscii } from 'utils/strings';
+import { isAscii } from 'utils/strings';
+
+import { hexToString } from '@polkadot/util';
 
 export default function MessageDetailsCard({ data, isHash, message, style }: {
 	isHash: boolean;
@@ -40,13 +42,13 @@ export default function MessageDetailsCard({ data, isHash, message, style }: {
 				<Text style={styles.titleText}>
 					{isHash ? 'Message Hash' : 'Message'}
 				</Text>
-				{isHash ? (
-					<Text style={styles.messageText}>{message}</Text>
-				) : (
-					<Text style={styles.messageText}>
-						{isAscii(message) ? hexToAscii(message) : data}
-					</Text>
-				)}
+				{
+					isHash
+						? <Text style={styles.messageText}>{message}</Text>
+						: <Text style={styles.messageText}>
+							{isAscii(message) ? hexToString(message) : data}
+						</Text>
+				}
 			</View>
 		</>
 	);
