@@ -178,8 +178,10 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 				const paramArgs: Array<[any, any]> = entry[1];
 
 				return (
-					<View key={index}
-						style={styles.callDetails}>
+					<View
+						key={index}
+						style={styles.callDetails}
+					>
 						<Text style={styles.secondaryText}>
 							Call <Text style={styles.titleText}>{sectionMethod}</Text> with
 							the following arguments:

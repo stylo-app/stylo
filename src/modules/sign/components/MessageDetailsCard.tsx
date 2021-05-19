@@ -14,54 +14,56 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import Separator from 'components/Separator';
-import React from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
 import { isAscii } from 'utils/strings';
 
 import { hexToString } from '@polkadot/util';
 
-export default function MessageDetailsCard({ data, isHash, message, style }: {
+import { NetworksContext } from '../../../context';
+
+export default function MessageDetailsCard({ data, isHash, message, networkKey }: {
 	isHash: boolean;
 	message: string;
 	data: string;
-	style?: ViewStyle;
+	networkKey: string;
 }): React.ReactElement {
+	const { getSubstrateNetwork } = useContext(NetworksContext);
+	const network = getSubstrateNetwork(networkKey);
+
 	return (
-		<>
-			<Separator
-				shadow={true}
-				style={{
-					height: 0,
-					marginTop: 16
-				}}
-			/>
-			<View style={[styles.messageContainer, style]}>
-				<Text style={styles.titleText}>
-					{isHash ? 'Message Hash' : 'Message'}
-				</Text>
-				{
-					isHash
-						? <Text style={styles.messageText}>{message}</Text>
-						: <Text style={styles.messageText}>
-							{isAscii(message) ? hexToString(message) : data}
-						</Text>
-				}
-			</View>
-		</>
+		<View style={[styles.extrinsicContainer]}>
+			<Text style={[styles.label, { backgroundColor: network?.color }]}>
+				{isHash ? 'Message Hash' : 'Message'}
+			</Text>
+			{
+				isHash
+					? <Text style={styles.secondaryText}>{message}</Text>
+					: <Text style={styles.secondaryText}>
+						{isAscii(message) ? hexToString(message) : data}
+					</Text>
+			}
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	messageContainer: { marginTop: 16 },
-	messageText: {
-		...fontStyles.t_code,
-		color: colors.signal.main
+	extrinsicContainer: {
+		paddingTop: 16
 	},
-	titleText: {
-		...fontStyles.h_subheading,
-		marginBottom: 8
+	label: {
+		...fontStyles.t_label,
+		color: colors.text.white,
+		marginBottom: 10,
+		paddingLeft: 8,
+		textAlign: 'left'
+	},
+	secondaryText: {
+		...fontStyles.t_codeS,
+		color: colors.text.faded,
+		paddingHorizontal: 8,
+		textAlign: 'left'
 	}
 });

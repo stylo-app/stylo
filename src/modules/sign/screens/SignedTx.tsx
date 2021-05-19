@@ -125,7 +125,7 @@ If you proceed you may put your funds at risk.`, [
 			/>
 			<PayloadDetails />
 			<Separator
-				shadow={true}
+				shadow={false}
 				style={{
 					height: 0,
 					marginVertical: 20

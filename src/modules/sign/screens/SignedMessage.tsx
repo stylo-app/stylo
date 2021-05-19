@@ -41,7 +41,7 @@ interface Props extends NavigationScannerProps<'SignedMessage'> {
 function SignedMessageView({ message, sender: senderAddress }: Props): React.ReactElement {
 	const { getAccountByAddress } = useContext(AccountsContext);
 	const sender = getAccountByAddress(senderAddress);
-	const { state: { dataToSign, isHash, signedData } } = useContext(ScannerContext);
+	const { state: { dataToSign, isHash, isOversized, signedData } } = useContext(ScannerContext);
 	const { getNetwork } = useContext(NetworksContext);
 
 	if (!sender) {
@@ -52,40 +52,41 @@ function SignedMessageView({ message, sender: senderAddress }: Props): React.Rea
 
 	const senderNetworkParams = getNetwork(sender.networkKey);
 	const isEthereum = !!senderNetworkParams && isEthereumNetwork(senderNetworkParams);
+	const displayData = isEthereum ? signedData : signedData.slice(2)
 
 	return (
 		<SafeAreaScrollViewContainer>
 			<Text style={styles.topTitle}>Signed Message</Text>
-			<Separator
-				shadow={true}
-				style={{
-					height: 0,
-					marginVertical: 20
-				}}
-			/>
 			<AccountCard
 				address={senderAddress}
 				networkKey={sender.networkKey}
 				titlePrefix={'from:'}
 			/>
-			{!isEthereum && dataToSign ? (
-				<PayloadDetailsCard
-					description={strings.INFO_MULTI_PART}
-					networkKey={sender.networkKey}
-					signature={signedData.toString()}
-				/>
-			) : null}
 			<MessageDetailsCard
-				data={isU8a(dataToSign) ? u8aToHex(dataToSign) : dataToSign.toString()}
+				data={isU8a(dataToSign) ? u8aToHex(dataToSign) : dataToSign}
 				isHash={isHash ?? false}
 				message={message}
-				style={styles.bodyContent}
+				networkKey={sender.networkKey}
+			/>
+			{!isEthereum && dataToSign && (
+				<PayloadDetailsCard
+					description={isOversized ? strings.INFO_MULTI_PART : ''}
+					networkKey={sender.networkKey}
+					signature={displayData}
+				/>
+			)}
+			<Separator
+				shadow={false}
+				style={{
+					height: 0,
+					marginVertical: 20
+				}}
 			/>
 			<Text style={[fontStyles.h_subheading, { paddingHorizontal: 16 }]}>
 				{'Scan to publish'}
 			</Text>
 			<View testID={testIDs.SignedMessage.qrView}>
-				<QrView data={signedData} />
+				<QrView data={displayData} />
 			</View>
 		</SafeAreaScrollViewContainer>
 	);

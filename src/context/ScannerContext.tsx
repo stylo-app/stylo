@@ -18,7 +18,7 @@ import React, { useContext, useReducer } from 'react';
 import { AccountType } from 'types/accountTypes';
 import { isEthereumNetwork } from 'types/networkTypes';
 import { CompletedParsedData, EthereumParsedData, isEthereumCompletedParsedData, isSubstrateMessageParsedData, MessageQRInfo, MultiFramesInfo, QrInfo, SubstrateCompletedParsedData, SubstrateMessageParsedData, SubstrateTransactionParsedData, TxQRInfo } from 'types/scannerTypes';
-import { asciiToHex, constructDataFromBytes, encodeNumber } from 'utils/decoders';
+import { constructDataFromBytes, encodeNumber } from 'utils/decoders';
 import { brainWalletSign, decryptData, ethSign, keccak, substrateSign } from 'utils/native';
 import { isAscii } from 'utils/strings';
 import transaction, { Transaction } from 'utils/transaction';
@@ -230,7 +230,6 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 		setBusy();
 
 		const isOversized = (txRequest as SubstrateCompletedParsedData)?.oversized || false;
-
 		const isEthereum = isEthereumCompletedParsedData(txRequest);
 
 		if (isEthereum &&
@@ -299,8 +298,10 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 		let dataToSign = '';
 
 		if (isSubstrateMessageParsedData(signRequest)) {
-			if (signRequest.data.crypto !== 'sr25519')
+			if (signRequest.data.crypto !== 'sr25519'){
 				throw new Error('Stylo only supports accounts using sr25519 crypto');
+			}
+
 			isHash = signRequest.isHash;
 			isOversized = signRequest.oversized;
 			dataToSign = signRequest.data.data;
@@ -350,8 +351,10 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 		const { dataToSign, isHash, senderAddress } = state;
 		const sender = !!senderAddress && getAccountByAddress(senderAddress);
 
-		if (!sender || !sender.encryptedSeed)
+		if (!sender || !sender.encryptedSeed){
 			throw new Error('Signing Error: sender could not be found.');
+		}
+
 		const senderNetwork = getNetwork(sender.networkKey);
 		const isEthereum = senderNetwork && isEthereumNetwork(senderNetwork);
 		const seed = await decryptData(sender.encryptedSeed, pin);
@@ -371,7 +374,7 @@ export function ScannerContextProvider({ children }: ScannerContextProviderProps
 			} else if (isU8a(dataToSign)) {
 				signable = hexStripPrefix(u8aToHex(dataToSign));
 			} else if (isAscii(dataToSign)) {
-				signable = hexStripPrefix(asciiToHex(dataToSign));
+				signable = hexStripPrefix(dataToSign);
 			} else {
 				throw new Error('Signing Error: cannot signing message');
 			}
