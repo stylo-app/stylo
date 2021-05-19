@@ -22,6 +22,14 @@ import { blake2b } from 'utils/native';
 import { compactFromU8a, hexStripPrefix, hexToU8a, u8aToHex } from '@polkadot/util';
 import { encodeAddress } from '@polkadot/util-crypto';
 
+// from https://github.com/maciejhirsz/uos#substrate-payload
+const CRYPTO_ED25519 = '00';
+const CRYPTO_SR25519 = '01';
+const CMD_SIGN_MORTAL = '00';
+const CMD_SIGN_HASH = '01';
+const CMD_SIGN_IMMORTAL = '02';
+const CMD_SIGN_MSG = '03';
+
 /*
  * @return strippedData: the rawBytes from react-native-camera, stripped of the ec11 padding to fill the frame size. See: decoders.js
  * N.B. Substrate oversized/multipart payloads will already be hashed at this point.
@@ -157,9 +165,9 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 
 			try {
 				data.data.crypto =
-						firstByte === '00'
+						firstByte === CRYPTO_ED25519
 							? 'ed25519'
-							: firstByte === '01'
+							: firstByte === CRYPTO_SR25519
 								? 'sr25519'
 								: null;
 				const pubKeyHex = uosAfterFrames.substr(6, 64);
@@ -182,8 +190,8 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 				}
 
 				switch (secondByte) {
-				case '00': // sign mortal extrinsic
-				case '02': // sign immortal extrinsic
+				case CMD_SIGN_MORTAL:
+				case CMD_SIGN_IMMORTAL:
 					data.action = 'signTransaction';
 					data.oversized = isOversized;
 					data.isHash = isOversized;
@@ -198,11 +206,11 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 					data.data.account = encodeAddress(publicKeyAsBytes, network.prefix);
 
 					break;
-				case '01': // data is a message
-				case '03': // data is a hash
+				case CMD_SIGN_HASH:
+				case CMD_SIGN_MSG:
 					data.action = 'signData';
 					data.oversized = false;
-					data.isHash = secondByte === '01' ? true : false;
+					data.isHash = secondByte === CMD_SIGN_HASH ? true : false;
 					data.data.data = hexPayload;
 					data.data.account = encodeAddress(publicKeyAsBytes, network.prefix); // default to Kusama
 					break;
