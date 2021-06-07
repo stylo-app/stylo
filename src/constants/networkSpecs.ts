@@ -51,6 +51,7 @@ export const SubstrateNetworkKeys: Record<string, string> = Object.freeze({
 	EDGEWARE: '0x742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b', // https://polkascan.io/pre/edgeware/block/0
 	KULUPU: '0xf7a99d3cb92853d00d5275c971c132c074636256583fee53b3bbe60d7b8769ba',
 	ROCOCO: '0x1611e1dbf0405379b861e2e27daa90f480b2e6d3682414a80835a52e8cb8a215',
+	STATEMINE: '0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e'
 });
 
@@ -160,6 +161,18 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 42,
 		title: 'Westend',
 		unit: 'WND'
+	},
+	[SubstrateNetworkKeys.STATEMINE]: {
+		color: '#113911',
+		decimals: 12,
+		genesisHash: SubstrateNetworkKeys.STATEMINE,
+		logo: require('res/img/logos/Statemine.png'),
+		metadataKey: 'statemineMetadata',
+		order: 3,
+		pathId: 'statemine',
+		prefix: 2,
+		title: 'Statemine',
+		unit: 'KSM'
 	}
 };
 
