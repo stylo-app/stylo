@@ -48,8 +48,6 @@ export const SubstrateNetworkKeys: Record<string, string> = Object.freeze({
 	KUSAMA: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe', // https://polkascan.io/pre/kusama-cc3/block/0
 	// eslint-disable-next-line sort-keys
 	CENTRIFUGE: '0x67dddf2673b69e5f875f6f25277495834398eafd67f492e09f3f3345e003d1b5', // https://portal.chain.centrifuge.io/#/explorer/query/0
-	EDGEWARE: '0x742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b', // https://polkascan.io/pre/edgeware/block/0
-	KULUPU: '0xf7a99d3cb92853d00d5275c971c132c074636256583fee53b3bbe60d7b8769ba',
 	ROCOCO: '0x1611e1dbf0405379b861e2e27daa90f480b2e6d3682414a80835a52e8cb8a215',
 	STATEMINE: '0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e'
@@ -114,29 +112,6 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 36,
 		title: 'Centrifuge Mainnet',
 		unit: 'RAD'
-	},
-	[SubstrateNetworkKeys.EDGEWARE]: {
-		color: '#0B95E0',
-		decimals: 18,
-		genesisHash: SubstrateNetworkKeys.EDGEWARE,
-		logo: require('res/img/logos/Edgeware.png'),
-		metadataKey: 'edgewareMetadata',
-		order: 6,
-		pathId: 'edgeware',
-		prefix: 7,
-		title: 'Edgeware',
-		unit: 'EDG'
-	},
-	[SubstrateNetworkKeys.KULUPU]: {
-		color: '#003366',
-		decimals: 18,
-		genesisHash: SubstrateNetworkKeys.KULUPU,
-		metadataKey: 'kulupuMetadata',
-		order: 5,
-		pathId: 'kulupu',
-		prefix: 16,
-		title: 'Kulupu',
-		unit: 'KULU'
 	},
 	[SubstrateNetworkKeys.ROCOCO]: {
 		color: '#6f36dc',
