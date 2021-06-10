@@ -157,7 +157,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 3,
 		pathId: 'karura',
 		prefix: 8,
-		title: 'karura',
+		title: 'Karura',
 		unit: 'KAR'
 	},
 	[SubstrateNetworkKeys.SHIDEN]: {
@@ -169,7 +169,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 3,
 		pathId: 'shiden',
 		prefix: 5,
-		title: 'shiden',
+		title: 'Shiden',
 		unit: 'SDN'
 	},
 	[SubstrateNetworkKeys.MOONRIVER]: {
@@ -181,7 +181,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 3,
 		pathId: 'moonriver',
 		prefix: 49,
-		title: 'moonriver',
+		title: 'Moonriver',
 		unit: 'MVR'
 	}
 
