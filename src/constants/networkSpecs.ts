@@ -32,11 +32,7 @@ export const UnknownNetworkKeys: Record<string, string> = Object.freeze({ UNKNOW
 /* eslint-disable sort-keys */
 export const EthereumNetworkKeys: Record<string, string> = Object.freeze({
 	FRONTIER: '1',
-	ROPSTEN: '3',
-	RINKEBY: '4',
-	GOERLI: '5',
-	KOVAN: '42',
-	CLASSIC: '61'
+	GOERLI: '5'
 });
 
 /* eslint-enable sort-keys */
@@ -48,7 +44,10 @@ export const SubstrateNetworkKeys: Record<string, string> = Object.freeze({
 	KUSAMA: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe', // https://polkascan.io/pre/kusama-cc3/block/0
 	// eslint-disable-next-line sort-keys
 	CENTRIFUGE: '0x67dddf2673b69e5f875f6f25277495834398eafd67f492e09f3f3345e003d1b5', // https://portal.chain.centrifuge.io/#/explorer/query/0
+	KARURA: '0xbaf5aabe40646d11f0ee8abbdc64f4a4b7674925cba08e4a05ff9ebed6e2126b',
+	MOONRIVER: '0x401a1f9dca3da46f5c4091016c8a2f26dcea05865116b286f60f668207d1474b',
 	ROCOCO: '0x1611e1dbf0405379b861e2e27daa90f480b2e6d3682414a80835a52e8cb8a215',
+	SHIDEN: '0xf1cf9022c7ebb34b162d5b5e34e705a5a740b2d0ecc1009fb89023e62a488108',
 	STATEMINE: '0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e'
 });
@@ -148,7 +147,44 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 2,
 		title: 'Statemine',
 		unit: 'KSM'
+	},
+	[SubstrateNetworkKeys.KARURA]: {
+		color: '#ff4c3b',
+		decimals: 12,
+		genesisHash: SubstrateNetworkKeys.KARURA,
+		logo: require('res/img/logos/Karura.png'),
+		metadataKey: 'karuraMetadata',
+		order: 3,
+		pathId: 'karura',
+		prefix: 8,
+		title: 'karura',
+		unit: 'KAR'
+	},
+	[SubstrateNetworkKeys.SHIDEN]: {
+		color: '#5923B2',
+		decimals: 18,
+		genesisHash: SubstrateNetworkKeys.SHIDEN,
+		logo: require('res/img/logos/Shiden.png'),
+		metadataKey: 'shidenMetadata',
+		order: 3,
+		pathId: 'shiden',
+		prefix: 5,
+		title: 'shiden',
+		unit: 'SDN'
+	},
+	[SubstrateNetworkKeys.MOONRIVER]: {
+		color: '#0E132E',
+		decimals: 18,
+		genesisHash: SubstrateNetworkKeys.MOONRIVER,
+		logo: require('res/img/logos/Moonriver.png'),
+		metadataKey: 'moonriverMetadata',
+		order: 3,
+		pathId: 'moonriver',
+		prefix: 49,
+		title: 'moonriver',
+		unit: 'MVR'
 	}
+
 };
 
 const ethereumNetworkBase: Record<string, EthereumNetworkDefaultConstants> = {
@@ -160,32 +196,11 @@ const ethereumNetworkBase: Record<string, EthereumNetworkDefaultConstants> = {
 		secondaryColor: colors.background.card,
 		title: 'Ethereum'
 	},
-	[EthereumNetworkKeys.CLASSIC]: {
-		color: '#1a4d33',
-		ethereumChainId: EthereumNetworkKeys.CLASSIC,
-		logo: require('res/img/logos/Ethereum_Classic.png'),
-		order: 102,
-		pathId: 'classic',
-		secondaryColor: colors.background.card,
-		title: 'Eth Classic'
-	},
-	[EthereumNetworkKeys.ROPSTEN]: {
-		ethereumChainId: EthereumNetworkKeys.ROPSTEN,
-		order: 104,
-		pathId: 'ropsten',
-		title: 'Ropsten'
-	},
 	[EthereumNetworkKeys.GOERLI]: {
 		ethereumChainId: EthereumNetworkKeys.GOERLI,
 		order: 105,
 		pathId: 'goerli',
 		title: 'Görli'
-	},
-	[EthereumNetworkKeys.KOVAN]: {
-		ethereumChainId: EthereumNetworkKeys.KOVAN,
-		order: 103,
-		pathId: 'kovan',
-		title: 'Kovan'
 	}
 };
 
