@@ -23,6 +23,7 @@ import { isAscii } from 'utils/strings';
 import { hexToString } from '@polkadot/util';
 
 import { NetworksContext } from '../../../context';
+import { unwrapMessage } from '../utils';
 
 export default function MessageDetailsCard({ data, isHash, message, networkKey }: {
 	isHash: boolean;
@@ -42,7 +43,7 @@ export default function MessageDetailsCard({ data, isHash, message, networkKey }
 				isHash
 					? <Text style={styles.secondaryText}>{message}</Text>
 					: <Text style={styles.secondaryText}>
-						{isAscii(message) ? hexToString(message) : data}
+						{isAscii(message) ? unwrapMessage(hexToString(message)) : data}
 					</Text>
 			}
 		</View>
