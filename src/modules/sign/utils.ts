@@ -121,7 +121,7 @@ export const unwrapMessage = (message: string) => {
 
 	let unwrapped = message;
 
-	unwrapped = message.substr(0,prefix.length) === prefix ? message.substr(prefix.length, message.length) : unwrapped
+	unwrapped = unwrapped.substr(0,prefix.length) === prefix ? unwrapped.substr(prefix.length, unwrapped.length) : unwrapped
 	unwrapped = unwrapped.substr(unwrapped.length - suffix.length, suffix.length) === suffix ? unwrapped.substr(0, unwrapped.length - suffix.length) : unwrapped
 
 	return unwrapped
