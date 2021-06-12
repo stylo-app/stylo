@@ -38,7 +38,7 @@ const About = () => (
 			<Text style={styles.text}>
 				This application is meant to be used on a phone that will remain
 				offline at any point in time. To upgrade the app, you need to make
-				sure you backup your accounts (e.g by writing the recovery phrase on
+				sure you backup your accounts (e.g by writing the secret phrase on
 				paper), then factory reset the phone, then install Stylo's
 				new version either from the store or from a sd card, and finally turn
 				your phone offline for good before recoveing or generating new accounts.

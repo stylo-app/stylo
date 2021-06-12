@@ -8,7 +8,7 @@ This tutorial will walk you through setting up a Kusama account with the Stylo A
 - [1. Get Stylo mobile application](#1-get-stylo-mobile-application)
 - [2. Setup or recover an account](#2-setup-or-recover-an-account)
   - [Create an account](#create-an-account)
-  - [Recover an account with your recovery phrase](#recover-an-account-with-your-recovery-phrase)
+  - [Recover an account with your secret phrase](#recover-an-account-with-your-secret-phrase)
 - [3. Add Stylo's account to Polkadot-js apps](#3-add-stylos-account-to-polkadot-js-apps)
 - [4. Sign a transaction](#4-sign-a-transaction)
 
@@ -39,20 +39,20 @@ When launching the app for the first time, no account is created. At this stage,
  
 Tap on the `+` button, and follow along.
 
-In the next step, your recovery phrase will be presented to you. Think of it as a master key. If you lose it, you lose your access to your money.
-**Write this recovery phrase down and store it in a safe place**.
-If your phone gets stolen/broken/forgotten this will be the only way to [recover your account](#recover-an-account-with-your-recovery-phrase).
+In the next step, your secret phrase will be presented to you. Think of it as a master key. If you lose it, you lose your access to your money.
+**Write this secret phrase down and store it in a safe place**.
+If your phone gets stolen/broken/forgotten this will be the only way to [recover your account](#recover-an-account-with-your-secret-phrase).
 
 You will then be asked to choose a pin code. This pin will be needed later on to unlock your account to manage the account or sign a transaction.
 
 
-### Recover an account with your recovery phrase
+### Recover an account with your secret phrase
 
 If you already have an account created with either Stylo or any other wallet, you can recover it by doing so:
 - Tap on the `+` at the top right corner, and choose ` Recover account`.
 - Input the new account name.
 - Select the network.
-- Type in the recovery phrase, word suggestion helps you prevent any typo.
+- Type in the secret phrase, word suggestion helps you prevent any typo.
 - Tap `Recover account`.
 - Select a PIN number and confirm it by typing it again.
 

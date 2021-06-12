@@ -42,13 +42,13 @@ export const alertDeleteLegacyAccount = (setAlert: SetAlert,
 	onDelete: () => any): void => {
 	setAlert('Delete Account',
 		`Do you really want to delete ${accountName}?
-This account can only be recovered with its associated recovery phrase.`,
+This account can only be recovered with its associated secret phrase.`,
 		buildAlertDeleteButtons(onDelete));
 };
 
 export const alertCopyBackupPhrase = (setAlert: SetAlert, seedPhrase: string): void =>
-	setAlert('Write this recovery phrase on paper',
-		'It is not recommended to transfer or store a recovery phrase digitally and unencrypted. Anyone in possession of this recovery phrase is able to spend funds from this account.',
+	setAlert('Write this secret phrase on paper',
+		'It is not recommended to transfer or store a secret phrase digitally and unencrypted. Anyone in possession of this secret phrase is able to spend funds from this account.',
 		[
 			{
 				onPress: (): void => {
@@ -74,7 +74,7 @@ export const alertDecodeError = (setAlert: SetAlert): void =>
 
 export const alertBackupDone = (setAlert: SetAlert, onPress: () => any): void =>
 	setAlert('Important',
-		"Make sure you've backed up this recovery phrase. It is the only way to restore your account in case of device failure/loss.",
+		"Make sure you've backed up this secret phrase. It is the only way to restore your account in case of device failure/loss.",
 		[
 			{
 				onPress,

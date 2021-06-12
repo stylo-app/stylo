@@ -3,8 +3,8 @@
 ## Account Management
 
 * Create new account for Polkadot or Ethereum
-* Recover an account with 12 or 24 word mnemonic for Polkadot or Ethereum
-* View the mnemonic (backup) with the correct pin
+* Recover an account with 12 or 24 word secret phrase for Polkadot or Ethereum
+* View the secret phrase (backup) with the correct pin
 * Change the name
 * Change the pin
 

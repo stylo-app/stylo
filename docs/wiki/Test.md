@@ -6,7 +6,7 @@ For a super quick test and to avoid the hurdle of creating an account, sending f
 
 - Recover an account
 - Select `Kovan` network and choose a name
-- Use the recovery phrase: `this is sparta` you'll get the account address: `006E27B6A72E1f34C626762F3C4761547Aff1421`
+- Use the secret phrase: `this is sparta` you'll get the account address: `006E27B6A72E1f34C626762F3C4761547Aff1421`
 - Validate and accept the warning message
 - Chose a pin code
 - Scan this QR code to sign a transaction sending some Kovan Eth to the same account.

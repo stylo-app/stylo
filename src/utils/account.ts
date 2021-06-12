@@ -41,7 +41,7 @@ export function validateSeed(seed: string | undefined, validBip39Seed: boolean):
 		return {
 			accountRecoveryAllowed: false,
 			bip39: false,
-			reason: 'A seed phrase is required.',
+			reason: 'A secret phrase is required.',
 			valid: false
 		};
 	}
@@ -64,7 +64,7 @@ export function validateSeed(seed: string | undefined, validBip39Seed: boolean):
 			accountRecoveryAllowed: true,
 			bip39: false,
 			reason:
-				'This recovery phrase is not a valid BIP39 seed, will be treated as a legacy Parity brain wallet. Make sure you understand the risks.',
+				'This secret phrase is not a valid BIP39 seed, will be treated as a legacy Parity brain wallet. Make sure you understand the risks.',
 			valid: false
 		};
 	}

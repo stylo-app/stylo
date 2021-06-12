@@ -9,7 +9,7 @@ This tutorial will walk through setting up an account with Stylo Android or iOs 
 - [1. Get Stylo mobile application](#1-get-stylo-mobile-application)
 - [2. Setup or recover an account](#2-setup-or-recover-an-account)
   - [Create an account](#create-an-account)
-  - [Recover an account with your recovery phrase](#recover-an-account-with-your-recovery-phrase)
+  - [Recover an account with your secret phrase](#recover-an-account-with-your-secret-phrase)
 - [3. Copy Stylo account's address](#3-copy-stylo-accounts-address)
 - [4. Sign a transaction on MyCrypto](#4-sign-a-transaction-using-mycrypto-desktop-app)
 
@@ -40,18 +40,18 @@ When launching the app for the first time, no account has been set up yet. At th
  
 Tap on the `+` button after Stylo's first launch, follow along to create your account.
 
-In the next step, your recovery phrase will be presented to you. Think of it as a master key. If you lose it, you lose your money.
-**Write this recovery phrase down and store it in a safe place**.
-If your phone gets stolen/broken/forgotten this will be the only way to [recover your account](#recover-an-account-with-your-recovery-phrase).
+In the next step, your secret phrase will be presented to you. Think of it as a master key. If you lose it, you lose your money.
+**Write this secret phrase down and store it in a safe place**.
+If your phone gets stolen/broken/forgotten this will be the only way to [recover your account](#recover-an-account-with-your-secret-phrase).
 
 You will then be asked to choose a pin code. This pin will be needed later on to unlock your account to manage the account or sign a transaction.
 
 
-### Recover an account with your recovery phrase
+### Recover an account with your secret phrase
 
 If you already have an account created with either Stylo or any other wallet, you can recover it by doing so:
 - Tap on the top right side the ` +` and `Recover account`.
-- Type in the recovery phrase, word suggestion helps you prevent any typo.
+- Type in the secret phrase, word suggestion helps you prevent any typo.
 - Tap `Recover account`.
 - Select a PIN number and confirm it by typing it again.
 

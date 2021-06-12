@@ -178,7 +178,7 @@ function RecoverAccount(): React.ReactElement {
 				/>
 			</View>
 			<View style={styles.step}>
-				<Text style={styles.title}>NETWORK</Text>
+				<Text style={styles.title}>Network</Text>
 				<NetworkCard
 					networkKey={networkKey}
 					onPress={(): void => navigate('NetworkList')}
@@ -186,7 +186,7 @@ function RecoverAccount(): React.ReactElement {
 				/>
 			</View>
 			<View style={styles.step}>
-				<Text style={styles.title}>Mnemonic</Text>
+				<Text style={styles.title}>Secret Phrase</Text>
 				<AccountSeed
 					onChangeText={onSeedTextInput}
 					returnKeyType="done"
@@ -216,7 +216,7 @@ function RecoverAccount(): React.ReactElement {
 			{ accountAlreadyExists && (
 				<View style={styles.step}>
 					<Text style={styles.errorText}>
-						An account with this seed phrase already exists.
+						An account with this secret phrase already exists.
 					</Text>
 				</View>
 			)}

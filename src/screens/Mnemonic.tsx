@@ -73,7 +73,7 @@ function Mnemonic({ navigation, route }: NavigationProps<'Mnemonic'>): React.Rea
 			<ScreenHeading
 				subtitle="Write these words down on paper. Keep the backup paper safe. These
 				words allow anyone to recover this account and access its funds."
-				title="Recovery Phrase"
+				title="Secret Phrase"
 			/>
 
 			<AccountCard
@@ -82,10 +82,10 @@ function Mnemonic({ navigation, route }: NavigationProps<'Mnemonic'>): React.Rea
 				title={name}
 			/>
 			<View style={styles.bodyContent}>
-				<Text style={styles.title}>Mnemonic</Text>
+				<Text style={styles.title}>Secret Phrase</Text>
 				<TouchableItem
 					onPress={(): void => {
-						// only allow the copy of the recovery phrase in dev environment
+						// only allow the copy of the secret phrase in dev environment
 						if (__DEV__) {
 							if (protocol === NetworkProtocols.SUBSTRATE) {
 								alertCopyBackupPhrase(setAlert,

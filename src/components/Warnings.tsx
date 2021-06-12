@@ -49,7 +49,7 @@ export function UnknownAccountWarning({ isPath }: {
 					{'\n'}
 					{'\n'}
 					To be able to use this account you need to:
-					{'\n'}- write down its recovery phrase
+					{'\n'}- write down its secret phrase
 					{'\n'}- delete it
 					{'\n'}- recover/derive it
 					{'\n'}

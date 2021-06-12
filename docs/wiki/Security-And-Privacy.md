@@ -17,13 +17,13 @@ The app is available in beta for Android and iOs :
 <!-- - [iOs app store](https://itunes.apple.com/us/app//id1218174838)-->
 
 Please double check carefully the origin of the app, and make sure that the company distributing it is **Stylo app**. Usual security advice apply to this air-gapped wallet: 
-- When creating an account using Stylo Mobile app, make sure to write down the recovery phrase and store it in safe places.
+- When creating an account using Stylo Mobile app, make sure to write down the secret phrase and store it in safe places.
 - Always double check the information of the transactions you are about to sign or send.
 - Make sure to first transfer a small amount of Ether with the app and verify that everything is working as expected before transferring larger amounts of Ether.
 
 ## How to update Stylo securely
 Once Stylo is installed, your device should never go online. This would put your private keys at threat. To update, you will need to :
-1. Make sure you have the recovery phrase for each of your accounts. You can find it on Stylo by taping on an account, then the 3 dots at the top right > View recover phrase.
+1. Make sure you have the secret phrase for each of your accounts. You can find it on Stylo by taping on an account, then the 3 dots at the top right > View recover phrase.
 2. Factory reset the device.
 3. Enable full-disk encryption on the device and set a strong password (might not be on by default, for example for older Android devices).
 4. Do not use any kind of biometrics such as fingerprint or face recognition for device decryption/unlocking, as those may be less secure than regular passwords.

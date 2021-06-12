@@ -101,7 +101,7 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 							menuItems={[
 								{ text: 'Change name', value: 'AccountEdit' },
 								{ text: 'Change pin', value: 'AccountPin' },
-								{ text: 'View recovery phrase', value: 'Mnemonic' },
+								{ text: 'View secret phrase', value: 'Mnemonic' },
 								{ text: 'Delete', textStyle: styles.deleteText, value: 'AccountDelete' }
 							]}
 							menuTriggerIconName={'more-vertical'}

@@ -4,15 +4,15 @@ The default behaviour on Stylo and [PolkadotJs Apps](https://polkadot.js.org/app
 
 * Notice: The UI maybe variant for different versions, but the functionalities are the same in v4 version.
 
-## Get the mnemonic phrase and path
+## Get the secret phrase and path
 
-When creating an account on PolkadotJs, it will give you a mnemonic phrase on the beginning without any key derivation. You can change it if you click `Advanced creation options` button, here you can specify any path you like, leave it as an empty string if you do not want changes.
+When creating an account on PolkadotJs, it will give you a secret phrase on the beginning without any key derivation. You can change it if you click `Advanced creation options` button, here you can specify any path you like, leave it as an empty string if you do not want changes.
 
 ![Create Account on PolkadotJs Apps](./images/Polkadotjs-Create-Account.png)
 
-## Recover account with mnemonic phrase
+## Recover account with secret phrase
 
-On Stylo, each mnemonic phrase represents an account, every account starts with an account, and account could derive infinite accounts from it. So firstly let's recover the account from the mnemonic phrase.
+On Stylo, each secret phrase represents an account, every account starts with an account, and account could derive infinite accounts from it. So firstly let's recover the account from the secret phrase.
 
 ![recover the account](./images/Recover-Account.png).
 
