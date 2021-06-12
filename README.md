@@ -8,8 +8,6 @@
 
 </div>
 
-<!--[<img src="./res/app-store-badge.png" width="250"/>]() -->
-
 # Stylo - A wallet to keep you crypto funds offline
 
 Stylo is a mobile application that turns any smartphone into an air-gapped crypto wallet. This is a fork of [Parity Signer](https://github.com/paritytech/parity-signer) and will work anywhere Signer works.
@@ -27,6 +25,16 @@ Any data transfer from or to the app happens using QR code. By doing so, the mos
 <p align="center">
     <img src="./docs/screens.jpg" alt="stylo app screenshots"/>
 </p>
+
+## What's the difference between Stylo and Parity Signer
+
+Stylo aims at creating a pleasing user experience for account creation and recovery. An account you create on Stylo can be recovered directly on Subkey or Polkadot.js/apps wihtout having to deal with account derivation. While the critical parts (key management and signing) are similar to what Parity Signer has as of v4.5.3, a significant part of the code base has been re-written to ease the maintainance.
+
+### What Stylo brings:
+- Unless you are an advanced user, you will not have to deal with "derivation paths"
+- Review what you are signing. This feature used to be part of Parity Signer but was removed starting with v4.2
+- Choose your account based on the identicon
+- Arbitrary message signing
 
 ## Getting Start
 
