@@ -25,7 +25,7 @@ import TxDetailsCard from 'modules/sign/components/TxDetailsCard';
 import { usePayloadDetails } from 'modules/sign/hooks';
 import strings from 'modules/sign/strings';
 import styles from 'modules/sign/styles';
-import React, { useContext, useState } from 'react';
+import React, { useCallback , useContext, useEffect,useState  } from 'react';
 import { Text, View } from 'react-native';
 import fontStyles from 'styles/fontStyles';
 import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
@@ -54,14 +54,8 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 	const { setAlert } = useContext(AlertContext);
 	const { navigateToAccountList } = useHelperNavigation()
 	const [isAlerted, setIsAlerted] = useState(false);
-
-	if (!sender) {
-		console.error('no sender');
-
-		return <View/>;
-	}
-
-	const showSpecVersionMismatchAlert = () =>	setAlert('Warning', `This version of Stylo is not up to date with the latest version of ${senderNetwork?.title} network.
+	const metadataSpecVersion = (metadataJson as Record<string, any>)[(senderNetwork as SubstrateNetworkParams).metadataKey].specVersion
+	const showSpecVersionMismatchAlert = useCallback(() =>	setAlert('Warning', `This version of Stylo is not up to date with the latest version of ${senderNetwork?.title} network.
 
 The transaction details can be wrong or meaningless.
 
@@ -73,7 +67,25 @@ If you proceed you may put your funds at risk.`, [
 			onPress: navigateToAccountList,
 			text: 'Back'
 		}
-	])
+	]), [navigateToAccountList, senderNetwork?.title, setAlert])
+
+	useEffect(() => {
+		if(!isAlerted && !isEthereum && (Number(payload?.specVersion) > metadataSpecVersion)){
+			setIsAlerted(true);
+			showSpecVersionMismatchAlert();
+		}
+	},[isAlerted, isEthereum, metadataSpecVersion, payload?.specVersion, showSpecVersionMismatchAlert])
+
+	if (!sender) {
+		console.error('no sender');
+
+		return <View/>;
+	}
+
+	if (isProcessing || !signedData || (!isEthereum && payload === null)) {
+
+		return (<Loader label='Signing...'/>)
+	}
 
 	const PayloadDetails = () => {
 		if (isEthereum) {
@@ -102,18 +114,6 @@ If you proceed you may put your funds at risk.`, [
 				signature={signedData}
 			/>
 		);
-	}
-
-	if (isProcessing || !signedData || (!isEthereum && payload === null)) {
-
-		return (<Loader label='Signing...'/>)
-	}
-
-	const metadataSpecVersion = (metadataJson as Record<string, any>)[(senderNetwork as SubstrateNetworkParams).metadataKey].specVersion
-
-	if(!isAlerted && !isEthereum && (Number(payload?.specVersion) > metadataSpecVersion)){
-		setIsAlerted(true);
-		showSpecVersionMismatchAlert();
 	}
 
 	return (

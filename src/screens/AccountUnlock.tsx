@@ -141,6 +141,8 @@ export function AccountUnlock({ navigation, route }: NavigationProps<'AccountUnl
 				if (next === 'AccountDelete') {
 					navigation.goBack();
 					onDelete && onDelete();
+
+					return;
 				}
 
 				const resetAction = CommonActions.reset({
