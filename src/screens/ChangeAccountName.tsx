@@ -25,7 +25,7 @@ import { StyleSheet } from 'react-native';
 
 import { AccountsContext } from '../context';
 
-export default function AccountEdit(): React.ReactElement {
+export default function ChangeAccountName(): React.ReactElement {
 	const { getSelectedAccount, saveAccount } = useContext(AccountsContext);
 	const selectedAccount = getSelectedAccount();
 	const [newName, setNewName] = useState(selectedAccount?.name || '')

@@ -43,6 +43,7 @@ function Mnemonic({ navigation, route }: NavigationProps<'Mnemonic'>): React.Rea
 		: selectedAccount || {};
 	const protocol = getNetwork(networkKey)?.protocol;
 
+	// Make sure to lock the account if the app goes innactive or the user goes back
 	useEffect(() => {
 
 		const handleAppStateChange = (nextAppState: AppStateStatus): void => {

@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { useNavigation } from '@react-navigation/native';
 import Button from 'components/Button';
 import KeyboardScrollView from 'components/KeyboardScrollView';
 import TextInput from 'components/TextInput';
-import React, { useContext, useReducer } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import React, { useContext, useEffect, useReducer } from 'react';
+import { AppState, AppStateStatus, StyleSheet, Text } from 'react-native';
 import colors from 'styles/colors';
 import fonts from 'styles/fonts';
 import fontStyles from 'styles/fontStyles';
@@ -64,6 +65,8 @@ const initialState: State = {
 function AccountPin({ route }: NavigationProps<'AccountPin'>): React.ReactElement {
 	const { getSelectedAccount, lockAccount, newAccount, saveAccount, submitNew } = useContext(AccountsContext);
 	const { navigateToAccountDetails, navigateToAccountList } = useHelperNavigation()
+	const { goBack } = useNavigation()
+	const selectedAccount = getSelectedAccount();
 
 	const reducer = (state: State, delta: Partial<State>): State => ({
 		...state,
@@ -71,8 +74,27 @@ function AccountPin({ route }: NavigationProps<'AccountPin'>): React.ReactElemen
 	});
 	const [state, setState] = useReducer(reducer, initialState);
 
+	// Make sure to lock the account if the app goes innactive or the user goes back
+	useEffect(() => {
+
+		const handleAppStateChange = (nextAppState: AppStateStatus): void => {
+			if (nextAppState === 'inactive') {
+				goBack();
+			}
+		};
+
+		AppState.addEventListener('change', handleAppStateChange);
+
+		return (): void => {
+			if (selectedAccount?.address) {
+				lockAccount(selectedAccount.address);
+			}
+
+			AppState.removeEventListener('change', handleAppStateChange);
+		};
+	}, [goBack, lockAccount, selectedAccount?.address]);
+
 	const submit = async (): Promise<void> => {
-		const selectedAccount = getSelectedAccount();
 		const { confirmation, pin } = state;
 		const accountCreation = route.params?.isNew;
 		const account = accountCreation ? newAccount : selectedAccount;

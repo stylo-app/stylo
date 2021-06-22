@@ -37,7 +37,7 @@ const buildAlertButtons = (onConfirm: () => any, confirmText: string, testID?: s
 
 const buildAlertDeleteButtons = (onDelete: () => any, testID?: string): Action[] => buildAlertButtons(onDelete, 'Delete', testID);
 
-export const alertDeleteLegacyAccount = (setAlert: SetAlert,
+export const alertDeleteAccount = (setAlert: SetAlert,
 	accountName: string,
 	onDelete: () => any): void => {
 	setAlert('Delete Account',

@@ -1,13 +1,13 @@
 import { NetworkProtocols } from 'constants/networkSpecs';
 import { createContext, default as React, useCallback, useContext, useEffect, useState } from 'react';
 import { AccountType, isUnlockedAccount, LockedAccount, UnlockedAccount } from 'types/accountTypes';
-import { isEthereumNetwork, NetworkParams } from 'types/networkTypes';
+import { isEthereumNetwork, NetworkParams, SubstrateNetworkParams } from 'types/networkTypes';
 import { emptyAccount } from 'utils/account';
 import { deleteAccount as deleteDbAccount, loadAccounts, saveAccount as saveDbAccount } from 'utils/db';
 import { decryptData, encryptData } from 'utils/native';
 import { parseSURI } from 'utils/suri';
 
-import { decodeAddress } from '@polkadot/util-crypto';
+import { decodeAddress , encodeAddress } from '@polkadot/util-crypto';
 
 import { NetworksContext } from './NetworksContext';
 
@@ -15,11 +15,12 @@ export interface AccountsContextType {
 	accountExists: (address: string | null | undefined, network: NetworkParams | null) => boolean;
 	accounts: AccountType[];
 	accountsLoaded: boolean;
-	newAccount: AccountType;
+	changeCurrentAccountNetwork: (networkKey: string) => Promise<string | undefined>
 	deleteAccount: (accountAddress: string) => Promise<void>;
+	lockAccount: (accountKey: string) => void;
 	getAccountByAddress: (address: string) => AccountType | undefined;
 	getSelectedAccount: () => AccountType | undefined;
-	lockAccount: (accountKey: string) => void;
+	newAccount: AccountType;
 	saveAccount: (account: AccountType, pin?: string) => Promise<void>;
 	selectAccount: (accountAddress: string) => void;
 	submitNew: (pin: string) => Promise<void>;
@@ -236,11 +237,32 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 
 	const getSelectedAccount = () => getAccountByAddress(selectedAccountAddress);
 
+	const changeCurrentAccountNetwork = async (networkKey: string) => {
+		const newAccount = getSelectedAccount()
+
+		if (!newAccount || !newAccount.address){
+			console.error('no account selected')
+
+			return Promise.reject('No account selected')
+		}
+
+		const newAddresse = encodeAddress(newAccount?.address, (getNetwork(networkKey) as SubstrateNetworkParams).prefix)
+
+		try {
+			await saveAccount({ ...newAccount, address: newAddresse,networkKey })
+
+			return Promise.resolve(newAddresse)
+		} catch (e) {
+			console.error('error saving the account', e)
+		}
+	}
+
 	return (
 		<AccountsContext.Provider value={{
 			accountExists,
 			accounts,
 			accountsLoaded,
+			changeCurrentAccountNetwork,
 			deleteAccount,
 			getAccountByAddress,
 			getSelectedAccount,

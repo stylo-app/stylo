@@ -18,16 +18,39 @@ import { useNavigation } from '@react-navigation/native';
 import { NetworkCard } from 'components/NetworkCard';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import { UnknownNetworkKeys } from 'constants/networkSpecs';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { AppState, AppStateStatus } from 'react-native';
 import { NetworkParams } from 'types/networkTypes';
+import { NavigationProps } from 'types/props';
 
 import { AccountsContext, NetworksContext } from '../context';
 
-export default function NetworkListView(): React.ReactElement {
-	const accountsStore = useContext(AccountsContext);
+export default function NetworkListView({ route }: NavigationProps<'NetworkList'>): React.ReactElement {
+	const { changeCurrentAccountNetwork, getSelectedAccount, lockAccount, selectAccount, updateNew } = useContext(AccountsContext);
 	const { allNetworks } = useContext(NetworksContext);
 	const excludedNetworks = [UnknownNetworkKeys.UNKNOWN];
 	const { goBack } = useNavigation()
+	const shouldUpdateCurrentAccount = route.params?.changeCurrentAccountNetwork
+
+	useEffect(() => {
+		const handleAppStateChange = (nextAppState: AppStateStatus): void => {
+			if (nextAppState === 'inactive') {
+				goBack();
+			}
+		};
+
+		AppState.addEventListener('change', handleAppStateChange);
+
+		return (): void => {
+			const { address } = getSelectedAccount() || {};
+
+			if (address && shouldUpdateCurrentAccount) {
+				lockAccount(address);
+			}
+
+			AppState.removeEventListener('change', handleAppStateChange);
+		};
+	}, [getSelectedAccount, goBack, lockAccount, shouldUpdateCurrentAccount]);
 
 	return (
 		<SafeAreaScrollViewContainer contentContainerStyle={{ padding: 20 }}>
@@ -39,7 +62,9 @@ export default function NetworkListView(): React.ReactElement {
 						key={networkKey}
 						networkKey={networkKey}
 						onPress={(): void =>{
-							accountsStore.updateNew({ networkKey });
+							shouldUpdateCurrentAccount
+								? changeCurrentAccountNetwork(networkKey).then((newAddress) => newAddress && selectAccount(newAddress))
+								: updateNew({ networkKey });
 							goBack();
 						}}
 						title={networkParams.title}

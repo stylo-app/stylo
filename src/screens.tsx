@@ -29,11 +29,11 @@ import * as React from 'react';
 import { View } from 'react-native';
 import About from 'screens/About';
 import AccountDetails from 'screens/AccountDetails';
-import AccountEdit from 'screens/AccountEdit';
 import AccountList from 'screens/AccountList';
 import AccountNew from 'screens/AccountNew';
 import AccountPin from 'screens/AccountPin';
 import { AccountUnlock, AccountUnlockAndSign } from 'screens/AccountUnlock';
+import ChangeAccountName from 'screens/ChangeAccountName';
 import Main from 'screens/Main';
 import Mnemonic from 'screens/Mnemonic';
 import NetworkList from 'screens/NetworkList';
@@ -124,8 +124,8 @@ export const AppNavigator = (): React.ReactElement => (
 			name="AccountDetails"
 		/>
 		<ScreenStack.Screen
-			component={AccountEdit}
-			name="AccountEdit"
+			component={ChangeAccountName}
+			name="ChangeAccountName"
 		/>
 		<ScreenStack.Screen
 			component={AccountPin}

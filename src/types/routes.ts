@@ -1,11 +1,15 @@
 export type RootStackParamList = {
 	About: undefined;
 	AccountDetails: undefined;
-	AccountEdit: undefined;
+	ChangeAccountName: undefined;
 	AccountPin: { isNew: boolean } | undefined;
 	AccountNew: undefined;
 	AccountUnlockAndSign: { next: string };
-	AccountUnlock: { next: string; onDelete: () => any };
+	AccountUnlock: {
+		next: string;
+		onDelete?: () => void;
+		changeCurrentAccountNetwork?: boolean
+	};
 	IdentityBackup: { isNew: true } | { isNew: false; seedPhrase: string };
 	// IdentityManagement: undefined;
 	RecoverAccount: { isRecover: boolean } | undefined;
@@ -18,7 +22,7 @@ export type RootStackParamList = {
 		  }
 		| undefined;
 	AccountList: undefined;
-	NetworkList: undefined;
+	NetworkList: {changeCurrentAccountNetwork?: boolean};
 	NetworkDetails: { pathId: string };
 	NetworkSettings: undefined;
 	PathsList: { networkKey: string };

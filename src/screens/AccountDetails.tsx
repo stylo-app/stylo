@@ -16,6 +16,7 @@
 
 import AccountCard from 'components/AccountCard';
 import AccountIcon from 'components/AccountIcon';
+import { Loader } from 'components/Loader';
 import PopupMenu from 'components/PopupMenu';
 import QrScannerTab from 'components/QrScannerTab';
 import QrView from 'components/QrView';
@@ -28,7 +29,7 @@ import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
 import { EthereumNetwork, isSubstrateNetwork } from 'types/networkTypes';
 import { NavigationProps } from 'types/props';
-import { alertDeleteLegacyAccount } from 'utils/alertUtils';
+import { alertDeleteAccount } from 'utils/alertUtils';
 
 import { AccountsContext, AlertContext, NetworksContext } from '../context';
 import { useHelperNavigation } from '../hooks/useNavigationHelpers';
@@ -39,14 +40,22 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 	const { address, name, networkKey } = selectedAccount || { address: '', name: '', networkKey: '' };
 	const { getNetwork } = useContext(NetworksContext);
 	const { setAlert } = useContext(AlertContext);
-	const network = getNetwork(networkKey);
+	const network = useMemo(() => getNetwork(networkKey), [getNetwork, networkKey])
 	const { navigateToAccountList } = useHelperNavigation()
+	const baseMenuItems = [
+		{ text: 'Change name', value: 'ChangeAccountName' },
+		{ text: 'Change pin', value: 'AccountPin' },
+		{ text: 'View secret phrase', value: 'Mnemonic' },
+		{ text: 'Delete account', textStyle: styles.deleteText, value: 'AccountDelete' }
+	]
+	// allow changing the network only for Substrate based networks
+	const menuItems = isSubstrateNetwork(network) ? [...baseMenuItems.slice(0,-1), { text: 'Change network', value: 'NetworkList' }, baseMenuItems[baseMenuItems.length-1]]: baseMenuItems;
 
 	const accountId = useMemo((): string => {
 		if (!network){
 			console.log('Account without network')
 
-			return '';
+			return ''
 		}
 
 		const { protocol } = network;
@@ -62,12 +71,12 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 		}
 	}, [address, network])
 
-	if (!address || !network) return <View />;
+	if (!address || !network || !selectedAccount) return <Loader label='Updating...'/>;
 
 	const protocol = network?.protocol;
 
 	const onDelete = (): void => {
-		alertDeleteLegacyAccount(setAlert,
+		alertDeleteAccount(setAlert,
 			name || address || 'this account',
 			async () => {
 				await deleteAccount(address);
@@ -77,8 +86,9 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 	};
 
 	const onOptionSelect = (value: string): void => {
-		if (value !== 'AccountEdit') {
+		if (value !== 'ChangeAccountName') {
 			navigation.navigate('AccountUnlock', {
+				changeCurrentAccountNetwork: value === 'NetworkList',
 				next: value,
 				onDelete
 			});
@@ -98,12 +108,7 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 					<Text style={fontStyles.h2}>Public Address</Text>
 					<View style={styles.menuView}>
 						<PopupMenu
-							menuItems={[
-								{ text: 'Change name', value: 'AccountEdit' },
-								{ text: 'Change pin', value: 'AccountPin' },
-								{ text: 'View secret phrase', value: 'Mnemonic' },
-								{ text: 'Delete', textStyle: styles.deleteText, value: 'AccountDelete' }
-							]}
+							menuItems={menuItems}
 							menuTriggerIconName={'more-vertical'}
 							onSelect={onOptionSelect}
 						/>
