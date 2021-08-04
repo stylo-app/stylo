@@ -136,11 +136,11 @@ android {
         minSdkVersion 23
         missingDimensionStrategy 'react-native-camera', 'general'
         targetSdkVersion 30
-        versionCode 801
-        versionName "0.8.1"
+        versionCode 802
+        versionName "0.8.2"
         ndk {
-            abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
-            // abiFilters 'armeabi-v7a','x86'
+            // abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
+            abiFilters 'armeabi-v7a','x86'
         }
         testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
