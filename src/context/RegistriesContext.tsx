@@ -14,11 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { types as karTypesdef } from '@acala-network/type-definitions'
+import { SubstrateNetworkKeys } from 'constants/networkSpecs';
 import React, { useCallback, useContext, useState } from 'react';
 import { SubstrateNetworkParams } from 'types/networkTypes';
 
-import { Metadata } from '@polkadot/metadata';
-import { TypeRegistry } from '@polkadot/types';
+import { Metadata,TypeRegistry } from '@polkadot/types';
 import { getSpecTypes } from '@polkadot/types-known';
 
 import metadataJson from '../constants/metadata.json';
@@ -89,9 +90,15 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 			if (registries.has(networkKey)) return registries.get(networkKey)!;
 			const newRegistry = new TypeRegistry();
 			const specVersion = (metadataJson as Record<string, any>)[network.metadataKey].specVersion;
-			const overrideTypes = network && getOverrideTypes(newRegistry, network.pathId, specVersion);
+			let overrideTypes
 
-			newRegistry.register(overrideTypes);
+			if(networkKey === SubstrateNetworkKeys.KARURA){
+				overrideTypes =  karTypesdef
+			} else {
+				network && getOverrideTypes(newRegistry, network.pathId, specVersion);
+			}
+
+			overrideTypes && newRegistry.register(overrideTypes);
 			const metadata = new Metadata(newRegistry, networkMetadataRaw);
 
 			newRegistry.setMetadata(metadata);
