@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import { HeaderBackButton } from '@react-navigation/elements';
 import { useNavigation, useNavigationState, useRoute } from '@react-navigation/native';
-import { CardStyleInterpolators, createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
+import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import HeaderMenus from 'components/HeaderMenus';
 import HeaderTitleHome from 'components/HeaderTitleHome';
 import testIDs from 'e2e/testIDs';
@@ -45,6 +46,21 @@ import { headerHeight, horizontalPadding } from 'styles/containerStyles';
 import { RootStackParamList } from 'types/routes';
 
 export const ScreenStack = createStackNavigator<RootStackParamList>();
+
+const HeaderLeftWithBack = (): React.ReactElement => {
+	const navigation = useNavigation();
+
+	return (
+		<View testID={testIDs.Header.headerBackButton}>
+			<HeaderBackButton
+				labelStyle={globalStackNavigationOptions.headerBackTitleStyle}
+				labelVisible={false}
+				onPress={(): void => navigation.goBack()}
+				tintColor={colors.text.main}
+			/>
+		</View>
+	);
+};
 
 const HeaderLeft = (): React.ReactElement => {
 	const route = useRoute();
@@ -89,21 +105,6 @@ const globalStackNavigationOptions = {
 	},
 	headerTintColor: colors.text.main,
 	headerTitle: (): React.ReactElement => <HeaderTitle/>
-};
-
-const HeaderLeftWithBack = (): React.ReactElement => {
-	const navigation = useNavigation();
-
-	return (
-		<View testID={testIDs.Header.headerBackButton}>
-			<HeaderBackButton
-				labelStyle={globalStackNavigationOptions.headerBackTitleStyle}
-				labelVisible={false}
-				onPress={(): void => navigation.goBack()}
-				tintColor={colors.text.main}
-			/>
-		</View>
-	);
 };
 
 export const AppNavigator = (): React.ReactElement => (
