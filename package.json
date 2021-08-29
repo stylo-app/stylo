@@ -10,6 +10,7 @@
   "scripts": {
     "android": "yarn run build-rust:android && npx react-native run-android",
     "build-prod:ios": "NODE_OPTIONS=--max_old_space_size=8192 npx react-native bundle --dev false --entry-file index.js --bundle-output ios/main.jsbundle --platform ios --assets-dest='./ios'",
+    "build-prod:android": "NODE_OPTIONS=--max_old_space_size=8192 npx react-native bundle --dev true --entry-file index.js --bundle-output bundle/main.jsbundle --platform android --assets-dest='./bundle'",
     "install:ios": "yarn install && npx pod-install",
     "archive": "xcodebuild -scheme stylo-app -workspace ios/stylo-app.xcworkspace -configuration Release clean archive -archivePath \"ios/build/stylo-app.xcarchive\" \n    CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO",
     "clean": "watchman watch-del-all && rm -rf /tmp/metro-bundler-cache-* && rm -rf /tmp/haste-map-react-native-packager-* && rm -rf node_modules/ && yarn cache clean --force",
@@ -47,7 +48,7 @@
   "dependencies": {
     "@acala-network/type-definitions": "^2.2.1",
     "@polkadot/api": "^5.6.1",
-    "@polkadot/reactnative-identicon": "^0.84.3",
+    "@polkadot/reactnative-identicon": "^0.85.2",
     "@polkadot/util": "^7.3.1",
     "@polkadot/util-crypto": "^7.3.1",
     "@react-native-community/async-storage": "^1.12.1",
@@ -81,6 +82,7 @@
     "@babel/cli": "^7.14.5",
     "@babel/core": "^7.14.6",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-proposal-numeric-separator": "^7.14.5",
     "@babel/plugin-transform-runtime": "^7.14.5",
     "@babel/preset-typescript": "^7.14.5",
     "@babel/runtime": "^7.14.6",

@@ -1,6 +1,7 @@
 module.exports = {
 	ignore: ['node_modules/detox'],
 	plugins: [
+		'@babel/plugin-proposal-numeric-separator',
 		[
 			'rewrite-require',
 			{
