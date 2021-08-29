@@ -43,10 +43,10 @@ export const SubstrateNetworkKeys: Record<string, string> = Object.freeze({
 	// eslint-disable-next-line sort-keys
 	KUSAMA: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe', // https://polkascan.io/pre/kusama-cc3/block/0
 	// eslint-disable-next-line sort-keys
-	CENTRIFUGE: '0x67dddf2673b69e5f875f6f25277495834398eafd67f492e09f3f3345e003d1b5', // https://portal.chain.centrifuge.io/#/explorer/query/0
 	KARURA: '0xbaf5aabe40646d11f0ee8abbdc64f4a4b7674925cba08e4a05ff9ebed6e2126b',
-	MOONRIVER: '0x401a1f9dca3da46f5c4091016c8a2f26dcea05865116b286f60f668207d1474b',
-	ROCOCO: '0x1611e1dbf0405379b861e2e27daa90f480b2e6d3682414a80835a52e8cb8a215',
+	// CENTRIFUGE: '0x67dddf2673b69e5f875f6f25277495834398eafd67f492e09f3f3345e003d1b5', // https://portal.chain.centrifuge.io/#/explorer/query/0
+	// MOONRIVER: '0x401a1f9dca3da46f5c4091016c8a2f26dcea05865116b286f60f668207d1474b',
+	// ROCOCO: '0x1611e1dbf0405379b861e2e27daa90f480b2e6d3682414a80835a52e8cb8a215',
 	SHIDEN: '0xf1cf9022c7ebb34b162d5b5e34e705a5a740b2d0ecc1009fb89023e62a488108',
 	STATEMINE: '0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e'
@@ -100,30 +100,30 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		title: 'Kusama',
 		unit: 'KSM'
 	},
-	[SubstrateNetworkKeys.CENTRIFUGE]: {
-		color: '#FCC367',
-		decimals: 18,
-		genesisHash: SubstrateNetworkKeys.CENTRIFUGE,
-		logo: require('res/img/logos/Centrifuge.png'),
-		metadataKey: 'centrifugeMetadata',
-		order: 7,
-		pathId: 'centrifuge',
-		prefix: 36,
-		title: 'Centrifuge Mainnet',
-		unit: 'RAD'
-	},
-	[SubstrateNetworkKeys.ROCOCO]: {
-		color: '#6f36dc',
-		decimals: 12,
-		genesisHash: SubstrateNetworkKeys.ROCOCO,
-		logo: require('res/img/logos/Rococo.png'),
-		metadataKey: 'rococoMetadata',
-		order: 4,
-		pathId: 'rococo',
-		prefix: 42,
-		title: 'Rococo',
-		unit: 'ROC'
-	},
+	// [SubstrateNetworkKeys.CENTRIFUGE]: {
+	// 	color: '#FCC367',
+	// 	decimals: 18,
+	// 	genesisHash: SubstrateNetworkKeys.CENTRIFUGE,
+	// 	logo: require('res/img/logos/Centrifuge.png'),
+	// 	metadataKey: 'centrifugeMetadata',
+	// 	order: 7,
+	// 	pathId: 'centrifuge',
+	// 	prefix: 36,
+	// 	title: 'Centrifuge Mainnet',
+	// 	unit: 'RAD'
+	// },
+	// [SubstrateNetworkKeys.ROCOCO]: {
+	// 	color: '#6f36dc',
+	// 	decimals: 12,
+	// 	genesisHash: SubstrateNetworkKeys.ROCOCO,
+	// 	logo: require('res/img/logos/Rococo.png'),
+	// 	metadataKey: 'rococoMetadata',
+	// 	order: 4,
+	// 	pathId: 'rococo',
+	// 	prefix: 42,
+	// 	title: 'Rococo',
+	// 	unit: 'ROC'
+	// },
 	[SubstrateNetworkKeys.WESTEND]: {
 		color: '#da68a7',
 		decimals: 12,
@@ -171,19 +171,19 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 5,
 		title: 'Shiden',
 		unit: 'SDN'
-	},
-	[SubstrateNetworkKeys.MOONRIVER]: {
-		color: '#0E132E',
-		decimals: 18,
-		genesisHash: SubstrateNetworkKeys.MOONRIVER,
-		logo: require('res/img/logos/Moonriver.png'),
-		metadataKey: 'moonriverMetadata',
-		order: 3,
-		pathId: 'moonriver',
-		prefix: 49,
-		title: 'Moonriver',
-		unit: 'MVR'
 	}
+	// [SubstrateNetworkKeys.MOONRIVER]: {
+	// 	color: '#0E132E',
+	// 	decimals: 18,
+	// 	genesisHash: SubstrateNetworkKeys.MOONRIVER,
+	// 	logo: require('res/img/logos/Moonriver.png'),
+	// 	metadataKey: 'moonriverMetadata',
+	// 	order: 3,
+	// 	pathId: 'moonriver',
+	// 	prefix: 49,
+	// 	title: 'Moonriver',
+	// 	unit: 'MVR'
+	// }
 
 };
 

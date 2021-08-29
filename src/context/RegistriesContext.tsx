@@ -23,6 +23,7 @@ import { Metadata,TypeRegistry } from '@polkadot/types';
 import { getSpecTypes } from '@polkadot/types-known';
 
 import metadataJson from '../constants/metadata.json';
+import { plasmTypeDefs } from '../constants/typeDefs'
 import { NetworksContext } from './NetworksContext';
 import { deepCopyMap } from './utils';
 
@@ -92,10 +93,17 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 			const specVersion = (metadataJson as Record<string, any>)[network.metadataKey].specVersion;
 			let overrideTypes
 
-			if(networkKey === SubstrateNetworkKeys.KARURA){
-				overrideTypes =  karTypesdef
-			} else {
+			switch (networkKey) {
+			case SubstrateNetworkKeys.Karura:
+				overrideTypes = karTypesdef
+				break;
+
+			case SubstrateNetworkKeys.SHIDEN:
+				overrideTypes = plasmTypeDefs
+				break;
+			default:
 				network && getOverrideTypes(newRegistry, network.pathId, specVersion);
+				break;
 			}
 
 			overrideTypes && newRegistry.register(overrideTypes);
