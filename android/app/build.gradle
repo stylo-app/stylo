@@ -82,8 +82,6 @@ project.ext.react = [
 
 apply from: "../../node_modules/react-native/react.gradle"
 
-def useIntlJsc = false
-
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -103,7 +101,7 @@ def enableProguardInReleaseBuilds = true
  * The preferred build flavor of JavaScriptCore.
  *
  * For example, to use the international variant, you can use:
- * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
+ * `def jscFlavor = 'org.webkit:android-jsc-intel:+'`
  *
  * The international variant includes ICU i18n library and necessary data
  * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
@@ -119,7 +117,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
-def enableHermes = project.ext.react.get("enableHermes", false);
+def enableHermes = project.ext.react.get("enableHermes", false)
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -136,8 +134,8 @@ android {
         minSdkVersion 23
         missingDimensionStrategy 'react-native-camera', 'general'
         targetSdkVersion 30
-        versionCode 804
-        versionName "0.8.4"
+        versionCode 805
+        versionName "0.8.5"
         ndk {
             abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
             // abiFilters 'armeabi-v7a','x86'
@@ -206,11 +204,13 @@ android {
     }
 }
 
+def useIntlJsc = false
+
 dependencies {
     implementation project(':react-native-navbar-color')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:+"
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation "com.facebook.react:react-native:0.64.2"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.android.support:multidex:1.0.3'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
@@ -225,7 +225,7 @@ dependencies {
     }
 
     if (enableHermes) {
-        def hermesPath = "../../node_modules/hermes-engine/android/";
+        def hermesPath = "../../node_modules/hermes-engine/android/"
         debugImplementation files(hermesPath + "hermes-debug.aar")
         releaseImplementation files(hermesPath + "hermes-release.aar")
     } else {
@@ -237,7 +237,7 @@ dependencies {
     } else {
         implementation 'org.webkit:android-jsc:+'
     }
-    androidTestImplementation('com.wix:detox:+') { transitive = true }
+    androidTestImplementation('com.wix:detox:18.20.2') { transitive = true }
     androidTestImplementation 'junit:junit:4.12'
 }
 
