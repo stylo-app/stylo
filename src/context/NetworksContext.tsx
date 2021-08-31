@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { dummySubstrateNetworkParams, ETHEREUM_NETWORK_LIST, UnknownNetworkKeys, unknownNetworkParams, unknownNetworkPathId } from 'constants/networkSpecs';
+import { ETHEREUM_NETWORK_LIST } from 'constants/networkSpecs';
 import { createContext, default as React, useEffect, useMemo, useState } from 'react';
 import { NetworkParams,SubstrateNetworkParams } from 'types/networkTypes';
 // import { NetworkParsedData } from 'types/scannerTypes';
@@ -28,8 +28,8 @@ export interface NetworksContextType {
 	// addNetwork(networkParsedData: NetworkParsedData): void;
 	networks: Map<string, SubstrateNetworkParams>;
 	allNetworks: Map<string, NetworkParams>;
-	getSubstrateNetwork: (networkKey: string) => SubstrateNetworkParams;
-	getNetwork: (networkKey?: string) => NetworkParams | null;
+	getSubstrateNetwork: (networkKey: string) => SubstrateNetworkParams | undefined;
+	getNetwork: (networkKey?: string) => NetworkParams | undefined;
 	pathIds: string[];
 };
 
@@ -46,15 +46,13 @@ export function NetworksContextProvider({ children }: NetworksContextProviderPro
 
 		return new Map([
 			...substrateNetworks,
-			...ethereumNetworks,
-			[UnknownNetworkKeys.UNKNOWN, unknownNetworkParams]
+			...ethereumNetworks
 		]);
 	}, [substrateNetworks]);
 
 	const pathIds = useMemo(() => {
 		const result = Array.from(substrateNetworks.values())
 			.map(n => n.pathId)
-			.concat([unknownNetworkPathId]);
 
 		return result;
 	}, [substrateNetworks]);
@@ -66,17 +64,17 @@ export function NetworksContextProvider({ children }: NetworksContextProviderPro
 			}).catch(console.error);
 	}, []);
 
-	function getSubstrateNetworkParams(networkKey: string): SubstrateNetworkParams {
+	function getSubstrateNetworkParams(networkKey: string): SubstrateNetworkParams | undefined {
 
-		return substrateNetworks.get(networkKey) || dummySubstrateNetworkParams;
+		return substrateNetworks.get(networkKey);
 	}
 
-	function getNetwork(networkKey?: string): NetworkParams | null {
+	function getNetwork(networkKey?: string): NetworkParams | undefined {
 		if (!networkKey) {
-			return null;
+			return undefined;
 		}
 
-		return allNetworks.get(networkKey) || dummySubstrateNetworkParams;
+		return allNetworks.get(networkKey);
 	}
 
 	// function addNetwork(networkParsedData: NetworkParsedData): void {

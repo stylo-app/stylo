@@ -17,7 +17,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { NetworkCard } from 'components/NetworkCard';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
-import { UnknownNetworkKeys } from 'constants/networkSpecs';
 import React, { useContext, useEffect } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { NetworkParams } from 'types/networkTypes';
@@ -28,7 +27,6 @@ import { AccountsContext, NetworksContext } from '../context';
 export default function NetworkListView({ route }: NavigationProps<'NetworkList'>): React.ReactElement {
 	const { changeCurrentAccountNetwork, getSelectedAccount, lockAccount, selectAccount, updateNew } = useContext(AccountsContext);
 	const { allNetworks } = useContext(NetworksContext);
-	const excludedNetworks = [UnknownNetworkKeys.UNKNOWN];
 	const { goBack } = useNavigation()
 	const shouldUpdateCurrentAccount = route.params?.changeCurrentAccountNetwork
 
@@ -55,8 +53,6 @@ export default function NetworkListView({ route }: NavigationProps<'NetworkList'
 	return (
 		<SafeAreaScrollViewContainer contentContainerStyle={{ padding: 20 }}>
 			{Array.from(allNetworks.entries())
-				.filter(([networkKey]: [string, any]): boolean =>
-					!excludedNetworks.includes(networkKey))
 				.map(([networkKey, networkParams]: [ string, NetworkParams ]): React.ReactElement => (
 					<NetworkCard
 						key={networkKey}

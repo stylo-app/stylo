@@ -27,7 +27,7 @@ import Identicon from '@polkadot/reactnative-identicon';
 
 interface Props {
 	address: string;
-	network: NetworkParams | null;
+	network?: NetworkParams | null;
 	style?: ViewStyle;
 }
 

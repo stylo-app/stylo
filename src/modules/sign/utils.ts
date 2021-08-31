@@ -107,8 +107,9 @@ export function useProcessBarCode(showAlertMessage: (title: string, message: str
 
 		} catch (e) {
 			console.error(e);
+			const message = e instanceof Error ? e.message : 'unknown error :('
 
-			return showAlertMessage(strings.ERROR_TITLE, e.message);
+			return showAlertMessage(strings.ERROR_TITLE, message);
 		}
 	}
 

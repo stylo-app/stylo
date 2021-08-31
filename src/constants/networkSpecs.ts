@@ -15,18 +15,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import colors from 'styles/colors';
-import { EthereumNetwork, EthereumNetworkDefaultConstants, NetworkParams, NetworkProtocol, SubstrateNetworkDefaultConstant, SubstrateNetworkParams, UnknownNetworkParams } from 'types/networkTypes';
-
-export const unknownNetworkPathId = '';
+import { EthereumNetwork, EthereumNetworkDefaultConstants, NetworkParams, NetworkProtocol, SubstrateNetworkDefaultConstant, SubstrateNetworkParams } from 'types/networkTypes';
 
 export const NetworkProtocols: Record<string, NetworkProtocol> = Object.freeze({
 	ETHEREUM: 'ethereum',
-	SUBSTRATE: 'substrate',
-	UNKNOWN: 'unknown'
+	SUBSTRATE: 'substrate'
 });
-
-// accounts for which the network couldn't be found (failed migration, removed network)
-export const UnknownNetworkKeys: Record<string, string> = Object.freeze({ UNKNOWN: 'unknown' });
 
 // ethereumChainId is used as Network key for Ethereum networks
 /* eslint-disable sort-keys */
@@ -38,7 +32,7 @@ export const EthereumNetworkKeys: Record<string, string> = Object.freeze({
 /* eslint-enable sort-keys */
 
 // genesisHash is used as Network key for Substrate networks
-export const SubstrateNetworkKeys: Record<string, string> = Object.freeze({
+export const SubstrateNetworkKeys = Object.freeze({
 	POLKADOT: '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3',
 	// eslint-disable-next-line sort-keys
 	KUSAMA: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe', // https://polkascan.io/pre/kusama-cc3/block/0
@@ -51,29 +45,6 @@ export const SubstrateNetworkKeys: Record<string, string> = Object.freeze({
 	STATEMINE: '0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e'
 });
-
-export const unknownNetworkParams: UnknownNetworkParams = {
-	color: colors.signal.error,
-	order: 99,
-	pathId: unknownNetworkPathId,
-	prefix: 2,
-	protocol: NetworkProtocols.UNKNOWN,
-	secondaryColor: colors.background.card,
-	title: 'Unknown network'
-};
-
-export const dummySubstrateNetworkParams: SubstrateNetworkParams = {
-	...unknownNetworkParams,
-	decimals: 12,
-	deleted: false,
-	genesisHash: UnknownNetworkKeys.UNKNOWN,
-	logo: require('res/img/logos/Substrate_Dev.png'),
-	metadataKey: '',
-	protocol: NetworkProtocols.SUBSTRATE,
-	unit: 'UNIT'
-};
-
-const unknownNetworkBase: Record<string, UnknownNetworkParams> = { [UnknownNetworkKeys.UNKNOWN]: unknownNetworkParams };
 
 const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 	[SubstrateNetworkKeys.POLKADOT]: {
@@ -246,11 +217,9 @@ function setSubstrateNetworkDefault(): Record<string, SubstrateNetworkParams> {
 
 export const ETHEREUM_NETWORK_LIST: Record< string, EthereumNetwork> = Object.freeze(setEthereumNetworkDefault());
 export const SUBSTRATE_NETWORK_LIST: Record< string, SubstrateNetworkParams> = Object.freeze(setSubstrateNetworkDefault());
-export const UNKNOWN_NETWORK: Record< string, UnknownNetworkParams> = Object.freeze(unknownNetworkBase);
 
 export const NETWORK_LIST: Record<string, NetworkParams> = Object.freeze(Object.assign({},
 	SUBSTRATE_NETWORK_LIST,
-	ETHEREUM_NETWORK_LIST,
-	UNKNOWN_NETWORK));
+	ETHEREUM_NETWORK_LIST,));
 
 export const defaultNetworkKey = SubstrateNetworkKeys.KUSAMA;

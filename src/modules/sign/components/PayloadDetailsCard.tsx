@@ -45,7 +45,7 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 	const { setAlert } = useContext(AlertContext);
 	const { getSubstrateNetwork } = useContext(NetworksContext);
 	const network = getSubstrateNetwork(networkKey);
-	const { color: networkColor, prefix } = network
+	const { color: networkColor } = network || {}
 	const typeRegistry = useMemo(() => getTypeRegistry(networkKey)!, [getTypeRegistry, networkKey]);
 
 	useEffect(() => {
@@ -118,7 +118,7 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 		if (label === 'Tip') {
 			setTip(formatBalance(value as any));
 		}
-	}, [label, prefix, setAlert, typeRegistry, useFallback, value]);
+	}, [label, setAlert, typeRegistry, useFallback, value]);
 
 	const renderEraDetails = (): React.ReactElement => {
 		if (period && phase) {

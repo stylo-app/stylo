@@ -21,8 +21,6 @@ import PopupMenu from 'components/PopupMenu';
 import QrScannerTab from 'components/QrScannerTab';
 import QrView from 'components/QrView';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
-import { UnknownAccountWarning } from 'components/Warnings';
-import { NetworkProtocols } from 'constants/networkSpecs';
 import React, { useContext, useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
@@ -73,8 +71,6 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 
 	if (!address || !network || !selectedAccount) return <Loader label='Updating...'/>;
 
-	const protocol = network?.protocol;
-
 	const onDelete = (): void => {
 		alertDeleteAccount(setAlert,
 			name || address || 'this account',
@@ -123,7 +119,6 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 								: accountId
 						}
 					/>
-					{protocol === NetworkProtocols.UNKNOWN && <UnknownAccountWarning />}
 				</View>
 			</ScrollView>
 			<QrScannerTab />

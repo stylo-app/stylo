@@ -1,11 +1,10 @@
-import { NetworkProtocols, unknownNetworkPathId } from 'constants/networkSpecs';
+import { NetworkProtocols } from 'constants/networkSpecs';
 
-export type NetworkProtocol = 'ethereum' | 'substrate' | 'unknown';
+export type NetworkProtocol = 'ethereum' | 'substrate';
 
 export type NetworkParams =
 	| SubstrateNetworkParams
-	| EthereumNetwork
-	| UnknownNetworkParams;
+	| EthereumNetwork;
 
 export type SubstrateNetworkDefaultConstant = {
 	color: string;
@@ -75,48 +74,23 @@ export type EthereumNetwork = {
 	title: string;
 };
 
-export type UnknownNetworkParams = {
-	color: string;
-	order: number;
-	pathId: string;
-	prefix: number;
-	protocol: NetworkProtocol;
-	secondaryColor: string;
-	title: string;
-};
-
 export type Networks = Map<string, NetworkParams>;
 export type SubstrateNetworks = Map<string, SubstrateNetworkParams>;
 
-export function isSubstrateNetwork(network?: SubstrateNetworkParams | UnknownNetworkParams | EthereumNetwork | null): network is SubstrateNetworkParams {
+export function isSubstrateNetwork(network?: SubstrateNetworkParams | EthereumNetwork | null): network is SubstrateNetworkParams {
 
 	if (!network) {
 
 		return false;
 	}
 
-	const { pathId, protocol } = network;
-
 	return (
-		protocol === NetworkProtocols.SUBSTRATE && pathId !== unknownNetworkPathId
+		network.protocol === NetworkProtocols.SUBSTRATE
 	);
 }
 
-export function isEthereumNetwork(network: | SubstrateNetworkParams | UnknownNetworkParams | EthereumNetwork): network is EthereumNetwork {
+export function isEthereumNetwork(network: | SubstrateNetworkParams | EthereumNetwork): network is EthereumNetwork {
 	return (
 		(network as EthereumNetwork).protocol === NetworkProtocols.ETHEREUM
-	);
-}
-
-export function isUnknownNetworkParams(networkParams:
-		| SubstrateNetworkParams
-		| UnknownNetworkParams
-		| EthereumNetwork): networkParams is UnknownNetworkParams {
-	const { pathId, protocol } = networkParams as SubstrateNetworkParams;
-
-	return (
-		(protocol === NetworkProtocols.SUBSTRATE &&
-			pathId === unknownNetworkPathId) ||
-		protocol === NetworkProtocols.UNKNOWN
 	);
 }

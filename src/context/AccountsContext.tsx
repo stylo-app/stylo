@@ -12,7 +12,7 @@ import { decodeAddress , encodeAddress } from '@polkadot/util-crypto';
 import { NetworksContext } from './NetworksContext';
 
 export interface AccountsContextType {
-	accountExists: (address: string | null | undefined, network: NetworkParams | null) => boolean;
+	accountExists: (address?: string | null, network?: NetworkParams | null) => boolean;
 	accounts: AccountType[];
 	accountsLoaded: boolean;
 	changeCurrentAccountNetwork: (networkKey: string) => Promise<string | undefined>
@@ -61,7 +61,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 		} as AccountType))
 	}, [])
 
-	const accountExists = (address : string | null | undefined, network: NetworkParams | null) => {
+	const accountExists = (address? : string | null, network?: NetworkParams | null) => {
 		if (!address){
 			return false;
 		}

@@ -94,7 +94,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 			let overrideTypes
 
 			switch (networkKey) {
-			case SubstrateNetworkKeys.Karura:
+			case SubstrateNetworkKeys.KARURA:
 				overrideTypes = karTypesdef
 				break;
 

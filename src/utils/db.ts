@@ -104,8 +104,12 @@ export async function loadNetworks(): Promise<Map<string, SubstrateNetworkParams
 		const networksEntries = JSON.parse(networksJson);
 
 		return mergeNetworks(SUBSTRATE_NETWORK_LIST, networksEntries);
-	} catch (e) {
-		handleError(e, 'networks');
+	} catch (e: unknown) {
+		if(e instanceof Error){
+			handleError(e, 'networks');
+		}
+
+		console.error(e)
 
 		return new Map();
 	}
@@ -122,8 +126,12 @@ export async function saveNetworks(newNetwork: SubstrateNetworkParams): Promise<
 		SecureStorage.setItem(currentNetworkStorageLabel,
 			serializeNetworks(addedNetworks),
 			networkStorage);
-	} catch (e) {
-		handleError(e, 'networks');
+	} catch (e: unknown) {
+		if(e instanceof Error){
+			handleError(e, 'networks');
+		}
+
+		console.error(e)
 	}
 }
 

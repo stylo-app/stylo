@@ -228,8 +228,13 @@ export async function constructDataFromBytes(bytes: Uint8Array, multipartComplet
 		default:
 			throw new Error('Payload is not formated correctly: ' + bytes);
 		}
-	} catch (e) {
-		throw new Error(e);
+	} catch (e: unknown) {
+		if(e instanceof Error){
+			throw new Error(e.message);
+		} else {
+			throw new Error('unknown error :(')
+		}
+
 	}
 }
 
