@@ -30,6 +30,7 @@ import { Text, View } from 'react-native';
 import fontStyles from 'styles/fontStyles';
 import { isEthereumNetwork, SubstrateNetworkParams } from 'types/networkTypes';
 import { NavigationProps, NavigationScannerProps } from 'types/props';
+import { showSpecVersionMismatchAlert } from 'utils/alertUtils';
 import { Transaction } from 'utils/transaction';
 
 import metadataJson from '../../../constants/metadata.json';
@@ -55,39 +56,21 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 	const { navigateToAccountList } = useHelperNavigation()
 	const [isAlerted, setIsAlerted] = useState(false);
 	const metadataSpecVersion = (metadataJson as Record<string, any>)[(senderNetwork as SubstrateNetworkParams).metadataKey].specVersion
-	const showSpecVersionMismatchAlert = useCallback(() =>	setAlert('Warning', `This version of Stylo is not up to date with the latest version of ${senderNetwork?.title} network.
-
-The transaction details can be wrong or meaningless.
-
-You should stop right here, cancel this transaction by tapping "Back" and update Stylo.
-
-If you proceed you may put your funds at risk.`, [
-		{ text: 'Proceed' },
-		{
-			onPress: navigateToAccountList,
-			text: 'Back'
-		}
-	]), [navigateToAccountList, senderNetwork?.title, setAlert])
 
 	useEffect(() => {
 		if(!isAlerted && !isEthereum && (Number(payload?.specVersion) > metadataSpecVersion)){
 			setIsAlerted(true);
-			showSpecVersionMismatchAlert();
+			showSpecVersionMismatchAlert(setAlert, senderNetwork?.title || 'unknown', navigateToAccountList);
 		}
-	},[isAlerted, isEthereum, metadataSpecVersion, payload?.specVersion, showSpecVersionMismatchAlert])
+	},[isAlerted, isEthereum, metadataSpecVersion, navigateToAccountList, payload?.specVersion, senderNetwork?.title, setAlert])
 
-	if (!sender) {
-		console.error('no sender');
+	const PayloadDetails = useCallback(() => {
+		if (!sender) {
+			console.error('no sender');
 
-		return <View/>;
-	}
+			return <View/>;
+		}
 
-	if (isProcessing || !signedData || (!isEthereum && payload === null)) {
-
-		return (<Loader label='Signing...'/>)
-	}
-
-	const PayloadDetails = () => {
 		if (isEthereum) {
 			return (
 				<View style={{ marginTop: 16 }}>
@@ -114,6 +97,17 @@ If you proceed you may put your funds at risk.`, [
 				signature={signedData}
 			/>
 		);
+	},[gas, gasPrice, isEthereum, payload, recipientAddress, sender, signedData, value])
+
+	if (!sender) {
+		console.error('no sender');
+
+		return <View/>;
+	}
+
+	if (isProcessing || !signedData || (!isEthereum && payload === null)) {
+
+		return (<Loader label='Signing...'/>)
 	}
 
 	return (

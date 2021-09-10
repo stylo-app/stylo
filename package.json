@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@acala-network/type-definitions": "^2.2.1",
-    "@polkadot/api": "^5.7.1",
+    "@polkadot/api": "^5.8.3",
     "@polkadot/reactnative-identicon": "^0.85.2",
     "@polkadot/util": "^7.3.1",
     "@polkadot/util-crypto": "^7.3.1",

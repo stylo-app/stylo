@@ -15,11 +15,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { CommonActions, useNavigation } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 export const useHelperNavigation = () => {
 	const navigation = useNavigation();
 
-	const resetNavigationTo = (screenName: string, params: Record<string, unknown> = {}, isNew = false): void => {
+	const resetNavigationTo = useCallback((screenName: string, params: Record<string, unknown> = {}, isNew = false): void => {
 		const resetAction = CommonActions.reset({
 			index: 1,
 			routes: [
@@ -35,31 +36,31 @@ export const useHelperNavigation = () => {
 		});
 
 		navigation.dispatch(resetAction);
-	};
+	}, [navigation])
 
-	const resetNavigationToHome = (screenName: string, params?: any): void => {
+	const resetNavigationToHome = useCallback((screenName: string, params?: any): void => {
 		const resetAction = CommonActions.reset({
 			index: 0,
 			routes: [{ name: screenName, params }]
 		});
 
 		navigation.dispatch(resetAction);
-	};
+	}, [navigation])
 
-	const navigateToAccountDetails = () => {
+	const navigateToAccountDetails = useCallback(() => {
 		const resetAction = CommonActions.reset({
 			index: 1,
 			routes: [{ name: 'AccountList' }, { name: 'AccountDetails' }]
 		});
 
 		navigation.dispatch(resetAction);
-	}
+	}, [navigation])
 
-	const navigateToAccountList = (): void => resetNavigationToHome('AccountList');
+	const navigateToAccountList = useCallback((): void => resetNavigationToHome('AccountList'), [resetNavigationToHome]);
 
-	const navigateToQrScanner = (): void => resetNavigationTo('QrScanner');
+	const navigateToQrScanner = useCallback((): void => resetNavigationTo('QrScanner'), [resetNavigationTo]);
 
-	const navigateToNetworkSettings = (): void => resetNavigationTo('NetworkSettings');
+	const navigateToNetworkSettings = useCallback((): void => resetNavigationTo('NetworkSettings'), [resetNavigationTo]);
 
 	return {
 		navigateToAccountDetails,

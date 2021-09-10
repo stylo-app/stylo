@@ -103,7 +103,7 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 				setFormattedCallArgs(methodArgs);
 			} catch (e) {
 				console.error(e)
-				alertDecodeError(setAlert);
+				alertDecodeError(setAlert, (e as Error).message);
 				setUseFallBack(true);
 			}
 		}
@@ -249,8 +249,8 @@ interface PayloadDetailsCardProps {
 
 const PayloadDetailsCard = ({ description, networkKey, payload, signature, style }: PayloadDetailsCardProps): React.ReactElement =>  {
 	const { getNetwork } = useContext(NetworksContext);
-	const network = getNetwork(networkKey);
-	const fallback = !network;
+	const network = useMemo(() => getNetwork(networkKey),[getNetwork, networkKey]);
+	const fallback = useMemo(() => !network, [network]);
 
 	if (isSubstrateNetwork(network)) {
 		formatBalance.setDefaults({

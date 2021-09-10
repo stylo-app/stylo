@@ -68,9 +68,14 @@ export const alertRisks = (setAlert: SetAlert, message: string, onPress: () => a
 		{ text: 'Back' }
 	]);
 
-export const alertDecodeError = (setAlert: SetAlert): void =>
+export const alertDecodeError = (setAlert: SetAlert, error: string): void =>
 	setAlert('Could not decode method with available metadata.',
-		'Signing something you do not understand is inherently unsafe. Do not sign this extrinsic unless you know what you are doing, or update Stylo to be able to decode this message. If you are not sure, or you are using the latest version, please open an issue on github.com/stylo-app/stylo.');
+		`Signing something you do not understand is inherently unsafe. Do not sign this extrinsic unless you know what you are doing, or update Stylo to be able to decode this message. If you are not sure, or you are using the latest version, please open an issue on github.com/stylo-app/stylo.
+		
+Error: ${error}`,
+		[
+			{ text: 'OK' }
+		]);
 
 export const alertBackupDone = (setAlert: SetAlert, onPress: () => any): void =>
 	setAlert('Important',
@@ -83,3 +88,19 @@ export const alertBackupDone = (setAlert: SetAlert, onPress: () => any): void =>
 			},
 			{ text: 'Cancel' }
 		]);
+
+export const showSpecVersionMismatchAlert = (setAlert: SetAlert, networkTitle: string, onPress: () => any): void =>
+	setAlert('Warning',
+		`This version of Stylo is not up to date with the latest version of ${networkTitle} network.
+
+The transaction details can be wrong or meaningless.
+
+You should stop right here, cancel this transaction by tapping "Back" and update Stylo.
+
+If you proceed you may put your funds at risk.`, [
+			{ text: 'Proceed' },
+			{
+				onPress,
+				text: 'Back'
+			}
+		])
