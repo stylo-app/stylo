@@ -33,12 +33,11 @@ interface AccountCardProps{
 	networkKey?: string;
 	onPress?: ButtonListener;
 	style?: ViewStyle;
-	testID?: string;
 	title?: string;
 	titlePrefix?: string;
 };
 
-export default function AccountCard({ address, derivationPath, networkKey, onPress, style, testID, title, titlePrefix }: AccountCardProps): ReactElement {
+export default function AccountCard({ address, derivationPath, networkKey, onPress, style, title, titlePrefix }: AccountCardProps): ReactElement {
 	const { getNetwork } = useContext(NetworksContext);
 	const { getAccountByAddress } = useContext(AccountsContext);
 
@@ -51,7 +50,6 @@ export default function AccountCard({ address, derivationPath, networkKey, onPre
 		<TouchableItem
 			disabled={false}
 			onPress={onPress}
-			testID={testID}
 		>
 			<View style={[styles.content, style]}>
 				<AccountIcon

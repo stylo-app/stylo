@@ -15,7 +15,6 @@
 
 import Button from 'components/Button';
 import ScreenHeading from 'components/ScreenHeading';
-import testIDs from 'e2e/testIDs';
 import { KeyboardAwareContainer } from 'modules/unlock/components/Container';
 import PinInput from 'modules/unlock/components/PinInput';
 import { usePinState } from 'modules/unlock/hooks';
@@ -60,7 +59,6 @@ export default function PinNew({ route }: NavigationProps<'PinNew'>): React.Reac
 					updateState({ focusConfirmation: true });
 				}}
 				returnKeyType="next"
-				testID={testIDs.IdentityPin.setPin}
 				value={state.pin}
 			/>
 			<PinInput
@@ -69,13 +67,11 @@ export default function PinNew({ route }: NavigationProps<'PinNew'>): React.Reac
 				onChangeText={onPinInputChange('confirmation', updateState)}
 				onSubmitEditing={submit}
 				returnKeyType="done"
-				testID={testIDs.IdentityPin.confirmPin}
 				value={state.confirmation}
 			/>
 			<Button
 				aboveKeyboard
 				onPress={submit}
-				testID={testIDs.IdentityPin.submitButton}
 				title={t.doneButton.pinCreation}
 			/>
 		</KeyboardAwareContainer>

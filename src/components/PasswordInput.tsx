@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import TextInput from 'components/TextInput';
-import testIDs from 'e2e/testIDs';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -39,7 +38,6 @@ export default function PasswordInput({ onSubmitEditing, password, setPassword }
 			<TouchableOpacity
 				onPress={togglePasswordInput}
 				style={styles.label}
-				testID={testIDs.PathDerivation.togglePasswordButton}
 			>
 				<Text style={fontStyles.t_regular}>Add Optional Password</Text>
 				<Icon
@@ -54,7 +52,6 @@ export default function PasswordInput({ onSubmitEditing, password, setPassword }
 						onSubmitEditing={onSubmitEditing}
 						placeholder="Optional password"
 						returnKeyType="done"
-						testID={testIDs.PathDerivation.passwordInput}
 						value={password}
 					/>
 					<Text style={styles.hintText}>

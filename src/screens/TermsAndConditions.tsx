@@ -19,7 +19,6 @@ import Button from 'components/Button';
 import CustomScrollView from 'components/CustomScrollView';
 import Markdown from 'components/Markdown';
 import TouchableItem from 'components/TouchableItem';
-import testIDs from 'e2e/testIDs';
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -61,7 +60,6 @@ export default function TermsAndConditions(): React.ReactElement {
 	return (
 		<View
 			style={containerStyles.background}
-			testID={testIDs.TacScreen.tacView}
 		>
 			<CustomScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
 				<Markdown>{tac}</Markdown>
@@ -77,7 +75,6 @@ export default function TermsAndConditions(): React.ReactElement {
 							paddingHorizontal: 16,
 							paddingVertical: 10
 						}}
-						testID={testIDs.TacScreen.agreeTacButton}
 					>
 						<Icon
 							name={isTacAgreed ? 'checkbox-marked' : 'checkbox-blank-outline'}
@@ -93,7 +90,6 @@ export default function TermsAndConditions(): React.ReactElement {
 						disabled={!isTacAgreed}
 						onPress={onConfirm}
 						style={styles.nextButton}
-						testID={testIDs.TacScreen.nextButton}
 						title="Next"
 					/>
 				</View>

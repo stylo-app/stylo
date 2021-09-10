@@ -33,15 +33,6 @@
     "unit": "jest --config ./test/unit/jest.config.js",
     "unit:debug": "node --inspect node_modules/.bin/jest --config ./test/unit/jest.config.js --watch --runInBand",
     "test-rust": "(cd ./rust/signer && cargo test)",
-    "build-e2e:android": "detox build -c android.emu.debug -l info",
-    "test-e2e:android": "detox test -c android.emu.debug -l info --noStackTrace",
-    "e2e:android": "yarn run build-e2e:android && yarn run test-e2e:android",
-    "build-e2e:ios": "detox build -c ios.sim.debug -l info",
-    "build-e2e:ci": "detox build -c ios.sim.release -l info",
-    "test-e2e:ios": "detox test -c ios.sim.debug -l info --noStackTrace",
-    "test-e2e:ci": "detox test -c ios.sim.release -l info --noStackTrace  --cleanup",
-    "e2e:ios": "yarn run build-e2e:ios && yarn run test-e2e:ios",
-    "e2e": "yarn e2e:ios && yarn e2e:android",
     "release:apk": "(cd android && ./gradlew assembleRelease)",
     "release:aab": "(cd android && ./gradlew bundleRelease)"
   },
@@ -87,7 +78,6 @@
     "@babel/preset-typescript": "^7.15.0",
     "@babel/runtime": "^7.15.3",
     "@react-native-community/clipboard": "^1.5.1",
-    "@types/detox": "^17.14.2",
     "@types/jasmine": "^3.8.2",
     "@types/jest": "^27.0.1",
     "@types/react": "^17.0.19",
@@ -99,7 +89,6 @@
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-rewrite-require": "^1.14.5",
     "babel-plugin-tester": "^10.1.0",
-    "detox": "^18.20.2",
     "eslint": "^7.32.0",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.24.2",
@@ -117,44 +106,6 @@
     "reactotron-react-native": "5.0.0",
     "ts-jest": "^27.0.5",
     "typescript": "^4.4.2"
-  },
-  "detox": {
-    "configurations": {
-      "ios.sim.debug": {
-        "binaryPath": "ios/build/stylo-app/Build/Products/Debug-iphonesimulator/stylo-app.app",
-        "build": "yarn xcbuild:debug",
-        "type": "ios.simulator",
-        "device": {
-          "type": "iPhone 8"
-        }
-      },
-      "ios.sim.release": {
-        "binaryPath": "ios/build/stylo-app/Build/Products/GithubActions-iphonesimulator/stylo-app.app",
-        "build": "yarn xcbuild:githubActions",
-        "type": "ios.simulator",
-        "device": {
-          "type": "iPhone 8"
-        }
-      },
-      "android.emu.debug": {
-        "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
-        "build": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd ..",
-        "type": "android.emulator",
-        "device": {
-          "avdName": "Nexus_5_API_28"
-        }
-      },
-      "android.emu.release": {
-        "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
-        "build": "cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && cd ..",
-        "type": "android.emulator",
-        "device": {
-          "avdName": "Nexus_5_API_28"
-        }
-      }
-    },
-    "runner-config": "test/e2e/jest.config.js",
-    "test-runner": "jest"
   },
   "jest": {
     "projects": [

@@ -8,7 +8,6 @@ export type SetAlert = (
 
 export interface Action {
 	text: string;
-	testID?: string;
 	onPress?: () => any;
 };
 

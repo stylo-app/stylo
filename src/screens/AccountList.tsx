@@ -21,7 +21,6 @@ import InsecureDeviceBanner from 'components/InsecureDeviceBanner';
 import { Loader } from 'components/Loader';
 import QrScannerTab from 'components/QrScannerTab';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
-import testIDs from 'e2e/testIDs';
 import React, { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
@@ -72,7 +71,6 @@ function AccountList(): React.ReactElement {
 						<>
 							<ScrollView
 								style={styles.content}
-								testID={testIDs.AccountListScreen.accountList}
 							>
 								{accounts.map(renderAccountCard)}
 							</ScrollView>

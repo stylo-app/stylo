@@ -17,7 +17,6 @@
 import { NetworkCard } from 'components/NetworkCard';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import ScreenHeading from 'components/ScreenHeading';
-import testIDs from 'e2e/testIDs';
 import { filterNetworks } from 'modules/network/utils';
 import React, { ReactElement, useContext } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
@@ -42,7 +41,6 @@ export default function NetworkSettings({ navigation }: NavigationProps<'Network
 				onPress={(): void =>
 					navigation.navigate('NetworkDetails', { pathId: networkSpec.pathId })
 				}
-				testID={testIDs.NetworkSettings.networkCard + networkSpec.genesisHash}
 				title={networkSpec.title}
 			/>
 		);

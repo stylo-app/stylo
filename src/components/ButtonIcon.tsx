@@ -28,13 +28,12 @@ interface Props {
 	onPress: ButtonListener;
 	iconBgStyle?: ViewStyle;
 	iconSize?: number;
-	testID?: string;
 	textStyle?: TextStyle;
 	title?: string;
 	style?: ViewStyle;
 }
 
-const ButtonIcon: FunctionComponent<Props> = ({ iconName, iconType, iconColor, onPress, iconBgStyle, iconSize, testID, textStyle, title, style = {} }) => {
+const ButtonIcon: FunctionComponent<Props> = ({ iconName, iconType, iconColor, onPress, iconBgStyle, iconSize, textStyle, title, style = {} }) => {
 	const size = iconSize || 28;
 
 	const styles = StyleSheet.create({
@@ -85,7 +84,6 @@ const ButtonIcon: FunctionComponent<Props> = ({ iconName, iconType, iconColor, o
 			activeOpacity={0.5}
 			onPress={onPress}
 			style={{ ...styles.generalView, ...style }}
-			testID={testID}
 		>
 			<View style={styles.iconTitleView}>
 				<View style={[styles.iconView, iconBgStyle]}>{renderIcon()}</View>

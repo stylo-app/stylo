@@ -20,7 +20,6 @@ import '../ReactotronConfig';
 
 import { NavigationContainer } from '@react-navigation/native';
 import CustomAlert from 'components/CustomAlert';
-import { AppProps, getLaunchArgs } from 'e2e/injections';
 import * as React from 'react';
 import { LogBox,StatusBar } from 'react-native';
 import NavigationBar from 'react-native-navbar-color';
@@ -31,8 +30,7 @@ import colors from 'styles/colors';
 import { AccountsContextProvider, AlertContextProvider, NetworksContextProvider, RegistriesContextProvider, ScannerContextProvider } from './context';
 import { AppNavigator } from './screens';
 
-export default function App(props: AppProps): React.ReactElement {
-	getLaunchArgs(props);
+export default function App(): React.ReactElement {
 	NavigationBar.setColor(colors.background.os);
 
 	if (__DEV__) {

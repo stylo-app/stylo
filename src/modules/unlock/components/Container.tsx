@@ -14,7 +14,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import KeyboardScrollView from 'components/KeyboardScrollView';
-import testIDs from 'e2e/testIDs';
 import React from 'react';
 
 import styles from '../styles';
@@ -25,7 +24,6 @@ export function KeyboardAwareContainer(props: any): React.ReactElement {
 			{...props}
 			bounces={false}
 			style={styles.body}
-			testID={testIDs.IdentityPin.scrollScreen}
 		/>
 	);
 }

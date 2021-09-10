@@ -15,27 +15,23 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import Clipboard from '@react-native-community/clipboard';
-import testIDs from 'e2e/testIDs';
 
 import { Action, SetAlert } from '../context/AlertContext';
-
-const alertTestIDs = testIDs.Alert;
 
 export const alertError = (setAlert: SetAlert, message: string): void =>
 	setAlert('Error', message);
 
-const buildAlertButtons = (onConfirm: () => any, confirmText: string, testID?: string): Action[] => [
+const buildAlertButtons = (onConfirm: () => any, confirmText: string): Action[] => [
 	{
 		onPress: (): void => {
 			onConfirm();
 		},
-		testID,
 		text: confirmText
 	},
 	{ text: 'Cancel' }
 ];
 
-const buildAlertDeleteButtons = (onDelete: () => any, testID?: string): Action[] => buildAlertButtons(onDelete, 'Delete', testID);
+const buildAlertDeleteButtons = (onDelete: () => any): Action[] => buildAlertButtons(onDelete, 'Delete');
 
 export const alertDeleteAccount = (setAlert: SetAlert,
 	accountName: string,
@@ -83,7 +79,6 @@ export const alertBackupDone = (setAlert: SetAlert, onPress: () => any): void =>
 		[
 			{
 				onPress,
-				testID: alertTestIDs.backupDoneButton,
 				text: 'Proceed'
 			},
 			{ text: 'Cancel' }

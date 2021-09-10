@@ -17,8 +17,6 @@
 import Button from 'components/Button';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
 import ScreenHeading from 'components/ScreenHeading';
-import { useInjectionQR } from 'e2e/injections';
-import testIDs from 'e2e/testIDs';
 import { useProcessBarCode } from 'modules/sign/utils';
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -35,7 +33,6 @@ export default function Scanner(): React.ReactElement {
 	const { setAlert } = useContext(AlertContext);
 	const [enableScan, setEnableScan] = useState<boolean>(true);
 	const [lastFrame, setLastFrame] = useState<null | string>(null);
-	const [mockIndex, onMockBarCodeRead] = useInjectionQR();
 	const [multiFrames, setMultiFrames] = useState<Frames>({
 		completedFramesCount: 0,
 		isMultipart: false,
@@ -62,7 +59,6 @@ export default function Scanner(): React.ReactElement {
 						await clearByTap();
 						navigateToNetworkSettings();
 					},
-					testID: testIDs.QrScanner.networkAddSuccessButton,
 					text: 'Done'
 				}
 			]);
@@ -104,17 +100,6 @@ export default function Scanner(): React.ReactElement {
 		setLastFrame(event.rawData);
 		await processBarCode(event as TxRequestData);
 	};
-
-	useEffect(() => {
-		/** E2E Test Injection Code **/
-		if (global.inTest && global.scanRequest !== undefined) {
-			onMockBarCodeRead(global.scanRequest,
-				async (tx: TxRequestData): Promise<void> => {
-					await processBarCode(tx);
-				});
-		}
-		/* eslint-disable-next-line react-hooks/exhaustive-deps */
-	}, [mockIndex]);
 
 	const { completedFramesCount,
 		isMultipart,

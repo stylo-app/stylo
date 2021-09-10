@@ -61,7 +61,6 @@ export default function CustomAlert(): React.ReactElement {
 			onlyText={true}
 			small={true}
 			style={styles.button}
-			testID={action.testID}
 			textStyles={action.onPress ? styles.buttonBoldText : styles.buttonLightText}
 			title={action.text}
 		/>

@@ -19,7 +19,6 @@ import { useNavigation, useNavigationState, useRoute } from '@react-navigation/n
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import HeaderMenus from 'components/HeaderMenus';
 import HeaderTitleHome from 'components/HeaderTitleHome';
-import testIDs from 'e2e/testIDs';
 import NetworkDetails from 'modules/network/screens/NetworkDetails';
 import NetworkSettings from 'modules/network/screens/NetworkSettings';
 import QrScanner from 'modules/sign/screens/QrScanner';
@@ -51,7 +50,7 @@ const HeaderLeftWithBack = (): React.ReactElement => {
 	const navigation = useNavigation();
 
 	return (
-		<View testID={testIDs.Header.headerBackButton}>
+		<View>
 			<HeaderBackButton
 				labelStyle={globalStackNavigationOptions.headerBackTitleStyle}
 				labelVisible={false}

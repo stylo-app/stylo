@@ -19,7 +19,6 @@ import { Loader } from 'components/Loader';
 import QrView from 'components/QrView';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import Separator from 'components/Separator';
-import testIDs from 'e2e/testIDs';
 import PayloadDetailsCard from 'modules/sign/components/PayloadDetailsCard';
 import TxDetailsCard from 'modules/sign/components/TxDetailsCard';
 import { usePayloadDetails } from 'modules/sign/hooks';
@@ -130,7 +129,6 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 			</Text>
 			<View
 				style={styles.qr}
-				testID={testIDs.SignedTx.qrView}
 			>
 				<QrView data={signedData} />
 			</View>

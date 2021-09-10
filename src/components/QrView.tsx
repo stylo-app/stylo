@@ -25,7 +25,6 @@ interface Props {
 	size?: number;
 	height?: number;
 	style?: ViewStyle;
-	testID?: string;
 }
 
 export default function QrView(props: Props): React.ReactElement {
@@ -73,7 +72,6 @@ export default function QrView(props: Props): React.ReactElement {
 				},
 				props.style
 			]}
-			testID={props.testID}
 		>
 			{qr !== '' && (
 				<Image

@@ -18,7 +18,6 @@ import AccountCard from 'components/AccountCard';
 import QrView from 'components/QrView';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import Separator from 'components/Separator';
-import testIDs from 'e2e/testIDs';
 import MessageDetailsCard from 'modules/sign/components/MessageDetailsCard';
 import PayloadDetailsCard from 'modules/sign/components/PayloadDetailsCard';
 import strings from 'modules/sign/strings';
@@ -85,7 +84,7 @@ function SignedMessageView({ message, sender: senderAddress }: Props): React.Rea
 			<Text style={[fontStyles.h_subheading, { paddingHorizontal: 16 }]}>
 				{'Scan to publish'}
 			</Text>
-			<View testID={testIDs.SignedMessage.qrView}>
+			<View>
 				<QrView data={displayData} />
 			</View>
 		</SafeAreaScrollViewContainer>

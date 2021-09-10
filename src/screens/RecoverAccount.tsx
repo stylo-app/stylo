@@ -23,7 +23,6 @@ import KeyboardScrollView from 'components/KeyboardScrollView';
 import { NetworkCard } from 'components/NetworkCard';
 import ScreenHeading from 'components/ScreenHeading';
 import TextInput from 'components/TextInput';
-import testIDs from 'e2e/testIDs';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
@@ -190,7 +189,6 @@ function RecoverAccount(): React.ReactElement {
 				<AccountSeed
 					onChangeText={onSeedTextInput}
 					returnKeyType="done"
-					testID={testIDs.RecoverAccount.seedInput}
 					valid={isSeedValid.bip39}
 				/>
 			</View>
@@ -232,7 +230,6 @@ function RecoverAccount(): React.ReactElement {
 					disabled={!isSeedValid.bip39 || !networkKey || !address || accountAlreadyExists || !isDerivationPathValid}
 					onPress={onRecoverConfirm}
 					small={true}
-					testID={testIDs.RecoverAccount.recoverButton}
 					title="Recover"
 				/>
 			</View>

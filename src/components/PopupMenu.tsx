@@ -25,7 +25,6 @@ type MenuItem = {
 	text: string;
 	value: string;
 	textStyle?: TextStyle;
-	testID?: string;
 	hide?: boolean;
 };
 
@@ -33,18 +32,16 @@ interface Props {
 	onSelect: (selectedItem: any) => void;
 	menuTriggerIconName: string;
 	menuItems: Array<MenuItem>;
-	testID?: string;
 }
 
 export default class PopupMenu extends React.PureComponent<Props> {
 	render(): React.ReactElement {
-		const { menuItems, menuTriggerIconName, onSelect, testID } = this.props;
+		const { menuItems, menuTriggerIconName, onSelect } = this.props;
 		const menuTriggerIcon = (
 			<Icon
 				color={colors.text.main}
 				name={menuTriggerIconName}
 				size={25}
-				testID={testID}
 			/>
 		);
 
@@ -62,7 +59,6 @@ export default class PopupMenu extends React.PureComponent<Props> {
 								value={menuItem.value}>
 								<Text
 									style={[menuOptionsStyles.optionText, menuItem.textStyle]}
-									testID={menuItem.testID}
 								>
 									{menuItem.text}
 								</Text>

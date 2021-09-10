@@ -169,8 +169,6 @@ android {
             // signingConfig signingConfigs.debug
              minifyEnabled enableProguardInReleaseBuilds
              proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            // Detox-specific additions to pro-guard, uncomment following line if pro-guard is enabled.
-             proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro"
         }
     }
     splits {
@@ -237,17 +235,16 @@ dependencies {
     } else {
         implementation 'org.webkit:android-jsc:+'
     }
-    androidTestImplementation('com.wix:detox:18.20.2') { transitive = true }
     androidTestImplementation 'junit:junit:4.12'
 }
 
-configurations.all {
-    resolutionStrategy {
-        //  the line below is required for Detox since version 14.5.0;
-        //  it should removed as soon as the project compiles without it
-        force 'androidx.annotation:annotation:1.0.0'
-    }
-}
+// configurations.all {
+//     resolutionStrategy {
+//         //  the line below is required for Detox since version 14.5.0;
+//         //  it should removed as soon as the project compiles without it
+//         force 'androidx.annotation:annotation:1.0.0'
+//     }
+// }
 
 // Run this once to be able to run the application with BUCK
 // puts all compile dependencies into folder libs for BUCK to use

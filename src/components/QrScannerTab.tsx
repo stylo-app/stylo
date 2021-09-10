@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import testIDs from 'e2e/testIDs';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -31,7 +30,6 @@ export default function QrScannerTab(): React.ReactElement {
 		<TouchableItem
 			onPress={navigateToQrScanner}
 			style={styles.body}
-			testID={testIDs.SecurityHeader.scanButton}
 		>
 			<Icon
 				// accessibilityComponentType={'button'}

@@ -28,11 +28,10 @@ export default class Button extends React.PureComponent<{
 	disabled?: boolean;
 	small?: boolean;
 	onlyText?: boolean;
-	testID?: string;
 	style?: ViewStyle;
 }> {
 	render(): React.ReactElement {
-		const { aboveKeyboard, disabled, onPress, onlyText, small, style, testID, textStyles, title } = this.props;
+		const { aboveKeyboard, disabled, onPress, onlyText, small, style, textStyles, title } = this.props;
 
 		const finalTextStyles = [styles.buttonText, {}];
 		const finalButtonStyles = [styles.button, {}];
@@ -59,7 +58,6 @@ export default class Button extends React.PureComponent<{
 			<TouchableNativeFeedback
 				disabled={disabled}
 				onPress={onPress}
-				testID={testID}
 			>
 				<View style={[finalButtonStyles, style]}>
 					<Text
@@ -79,7 +77,6 @@ export default class Button extends React.PureComponent<{
 				disabled={disabled}
 				onPress={onPress}
 				style={[finalButtonStyles, style]}
-				testID={testID}
 			>
 				<Text
 					style={[

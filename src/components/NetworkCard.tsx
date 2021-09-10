@@ -31,11 +31,10 @@ interface NetworkCardProps {
 	networkColor?: string;
 	networkKey?: string;
 	onPress?: ButtonListener;
-	testID?: string;
 	title: string;
 }
 
-export function NetworkCard({ isAdd, networkKey, onPress, testID, title }: NetworkCardProps): ReactElement {
+export function NetworkCard({ isAdd, networkKey, onPress, title }: NetworkCardProps): ReactElement {
 	const { getNetwork } = useContext(NetworksContext);
 	const networkParams = getNetwork(networkKey);
 	const networkColor = networkParams?.color || colors.background.app;
@@ -44,7 +43,7 @@ export function NetworkCard({ isAdd, networkKey, onPress, testID, title }: Netwo
 	return (
 		<TouchableItem disabled={isDisabled}
 			onPress={onPress}
-			testID={testID}>
+		>
 			<View style={styles.content}>
 				{isAdd ? (
 					<View

@@ -21,12 +21,11 @@ interface Props {
 	animationType: 'none' | 'slide' | 'fade';
 	setVisible: (isVisible: boolean) => void;
 	style?: ViewStyle;
-	testID?: string;
 	visible: boolean;
 	children: any;
 }
 
-export default function TransparentBackground({ animationType, children, setVisible, style, testID, visible }: Props): React.ReactElement {
+export default function TransparentBackground({ animationType, children, setVisible, style, visible }: Props): React.ReactElement {
 	return (
 		<Modal
 			animationType={animationType}
@@ -40,7 +39,6 @@ export default function TransparentBackground({ animationType, children, setVisi
 			>
 				<View
 					style={StyleSheet.flatten([styles.container, style])}
-					testID={testID}
 				>
 					{children}
 				</View>
