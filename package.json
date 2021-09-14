@@ -37,7 +37,7 @@
     "release:aab": "(cd android && ./gradlew bundleRelease)"
   },
   "dependencies": {
-    "@acala-network/type-definitions": "^2.2.1",
+    "@acala-network/type-definitions": "^2.2.2-6",
     "@polkadot/api": "^5.8.3",
     "@polkadot/reactnative-identicon": "^0.85.2",
     "@polkadot/util": "^7.3.1",

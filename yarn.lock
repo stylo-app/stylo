@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@acala-network/type-definitions@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@acala-network/type-definitions/-/type-definitions-2.2.1.tgz#031faac650e5e62184a441c233ee16fc70d77e79"
-  integrity sha512-MpXFgyfpzpdlZu5on/hBB7HpiQcwsOCe/oD51uYvS+FWlJ2L7HGGczDQcc9k123aIBvIlfxyj+PcaUbae1VfUg==
+"@acala-network/type-definitions@^2.2.2-6":
+  version "2.2.2-6"
+  resolved "https://registry.yarnpkg.com/@acala-network/type-definitions/-/type-definitions-2.2.2-6.tgz#96bec8055b96328f6cd3e9543929acfb0692d666"
+  integrity sha512-Nr1evQkkdChFAqfHlM050uatNM36BksbyFD3UaolqpN9UsDDqAAh0p6z+aJqe4hzn7gqhtE7JRDO+2teOVBCbw==
   dependencies:
     "@open-web3/orml-type-definitions" "^0.9.4-34"
 
