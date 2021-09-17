@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@acala-network/type-definitions@^2.2.2-6":
-  version "2.2.2-6"
-  resolved "https://registry.yarnpkg.com/@acala-network/type-definitions/-/type-definitions-2.2.2-6.tgz#96bec8055b96328f6cd3e9543929acfb0692d666"
-  integrity sha512-Nr1evQkkdChFAqfHlM050uatNM36BksbyFD3UaolqpN9UsDDqAAh0p6z+aJqe4hzn7gqhtE7JRDO+2teOVBCbw==
+"@acala-network/type-definitions@^2.2.2-9":
+  version "2.2.2-9"
+  resolved "https://registry.yarnpkg.com/@acala-network/type-definitions/-/type-definitions-2.2.2-9.tgz#a9205ab3e0ee2a7148940eee1409790a7c11dcf7"
+  integrity sha512-XJp7P3G1GPQOXbi3qC26Te/1pYJMHtrIKjG2jK4JyIM7FR6TkPEmdKAEW1Eu7D6E4WpdR/r7g8jVHl9AbCkFQw==
   dependencies:
-    "@open-web3/orml-type-definitions" "^0.9.4-34"
+    "@open-web3/orml-type-definitions" "^0.9.4-38"
 
 "@babel/cli@^7.14.8":
   version "7.15.4"
@@ -1440,10 +1440,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@open-web3/orml-type-definitions@^0.9.4-34":
-  version "0.9.4-34"
-  resolved "https://registry.yarnpkg.com/@open-web3/orml-type-definitions/-/orml-type-definitions-0.9.4-34.tgz#5aeeb7690db5aed1bb51e8e161bd61384c13c787"
-  integrity sha512-KYxPH0gc86mHXlpAqQ8KOaD53SpI7HS3J25hf/4fm33rBS76u/gxooqAogB10cVxL7S6lNo8Jd4davvCSc56Lg==
+"@open-web3/orml-type-definitions@^0.9.4-38":
+  version "0.9.4-38"
+  resolved "https://registry.yarnpkg.com/@open-web3/orml-type-definitions/-/orml-type-definitions-0.9.4-38.tgz#fc7642f6a518da2618ae39fa76fe046ee57c1e80"
+  integrity sha512-kV0++JlRLEf7Z1y+Jm+792zqx6Q7dzpGP73rJJmQrBaeTML5mQzu4veZ24TVtcLV6hsGjUU/ixrJODNj6CCuZQ==
   dependencies:
     lodash.merge "^4.6.2"
 
