@@ -64,7 +64,6 @@ function RecoverAccount(): React.ReactElement {
 
 	const goToPin = useCallback(() => navigate('AccountPin', { isNew: true }), [navigate])
 
-	console.log('reco--------.')
 	// Make sure to lock the account if the app goes innactive or the user goes back
 	useEffect(() => {
 
