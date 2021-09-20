@@ -15,7 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import NetInfo from '@react-native-community/netinfo';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import AccountCard from 'components/AccountCard';
 import InsecureDeviceBanner from 'components/InsecureDeviceBanner';
 import { Loader } from 'components/Loader';
@@ -26,6 +26,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import colors from 'styles/colors';
 import { AccountType } from 'types/accountTypes';
+import { RootStackParamList } from 'types/routes';
 
 import { AccountsContext } from '../context';
 import { useTac } from '../hooks/useTac';
@@ -34,7 +35,7 @@ function AccountList(): React.ReactElement {
 	const { accounts, selectAccount } = useContext(AccountsContext);
 	const [isConnected, setIsConnected] = useState(false);
 	const { dataLoaded } = useTac();
-	const { navigate } = useNavigation();
+	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
 	useEffect(() =>
 		NetInfo.addEventListener(state => {

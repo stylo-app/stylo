@@ -22,7 +22,7 @@ export type RootStackParamList = {
 		  }
 		| undefined;
 	AccountList: undefined;
-	NetworkList: {changeCurrentAccountNetwork?: boolean};
+	NetworkList: {changeCurrentAccountNetwork?: boolean} | undefined;
 	NetworkDetails: { pathId: string };
 	NetworkSettings: undefined;
 	PathsList: { networkKey: string };

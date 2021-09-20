@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { NavigationProp, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { RootStackParamList } from 'types/routes';
 
 import { useTac } from '../hooks/useTac';
 import PopupMenu from './PopupMenu';
@@ -24,13 +25,13 @@ import PopupMenu from './PopupMenu';
 const MAIN_MENUS = ['Main','AccountList'];
 
 function HeaderMenus(): React.ReactElement {
-	const { navigate } = useNavigation()
+	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>()
 	const { name } = useRoute();
 	const { ppAndTaCAccepted } = useTac()
 
 	const showMainMenu = MAIN_MENUS.includes(name) && ppAndTaCAccepted;
 
-	const onAccountCreate = useCallback((to: string) => {
+	const onAccountCreate = useCallback((to: keyof RootStackParamList) => {
 		navigate(to);
 	}, [navigate])
 
