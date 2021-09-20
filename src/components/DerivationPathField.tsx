@@ -26,10 +26,11 @@ import TextInput from './TextInput';
 interface Props {
 	onChange: (derivationEvent: { derivationPassword: string; derivationPath: string; isDerivationPathValid: boolean; }) => void;
 	styles: { title: TextStyle; };
-	value?: string
+	value?: string;
+	isDropdown?: boolean;
 }
 
-export default function DerivationPathField({ onChange, styles, value }: Props): React.ReactElement {
+export default function DerivationPathField({ isDropdown = false, onChange, styles, value }: Props): React.ReactElement {
 	const [showAdvancedField, setShowAdvancedField] = useState(!!value || false);
 	const [isValidPath, setIsValidPath] = useState(true);
 	const [derivationPath, setDerivationPath] = useState(value)
@@ -63,24 +64,30 @@ export default function DerivationPathField({ onChange, styles, value }: Props):
 
 	return (
 		<>
-			<TouchableWithoutFeedback onPress={toggleShowAdvancedField}>
-				<View style={ownStyles.container}>
-					<Text
-						style={StyleSheet.flatten([styles.title, ownStyles.advancedText])}
-					>
-						ADVANCED
+			{isDropdown
+				? (
+					<Text style={StyleSheet.flatten([styles.title, ownStyles.advancedText])}>
+						DERIVATION PATH
 					</Text>
-					<Icon
-						color={colors.text.main}
-						name={showAdvancedField ? 'arrow-drop-up' : 'arrow-drop-down'}
-						size={20}
-					/>
-				</View>
-			</TouchableWithoutFeedback>
-			{showAdvancedField && (
+				)
+				: (
+					<TouchableWithoutFeedback onPress={toggleShowAdvancedField}>
+						<View style={ownStyles.container}>
+							<Text style={StyleSheet.flatten([styles.title, ownStyles.advancedText])}>
+						ADVANCED
+							</Text>
+							<Icon
+								color={colors.text.main}
+								name={showAdvancedField ? 'arrow-drop-up' : 'arrow-drop-down'}
+								size={20}
+							/>
+						</View>
+					</TouchableWithoutFeedback>
+				)}
+			{(showAdvancedField || isDropdown) && (
 				<TextInput
 					onChangeText={onChangeText}
-					placeholder="optional derivation path"
+					placeholder="derivation path"
 					style={StyleSheet.flatten([
 						fontStyles.h2,
 						isValidPath ? {} : ownStyles.invalidInput

@@ -19,7 +19,7 @@ import { NetworkCard } from 'components/NetworkCard';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import React, { useContext, useEffect } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
-import { NetworkParams } from 'types/networkTypes';
+import { isSubstrateNetwork, NetworkParams } from 'types/networkTypes';
 import { NavigationProps } from 'types/props';
 
 import { AccountsContext, NetworksContext } from '../context';
@@ -29,6 +29,7 @@ export default function NetworkListView({ route }: NavigationProps<'NetworkList'
 	const { allNetworks } = useContext(NetworksContext);
 	const { goBack } = useNavigation()
 	const shouldUpdateCurrentAccount = route.params?.changeCurrentAccountNetwork
+	const onlysShowSubstrateAccounts = !!route.params?.substrateOnly
 
 	useEffect(() => {
 		const handleAppStateChange = (nextAppState: AppStateStatus): void => {
@@ -53,6 +54,7 @@ export default function NetworkListView({ route }: NavigationProps<'NetworkList'
 	return (
 		<SafeAreaScrollViewContainer contentContainerStyle={{ padding: 20 }}>
 			{Array.from(allNetworks.entries())
+				.filter((network) => onlysShowSubstrateAccounts ? isSubstrateNetwork(network[1]) : true)
 				.map(([networkKey, networkParams]: [ string, NetworkParams ]): React.ReactElement => (
 					<NetworkCard
 						key={networkKey}

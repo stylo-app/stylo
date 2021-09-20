@@ -16,6 +16,7 @@
 
 import React, { ReactElement, useContext } from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
 import { ButtonListener } from 'types/props';
@@ -31,13 +32,14 @@ interface AccountCardProps{
 	address: string;
 	derivationPath?: string;
 	networkKey?: string;
+	isChild?: boolean;
 	onPress?: ButtonListener;
 	style?: ViewStyle;
 	title?: string;
 	titlePrefix?: string;
 };
 
-export default function AccountCard({ address, derivationPath, networkKey, onPress, style, title, titlePrefix }: AccountCardProps): ReactElement {
+export default function AccountCard({ address, derivationPath, isChild, networkKey, onPress, style, title, titlePrefix }: AccountCardProps): ReactElement {
 	const { getNetwork } = useContext(NetworksContext);
 	const { getAccountByAddress } = useContext(AccountsContext);
 
@@ -51,16 +53,21 @@ export default function AccountCard({ address, derivationPath, networkKey, onPre
 			disabled={false}
 			onPress={onPress}
 		>
-			<View style={[styles.content, style]}>
+			<View style={[styles.content, style, isChild ? styles.childContent : undefined]}>
+				{isChild && (
+					<Icon
+						color={colors.text.white}
+						name="corner-down-right"
+						size={22}
+						style={styles.iconChildren}
+					/>
+				)}
+
 				<AccountIcon
 					address={account?.address || address}
 					network={network}
 					style={styles.icon} />
 				<View style={[styles.desc ]}>
-					<AccountPrefixedTitle
-						title={displayTitle}
-						titlePrefix={titlePrefix}
-					/>
 					{!!derivation && (
 						<View>
 							<Text style={[fontStyles.t_regular, styles.derivationPath]}>
@@ -68,6 +75,10 @@ export default function AccountCard({ address, derivationPath, networkKey, onPre
 							</Text>
 						</View>
 					)}
+					<AccountPrefixedTitle
+						title={displayTitle}
+						titlePrefix={titlePrefix}
+					/>
 					{address !== '' && (
 						<Address
 							address={address}
@@ -91,6 +102,10 @@ const styles = StyleSheet.create({
 		marginTop: 8,
 		paddingLeft: 16
 	},
+	// eslint-disable-next-line sort-keys
+	childContent: {
+		marginLeft: 16
+	},
 	derivationPath: {
 		color: colors.text.faded
 	},
@@ -103,5 +118,8 @@ const styles = StyleSheet.create({
 	icon: {
 		height: 50,
 		width: 50
+	},
+	iconChildren: {
+		marginRight: 8
 	}
 });

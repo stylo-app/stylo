@@ -21,12 +21,12 @@ import InsecureDeviceBanner from 'components/InsecureDeviceBanner';
 import { Loader } from 'components/Loader';
 import QrScannerTab from 'components/QrScannerTab';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import colors from 'styles/colors';
-import { AccountType } from 'types/accountTypes';
 import { RootStackParamList } from 'types/routes';
+import { buildHierarchy } from 'utils/buildHierarchy';
 
 import { AccountsContext } from '../context';
 import { useTac } from '../hooks/useTac';
@@ -36,6 +36,7 @@ function AccountList(): React.ReactElement {
 	const [isConnected, setIsConnected] = useState(false);
 	const { dataLoaded } = useTac();
 	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+	const hierarchy = useMemo(() => buildHierarchy(accounts), [accounts])
 
 	useEffect(() =>
 		NetInfo.addEventListener(state => {
@@ -52,17 +53,6 @@ function AccountList(): React.ReactElement {
 		navigate('AccountDetails');
 	};
 
-	const renderAccountCard = ({ address, name, networkKey }: AccountType): React.ReactElement => (
-		<AccountCard
-			address={address}
-			key={address}
-			networkKey={networkKey}
-			onPress={(): Promise<void> => onAccountSelected(address)}
-			style={{ paddingBottom: 0 }}
-			title={name}
-		/>
-	);
-
 	return (
 		<SafeAreaViewContainer>
 			{isConnected && <InsecureDeviceBanner onPress={(): void => navigate('Security')}/>}
@@ -73,7 +63,27 @@ function AccountList(): React.ReactElement {
 							<ScrollView
 								style={styles.content}
 							>
-								{accounts.map(renderAccountCard)}
+								{hierarchy.map(({ address, children, name, networkKey }) =>
+									<View key={`parent-${address}`}>
+										<AccountCard
+											address={address}
+											networkKey={networkKey}
+											onPress={(): Promise<void> => onAccountSelected(address)}
+											style={{ paddingBottom: 0 }}
+											title={name}
+										/>
+										{children?.map(({ address, name, networkKey }) => (
+											<AccountCard
+												address={address}
+												isChild={true}
+												key={`child-${address}`}
+												networkKey={networkKey}
+												onPress={(): Promise<void> => onAccountSelected(address)}
+												style={{ paddingBottom: 0 }}
+												title={name}
+											/>
+										))}
+									</View>)}
 							</ScrollView>
 							<QrScannerTab />
 						</>

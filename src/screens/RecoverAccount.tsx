@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import AccountCard from 'components/AccountCard';
 import AccountSeed from 'components/AccountSeed';
 import Button from 'components/Button';
@@ -24,7 +24,7 @@ import { NetworkCard } from 'components/NetworkCard';
 import ScreenHeading from 'components/ScreenHeading';
 import TextInput from 'components/TextInput';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { AppState, AppStateStatus, StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
 import { isSubstrateNetwork, SubstrateNetworkParams  } from 'types/networkTypes';
@@ -43,43 +43,55 @@ interface OnDerivationType {
 	isDerivationPathValid: boolean;
 }
 
+const defaultSeedValidObject = validateSeed('', false);
+
 function RecoverAccount(): React.ReactElement {
 	const [derivationPath, setDerivationPath] = useState('');
 	const [derivationPassword, setDerivationPassword] = useState('');
 	const [isDerivationPathValid, setIsDerivationPathValid] = useState(true);
-	const { accountExists, newAccount, updateNew } = useContext(AccountsContext);
-	const defaultSeedValidObject = validateSeed('', false);
+	const { accountExists, getSelectedAccount, lockAccount, newAccount, updateNew } = useContext(AccountsContext);
 	const [isSeedValid, setIsSeedValid] = useState(defaultSeedValidObject);
 	const [seedPhrase, setSeedPhrase] = useState('');
 	const { setAlert } = useContext(AlertContext);
 	const { getNetwork } = useContext(NetworksContext)
 	const selectedNetwork = useMemo(() => getNetwork(newAccount.networkKey), [getNetwork, newAccount.networkKey])
-	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>()
+	const { goBack, navigate } = useNavigation<NavigationProp<RootStackParamList>>()
+	const { params } = useRoute<RouteProp<RootStackParamList, 'RecoverAccount'>>()
 	const accountAlreadyExists = useMemo(() => accountExists(newAccount.address, selectedNetwork), [accountExists, newAccount.address, selectedNetwork])
 	const isSubstrate = useMemo(() => isSubstrateNetwork(selectedNetwork), [selectedNetwork])
+	const isDerivingAccount = useMemo(() => params?.isDerivation, [params?.isDerivation])
+	const selectedAccount = useMemo(() => getSelectedAccount(), [getSelectedAccount])
 
 	const goToPin = useCallback(() => navigate('AccountPin', { isNew: true }), [navigate])
 
+	console.log('reco--------.')
+	// Make sure to lock the account if the app goes innactive or the user goes back
+	useEffect(() => {
+
+		const handleAppStateChange = (nextAppState: AppStateStatus): void => {
+			if (nextAppState === 'inactive') {
+				goBack();
+			}
+		};
+
+		AppState.addEventListener('change', handleAppStateChange);
+
+		return (): void => {
+			if (selectedAccount?.address) {
+				lockAccount(selectedAccount.address);
+			}
+
+			AppState.removeEventListener('change', handleAppStateChange);
+		};
+	}, [goBack, lockAccount, selectedAccount?.address]);
+
 	useEffect((): void => {
-		updateNew(emptyAccount('', ''));
-	}, [updateNew]);
+		const parentAddress = isDerivingAccount ? selectedAccount?.address : undefined
 
-	const onSeedTextInput = (inputSeedPhrase: string): void => {
-		const trimmedSeed = inputSeedPhrase.trimEnd();
-
-		setSeedPhrase(trimmedSeed);
-
-		const addressGeneration = (): Promise<void> =>
-			brainWalletAddress(trimmedSeed)
-				.then(({ bip39 }) => {
-					setIsSeedValid(validateSeed(trimmedSeed, bip39));
-					generateAddress()
-				})
-				.catch(() => setIsSeedValid(defaultSeedValidObject));
-		const debouncedAddressGeneration = debounce(addressGeneration, 200);
-
-		debouncedAddressGeneration();
-	};
+		updateNew(emptyAccount('', '', parentAddress));
+		setDerivationPath('')
+		setDerivationPassword('')
+	}, [isDerivingAccount, selectedAccount?.address, updateNew]);
 
 	const generateAddress = useCallback(() => {
 
@@ -140,6 +152,37 @@ function RecoverAccount(): React.ReactElement {
 		isSeedValid.bip39 && isDerivationPathValid && generateAddress()
 	}, [generateAddress, isDerivationPathValid, isSeedValid.bip39, derivationPath, derivationPassword])
 
+	const validateAndGenerate = useCallback((seed, bip39 = true) => {
+		const validatedSeed = validateSeed(seed, bip39)
+
+		setIsSeedValid(validatedSeed);
+		generateAddress()
+	}, [generateAddress])
+
+	const onSeedTextInput = useCallback((inputSeedPhrase: string): void => {
+		const trimmedSeed = inputSeedPhrase.trimEnd();
+
+		setSeedPhrase(trimmedSeed);
+
+		const addressGeneration = (): Promise<void> =>
+			brainWalletAddress(trimmedSeed)
+				.then(({ bip39 }) => {
+					validateAndGenerate(trimmedSeed, bip39);
+				})
+				.catch(() => setIsSeedValid(defaultSeedValidObject));
+		const debouncedAddressGeneration = debounce(addressGeneration, 200);
+
+		debouncedAddressGeneration();
+	}, [validateAndGenerate]);
+
+	useEffect(() => {
+		if (isDerivingAccount) {
+			const seed = selectedAccount?.seedPhrase
+
+			seed && onSeedTextInput(seed)
+		}
+	}, [getSelectedAccount, isDerivingAccount, onSeedTextInput, selectedAccount?.seedPhrase])
+
 	const onRecoverAccount = (): void => {
 		goToPin()
 	};
@@ -166,14 +209,14 @@ function RecoverAccount(): React.ReactElement {
 
 	return (
 		<KeyboardScrollView>
-			<ScreenHeading title={'Recover Account'} />
+			<ScreenHeading title={isDerivingAccount ? 'Derive Account' : 'Recover Account'} />
 			<View style={styles.step}>
 				<Text style={styles.title}>Name</Text>
 				<TextInput
 					onChangeText={(input: string): void =>
 						updateNew({ name: input })
 					}
-					placeholder="new name"
+					placeholder="account name"
 					value={name}
 				/>
 			</View>
@@ -181,21 +224,24 @@ function RecoverAccount(): React.ReactElement {
 				<Text style={styles.title}>Network</Text>
 				<NetworkCard
 					networkKey={networkKey}
-					onPress={(): void => navigate('NetworkList')}
+					onPress={(): void => navigate('NetworkList', { substrateOnly: isDerivingAccount })}
 					title={selectedNetwork?.title || 'Select Network'}
 				/>
 			</View>
-			<View style={styles.step}>
-				<Text style={styles.title}>Secret Phrase</Text>
-				<AccountSeed
-					onChangeText={onSeedTextInput}
-					returnKeyType="done"
-					valid={isSeedValid.bip39}
-				/>
-			</View>
+			{!isDerivingAccount && (
+				<View style={styles.step}>
+					<Text style={styles.title}>Secret Phrase</Text>
+					<AccountSeed
+						onChangeText={onSeedTextInput}
+						returnKeyType="done"
+						valid={isSeedValid.bip39}
+					/>
+				</View>
+			)}
 			{isSubstrate && (
 				<View style={styles.step}>
 					<DerivationPathField
+						isDropdown={isDerivingAccount}
 						onChange={onDerivationChange}
 						styles={styles}
 						value={`${derivationPath}${derivationPassword ? '///' : '' }${derivationPassword}`}
@@ -212,7 +258,7 @@ function RecoverAccount(): React.ReactElement {
 					/>
 				</View>
 			)}
-			{ accountAlreadyExists && (
+			{ accountAlreadyExists && !(isDerivingAccount && !derivationPath) && (
 				<View style={styles.step}>
 					<Text style={styles.errorText}>
 						An account with this secret phrase already exists.
@@ -231,7 +277,7 @@ function RecoverAccount(): React.ReactElement {
 					disabled={!isSeedValid.bip39 || !networkKey || !address || accountAlreadyExists || !isDerivationPathValid}
 					onPress={onRecoverConfirm}
 					small={true}
-					title="Recover"
+					title={isDerivingAccount ? 'Derive' : 'Recover'}
 				/>
 			</View>
 		</KeyboardScrollView>

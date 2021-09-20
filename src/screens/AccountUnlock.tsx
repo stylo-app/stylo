@@ -122,7 +122,7 @@ export function AccountUnlockAndSign(props: NavigationProps<'AccountUnlockAndSig
 
 export function AccountUnlock({ navigation, route }: NavigationProps<'AccountUnlock'>): React.ReactElement {
 	const next = route.params.next || 'AccountList';
-	const { changeCurrentAccountNetwork, onDelete } = route.params;
+	const { changeCurrentAccountNetwork, isDerivation, onDelete } = route.params;
 	const { getSelectedAccount, unlockAccount } = useContext(AccountsContext);
 	const selectedAccount = getSelectedAccount();
 
@@ -150,7 +150,7 @@ export function AccountUnlock({ navigation, route }: NavigationProps<'AccountUnl
 					routes: [
 						{ name: 'AccountList' },
 						{ name: 'AccountDetails' },
-						{ name: next, params: { changeCurrentAccountNetwork } }
+						{ name: next, params: { changeCurrentAccountNetwork, isDerivation } }
 					]
 				});
 

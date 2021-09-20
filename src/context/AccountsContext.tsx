@@ -1,4 +1,3 @@
-import { NetworkProtocols } from 'constants/networkSpecs';
 import { createContext, default as React, useCallback, useContext, useEffect, useState } from 'react';
 import { AccountType, isUnlockedAccount, LockedAccount, UnlockedAccount } from 'types/accountTypes';
 import { isEthereumNetwork, NetworkParams, SubstrateNetworkParams } from 'types/networkTypes';
@@ -97,7 +96,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 
 	}
 
-	function _deleteSensitiveData({ address, createdAt, derivationPath, encryptedSeed, isLegacy, name, networkKey, recovered, updatedAt, validBip39Seed }: UnlockedAccount): LockedAccount {
+	function _deleteSensitiveData({ address, createdAt, derivationPath, encryptedSeed, isLegacy, name, networkKey, parent, recovered, updatedAt, validBip39Seed }: UnlockedAccount): LockedAccount {
 		return {
 			address,
 			createdAt,
@@ -106,6 +105,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 			isLegacy,
 			name,
 			networkKey,
+			parent,
 			recovered,
 			updatedAt,
 			validBip39Seed
@@ -122,7 +122,8 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 				accountToSave = _deleteSensitiveData(account);
 			}
 
-			const isEthereum = getNetwork(account.networkKey)?.protocol === NetworkProtocols.ETHEREUM;
+			const network = getNetwork(account.networkKey)
+			const isEthereum = !!network && isEthereumNetwork(network)
 
 			await saveDbAccount(accountToSave, isEthereum);
 			loadAccountsFromDb();
@@ -141,7 +142,6 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 
 			await saveAccount(newAccount, pin);
 
-			// setAccounts((prev) => [...prev, newAccount]);
 			setNewAccount(emptyAccount());
 			loadAccountsFromDb();
 		} catch (e) {
@@ -181,10 +181,10 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 		return accounts.filter((account) => account.address !== address)
 	}
 
-	const getAccountByAddress = (address: string): AccountType | undefined => {
+	const getAccountByAddress = useCallback((address: string): AccountType | undefined => {
 
 		return accounts.find((account) => account.address.toLowerCase() === address.toLowerCase())
-	}
+	}, [accounts])
 
 	async function unlockAccount(address: string, pin: string): Promise<boolean> {
 		const account = getAccountByAddress(address) ;
@@ -235,7 +235,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 		setSelectedAccountAddress(address);
 	}
 
-	const getSelectedAccount = () => getAccountByAddress(selectedAccountAddress);
+	const getSelectedAccount = useCallback(() => getAccountByAddress(selectedAccountAddress), [getAccountByAddress, selectedAccountAddress]);
 
 	const changeCurrentAccountNetwork = async (networkKey: string) => {
 		const newAccount = getSelectedAccount()
@@ -249,6 +249,8 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 		const newAddresse = encodeAddress(newAccount?.address, (getNetwork(networkKey) as SubstrateNetworkParams).prefix)
 
 		try {
+			// saving the same account with the new address and network
+			// the db indexes accounts by pub key so it will replace the previous one
 			await saveAccount({ ...newAccount, address: newAddresse,networkKey })
 
 			return Promise.resolve(newAddresse)

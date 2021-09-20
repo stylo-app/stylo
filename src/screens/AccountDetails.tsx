@@ -35,19 +35,27 @@ import { useHelperNavigation } from '../hooks/useNavigationHelpers';
 export default function AccountDetails({ navigation }: NavigationProps<'AccountDetails'>): React.ReactElement {
 	const { deleteAccount, getSelectedAccount } = useContext(AccountsContext);
 	const selectedAccount = getSelectedAccount();
-	const { address, name, networkKey } = selectedAccount || { address: '', name: '', networkKey: '' };
+	const { address, name, networkKey, parent } = selectedAccount || { address: '', name: '', networkKey: '' };
 	const { getNetwork } = useContext(NetworksContext);
 	const { setAlert } = useContext(AlertContext);
 	const network = useMemo(() => getNetwork(networkKey), [getNetwork, networkKey])
 	const { navigateToAccountList } = useHelperNavigation()
-	const baseMenuItems = [
-		{ text: 'Change name', value: 'ChangeAccountName' },
-		{ text: 'Change pin', value: 'AccountPin' },
-		{ text: 'View secret phrase', value: 'Mnemonic' },
-		{ text: 'Delete account', textStyle: styles.deleteText, value: 'AccountDelete' }
-	]
-	// allow changing the network only for Substrate based networks
-	const menuItems = isSubstrateNetwork(network) ? [...baseMenuItems.slice(0,-1), { text: 'Change network', value: 'NetworkList' }, baseMenuItems[baseMenuItems.length-1]]: baseMenuItems;
+	const menuItems = useMemo(() => {
+		const isSubstrate = isSubstrateNetwork(network)
+		const baseMenuItems = [
+			{ text: 'Change name', value: 'ChangeAccountName' },
+			{ text: 'Change pin', value: 'AccountPin' },
+			{ text: 'View secret phrase', value: 'Mnemonic' },
+			{ text: 'Delete account', textStyle: styles.deleteText, value: 'AccountDelete' }
+		]
+		// allow changing the network only for Substrate based networks
+		const menuItemsChangeNetwork = isSubstrate ? [...baseMenuItems.slice(0,-1), { text: 'Change network', value: 'NetworkList' }, baseMenuItems[baseMenuItems.length-1]]: baseMenuItems;
+
+		// allow deriving if this account doesn't have any parent
+		return !parent && isSubstrate
+			? [...menuItemsChangeNetwork.slice(0,-1), { text: 'Derive from', value: 'RecoverAccount' }, menuItemsChangeNetwork[menuItemsChangeNetwork.length-1]]
+			: menuItemsChangeNetwork
+	}, [network, parent])
 
 	const accountId = useMemo((): string => {
 		if (!network){
@@ -85,6 +93,7 @@ export default function AccountDetails({ navigation }: NavigationProps<'AccountD
 		if (value !== 'ChangeAccountName') {
 			navigation.navigate('AccountUnlock', {
 				changeCurrentAccountNetwork: value === 'NetworkList',
+				isDerivation: value === 'RecoverAccount',
 				next: value,
 				onDelete
 			});

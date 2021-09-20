@@ -14,14 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import { SubstrateNetworkKeys } from 'constants/networkSpecs';
 import { UnlockedAccount } from 'types/accountTypes';
 import { ValidSeed } from 'types/utilTypes';
 
-export function emptyAccount(address = '',
-	networkKey: string = SubstrateNetworkKeys.KUSAMA): UnlockedAccount {
+import { decodeAddress } from '@polkadot/util-crypto';
+
+export function emptyAccount(address = '', networkKey: string = '', parentAddress: string = ''): UnlockedAccount {
+	let parent = undefined
+
+	try {
+		parent = parentAddress ? decodeAddress(parentAddress).toString() : undefined
+	} catch(e){
+		console.log('Error while decoding the parent address', e)
+	}
+
 	return {
-		address: address,
+		address,
 		createdAt: new Date().getTime(),
 		derivationPassword: '',
 		derivationPath: '',
@@ -29,6 +37,7 @@ export function emptyAccount(address = '',
 		isLegacy: true,
 		name: '',
 		networkKey,
+		parent,
 		seed: '',
 		seedPhrase: '',
 		updatedAt: new Date().getTime(),

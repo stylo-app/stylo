@@ -8,11 +8,11 @@ export type RootStackParamList = {
 	AccountUnlock: {
 		next: string;
 		onDelete?: () => void;
-		changeCurrentAccountNetwork?: boolean
+		changeCurrentAccountNetwork?: boolean;
+		isDerivation?: boolean;
 	};
 	IdentityBackup: { isNew: true } | { isNew: false; seedPhrase: string };
-	// IdentityManagement: undefined;
-	RecoverAccount: { isRecover: boolean } | undefined;
+	RecoverAccount: { isDerivation: boolean } | undefined;
 	MessageDetails: undefined;
 	Loading: undefined;
 	Main: { isNew: boolean } | undefined;
@@ -22,7 +22,7 @@ export type RootStackParamList = {
 		  }
 		| undefined;
 	AccountList: undefined;
-	NetworkList: {changeCurrentAccountNetwork?: boolean} | undefined;
+	NetworkList: {changeCurrentAccountNetwork?: boolean, substrateOnly?: boolean} | undefined;
 	NetworkDetails: { pathId: string };
 	NetworkSettings: undefined;
 	PathsList: { networkKey: string };

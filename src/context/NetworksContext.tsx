@@ -17,7 +17,6 @@
 import { ETHEREUM_NETWORK_LIST } from 'constants/networkSpecs';
 import { createContext, default as React, useEffect, useMemo, useState } from 'react';
 import { NetworkParams,SubstrateNetworkParams } from 'types/networkTypes';
-// import { NetworkParsedData } from 'types/scannerTypes';
 import { loadNetworks } from 'utils/db';
 
 // https://github.com/polkadot-js/ui/blob/f2f36e2db07f5faec14ee43cf4295f5e8a6f3cfa/packages/reactnative-identicon/src/icons/Polkadot.tsx#L37.

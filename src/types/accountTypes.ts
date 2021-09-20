@@ -23,6 +23,7 @@ export type UnlockedAccount = {
 	isLegacy?: boolean;
 	name: string;
 	networkKey: string;
+	parent?: string;
 	recovered?: boolean;
 	seed: string; //this is the SURI (seedPhrase + /soft//hard///password derivation)
 	seedPhrase: string; //contains only the BIP39 words, no derivation path
@@ -34,8 +35,6 @@ export type LockedAccount = Omit<
 	UnlockedAccount,
 	'seedPhrase' | 'seed' | 'derivationPassword'
 >;
-
-// export type Account = UnlockedAccount | LockedAccount | AccountType;
 
 export function isUnlockedAccount(account: UnlockedAccount | LockedAccount | AccountType): account is UnlockedAccount {
 	return 'seed' in account || 'seedPhrase' in account;
@@ -51,6 +50,7 @@ export interface AccountType {
 	isLegacy?: boolean;
 	name: string;
 	networkKey: string;
+	parent?: string;
 	path?: string;
 	seed?: string; //this is the SURI (seedPhrase + /soft//hard///password derivation)
 	seedPhrase?: string; //contains only the BIP39 words, no derivation path
