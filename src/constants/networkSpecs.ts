@@ -43,6 +43,7 @@ export const SubstrateNetworkKeys = Object.freeze({
 	// ROCOCO: '0x1611e1dbf0405379b861e2e27daa90f480b2e6d3682414a80835a52e8cb8a215',
 	SHIDEN: '0xf1cf9022c7ebb34b162d5b5e34e705a5a740b2d0ecc1009fb89023e62a488108',
 	STATEMINE: '0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a',
+	SUBSOCIAL: '0x0bd72c1c305172e1275278aaeb3f161e02eccb7a819e63f62d47bd53a28189f8',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e'
 });
 
@@ -142,6 +143,18 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 5,
 		title: 'Shiden',
 		unit: 'SDN'
+	},
+	[SubstrateNetworkKeys.SUBSOCIAL]: {
+		color: '#b9018c',
+		decimals: 11,
+		genesisHash: SubstrateNetworkKeys.SUBSOCIAL,
+		logo: require('res/img/logos/Subsocial.png'),
+		metadataKey: 'subsocialMetadata',
+		order: 3,
+		pathId: 'subsocial',
+		prefix: 28,
+		title: 'subsocial',
+		unit: 'SUB'
 	}
 	// [SubstrateNetworkKeys.MOONRIVER]: {
 	// 	color: '#0E132E',
