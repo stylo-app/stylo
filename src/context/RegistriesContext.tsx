@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { types as karTypesdef } from '@acala-network/type-definitions'
+import { subsocial } from '@subsocial/types/substrate/interfaces/definitions'
 import { SubstrateNetworkKeys } from 'constants/networkSpecs';
 import React, { useCallback, useContext, useState } from 'react';
 import { SubstrateNetworkParams } from 'types/networkTypes';
@@ -96,6 +97,10 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 			switch (networkKey) {
 			case SubstrateNetworkKeys.KARURA:
 				overrideTypes = karTypesdef
+				break;
+
+			case SubstrateNetworkKeys.SUBSOCIAL:
+				overrideTypes = subsocial.types
 				break;
 
 			case SubstrateNetworkKeys.SHIDEN:

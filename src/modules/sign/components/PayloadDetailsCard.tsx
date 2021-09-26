@@ -99,11 +99,13 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 
 				const formated: FormatedCall[] = []
 
+				const firstArg = call.args[0]
+
 				// that's a batch
-				if (call.args[0].toRawType().startsWith('Vec<Call>')){
+				if (firstArg?.toRawType().startsWith('Vec<Call>')){
 					formated.push({ args: undefined, method: sectionMethod });
 
-					(call.args[0] as unknown as Call[]).forEach((c: Call) => {
+					(firstArg as unknown as Call[]).forEach((c: Call) => {
 						typeRegistry.createType('Call', c)
 						formated.push({ args: formatArgs(c), method: `${c.section}.${c.method}` })
 					})
