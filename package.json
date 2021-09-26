@@ -37,11 +37,11 @@
     "release:aab": "(cd android && ./gradlew bundleRelease)"
   },
   "dependencies": {
-    "@acala-network/type-definitions": "^2.2.2-9",
-    "@polkadot/api": "^5.8.3",
-    "@polkadot/reactnative-identicon": "^0.85.2",
-    "@polkadot/util": "^7.3.1",
-    "@polkadot/util-crypto": "^7.3.1",
+    "@acala-network/type-definitions": "^2.3.1",
+    "@polkadot/api": "^6.0.5",
+    "@polkadot/reactnative-identicon": "^0.85.4",
+    "@polkadot/util": "^7.4.1",
+    "@polkadot/util-crypto": "^7.4.1",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/netinfo": "^6.0.1",
