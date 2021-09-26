@@ -16,7 +16,6 @@
 
 import React, { ReactElement, useContext } from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
 import { ButtonListener } from 'types/props';
@@ -33,13 +32,14 @@ interface AccountCardProps{
 	derivationPath?: string;
 	networkKey?: string;
 	isChild?: boolean;
+	isLastChild?: boolean;
 	onPress?: ButtonListener;
 	style?: ViewStyle;
 	title?: string;
 	titlePrefix?: string;
 };
 
-export default function AccountCard({ address, derivationPath, isChild, networkKey, onPress, style, title, titlePrefix }: AccountCardProps): ReactElement {
+export default function AccountCard({ address, derivationPath, isChild, isLastChild = false, networkKey, onPress, style, title, titlePrefix }: AccountCardProps): ReactElement {
 	const { getNetwork } = useContext(NetworksContext);
 	const { getAccountByAddress } = useContext(AccountsContext);
 
@@ -53,21 +53,19 @@ export default function AccountCard({ address, derivationPath, isChild, networkK
 			disabled={false}
 			onPress={onPress}
 		>
-			<View style={[styles.content, style, isChild ? styles.childContent : undefined]}>
+			<View style={[styles.content, style]}>
 				{isChild && (
-					<Icon
-						color={colors.text.white}
-						name="corner-down-right"
-						size={22}
-						style={styles.iconChildren}
-					/>
+					<View style={styles.wrapperChildArrow}>
+						<View style={styles.childArrowTop}/>
+						<View style={[styles.childArrowBottom, isLastChild ? styles.lastChild : undefined]}/>
+					</View>
 				)}
 
 				<AccountIcon
 					address={account?.address || address}
 					network={network}
 					style={styles.icon} />
-				<View style={[styles.desc ]}>
+				<View style={styles.desc}>
 					{!!derivation && (
 						<View>
 							<Text style={[fontStyles.t_regular, styles.derivationPath]}>
@@ -96,15 +94,23 @@ export default function AccountCard({ address, derivationPath, isChild, networkK
 }
 
 const styles = StyleSheet.create({
+	childArrowBottom: {
+		borderColor: colors.text.faded,
+		borderLeftWidth: 1,
+		flex: 1,
+		width: 20
+	},
+	childArrowTop: {
+		borderBottomWidth: 1,
+		borderColor: colors.text.faded,
+		borderLeftWidth: 1,
+		flex: 1,
+		width: 20
+	},
 	content: {
 		alignItems: 'center',
 		flexDirection: 'row',
-		marginTop: 8,
 		paddingLeft: 16
-	},
-	// eslint-disable-next-line sort-keys
-	childContent: {
-		marginLeft: 16
 	},
 	derivationPath: {
 		color: colors.text.faded
@@ -121,5 +127,15 @@ const styles = StyleSheet.create({
 	},
 	iconChildren: {
 		marginRight: 8
+	},
+	lastChild : {
+		borderLeftWidth: 0
+	},
+	wrapperChildArrow: {
+		alignItems: 'flex-end',
+		display: 'flex',
+		height: '100%',
+		marginRight: 16,
+		width: 45
 	}
 });

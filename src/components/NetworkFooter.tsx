@@ -57,6 +57,7 @@ export const NetworkFooter = ({ color, text }: Props): React.ReactElement => (
 const styles = StyleSheet.create({
 	footer: {
 		height: TEXT_LENGTH,
+		marginTop: 4,
 		width: TEXT_HEIGHT
 	},
 	text: {

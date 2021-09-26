@@ -153,7 +153,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		order: 3,
 		pathId: 'subsocial',
 		prefix: 28,
-		title: 'subsocial',
+		title: 'Subsocial',
 		unit: 'SUB'
 	}
 	// [SubstrateNetworkKeys.MOONRIVER]: {

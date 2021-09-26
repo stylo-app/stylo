@@ -72,10 +72,11 @@ function AccountList(): React.ReactElement {
 											style={{ paddingBottom: 0 }}
 											title={name}
 										/>
-										{children?.map(({ address, name, networkKey }) => (
+										{children?.map(({ address, name, networkKey }, index) => (
 											<AccountCard
 												address={address}
 												isChild={true}
+												isLastChild={children.length === index + 1}
 												key={`child-${address}`}
 												networkKey={networkKey}
 												onPress={(): Promise<void> => onAccountSelected(address)}
