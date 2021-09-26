@@ -16,7 +16,7 @@
 
 import type { Call, ExtrinsicEra } from '@polkadot/types/interfaces';
 
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
@@ -35,10 +35,20 @@ type ExtrinsicPartProps = {
 	value: AnyJson | AnyU8a | IMethod | IExtrinsicEra;
 };
 
+interface FormatedCall {
+	args?: ArgInfo[];
+	method: string;
+}
+
+interface ArgInfo {
+	argName: string;
+	argValue: string | string[];
+}
+
 const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.ReactElement => {
 	const [period, setPeriod] = useState<string>();
 	const [phase, setPhase] = useState<string>();
-	const [formattedCallArgs, setFormattedCallArgs] = useState<any>();
+	const [formattedCallArgs, setFormattedCallArgs] = useState<FormatedCall[]>();
 	const [tip, setTip] = useState<string>();
 	const [useFallback, setUseFallBack] = useState(false);
 	const { getTypeRegistry } = useContext(RegistriesContext);
@@ -48,59 +58,60 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 	const { color: networkColor } = network || {}
 	const typeRegistry = useMemo(() => getTypeRegistry(networkKey)!, [getTypeRegistry, networkKey]);
 
+	const formatArgs = useCallback((callInstance: Call): ArgInfo[] => {
+		const paramArgKvArray: ArgInfo[] = [];
+		const { args, meta } = callInstance;
+
+		for (let i = 0; i < meta.args.length; i++) {
+			let argument: string;
+
+			if (args[i].toRawType().startsWith('AccountId')) {
+				argument =  args[i].toString()
+			} else if (args[i].toRawType().startsWith('Vec<Call>')) {
+				argument = JSON.stringify(args[i].toHuman(false))
+			} else if (args[i].toRawType().startsWith('Vec')) {
+				// toString is nicer than toHuman here because
+				// toHuman tends to concatenate long strings and would hide data
+				argument = (args[i] as any).map((v: any) => v.toString());
+			} else {
+				// toHuman takes care of the balance formating
+				// with the right chain unit
+				argument = JSON.stringify(args[i].toHuman());
+			}
+
+			const argName = meta.args[i].name.toHuman();
+
+			paramArgKvArray.push({ argName, argValue: argument } as ArgInfo);
+		}
+
+		return paramArgKvArray
+	}, [])
+
 	useEffect(() => {
 		if (useFallback) {
 			return
 		}
 
 		if (label === 'Method') {
-
 			try {
 				const call = typeRegistry.createType('Call', value);
-				const methodArgs = {};
+				const sectionMethod = `${call.section}.${call.method}`;
 
-				function formatArgs(callInstance: Call, callMethodArgs: any, depth: number): void {
-					const { args, meta } = callInstance;
-					const paramArgKvArray = [];
+				const formated: FormatedCall[] = []
 
-					const sectionMethod = `${call.section}.${call.method}`;
+				// that's a batch
+				if (call.args[0].toRawType().startsWith('Vec<Call>')){
+					formated.push({ args: undefined, method: sectionMethod });
 
-					if (!meta.args.length) {
-
-						callMethodArgs[sectionMethod] = null;
-
-						return;
-					}
-
-					for (let i = 0; i < meta.args.length; i++) {
-						let argument;
-
-						if (args[i].toRawType().startsWith('Vec')) {
-							// toString is nicer than toHuman here because
-							// toHuman tends to concatenate long strings and would hide data
-							argument = (args[i] as any).map((v: any) => v.toString());
-						} else if (args[i].toRawType().startsWith('AccountId')) {
-							// toString is nicer than toHumand here because it removes
-							// an additionnal { "Id": ...
-							argument = args[i].toString()
-					 	} else if ((args[i] as Call).section) {
-							// go deeper into the nested calls
-							argument = formatArgs(args[i] as Call, callMethodArgs, depth++);
-						} else {
-							// toHuman takes care of the balance formating
-							// with the right chain unit
-							argument = JSON.stringify(args[i].toHuman());
-						}
-
-						const param = meta.args[i].name.toHuman();
-
-						paramArgKvArray.push([param, argument]);
-						callMethodArgs[sectionMethod] = paramArgKvArray;
-					}
+					(call.args[0] as unknown as Call[]).forEach((c: Call) => {
+						typeRegistry.createType('Call', c)
+						formated.push({ args: formatArgs(c), method: `${c.section}.${c.method}` })
+					})
+				} else {
+					formated.push({ args: formatArgs(call as unknown as Call), method: sectionMethod })
 				}
 
-				formatArgs(call, methodArgs, 0);
-				setFormattedCallArgs(methodArgs);
+				setFormattedCallArgs(formated);
 			} catch (e) {
 				console.error(e)
 				alertDecodeError(setAlert, (e as Error).message);
@@ -118,7 +129,7 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 		if (label === 'Tip') {
 			setTip(formatBalance(value as any));
 		}
-	}, [label, setAlert, typeRegistry, useFallback, value]);
+	}, [formatArgs, label, setAlert, typeRegistry, useFallback, value]);
 
 	const renderEraDetails = (): React.ReactElement => {
 		if (period && phase) {
@@ -152,30 +163,28 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 		}
 	};
 
-	type ArgsList = Array<[string, any]>;
-	type MethodCall = [string, ArgsList];
-	type FormattedArgs = Array<MethodCall>;
-
 	const renderMethodDetails = (): React.ReactNode => {
 		if (formattedCallArgs) {
-			const formattedArgs: FormattedArgs = Object.entries(formattedCallArgs);
+			// const formattedCall = Object.entries(formattedCallArgs);
 
 			// HACK: if there's a sudo method just put it to the front.
 			// A better way would be to order by depth but currently this is
 			// only relevant for a single extrinsic, so seems like overkill.
-			for (let i = 1; i < formattedArgs.length; i++) {
-				if (formattedArgs[i][0].includes('sudo')) {
-					const tmp = formattedArgs[i];
+			// for (let i = 1; i < formattedCallArgs.length; i++) {
+			// 	const argument = formattedCall[i].
 
-					formattedArgs.splice(i, 1);
-					formattedArgs.unshift(tmp);
-					break;
-				}
-			}
+			// 	if (argument.includes('sudo')) {
+			// 		const tmp = formattedCall[i];
 
-			return formattedArgs.map((entry, index) => {
-				const sectionMethod = entry[0];
-				const paramArgs: Array<[any, any]> = entry[1];
+			// 		formattedCall.splice(i, 1);
+			// 		formattedCall.unshift(tmp);
+			// 		break;
+			// 	}
+			// }
+
+			return formattedCallArgs.map(({ args, method }, index) => {
+				// const sectionMethod = entry[0];
+				// const argList = entry[1];
 
 				return (
 					<View
@@ -183,27 +192,27 @@ const ExtrinsicPart = ({ label, networkKey, value }: ExtrinsicPartProps): React.
 						style={styles.callDetails}
 					>
 						<Text style={styles.secondaryText}>
-							Call <Text style={styles.titleText}>{sectionMethod}</Text> with
-							the following arguments:
+							Call <Text style={styles.titleText}>{method}{'  '}</Text>
+							{args && !!args.length && (
+								<Text>
+									with the following arguments:
+								</Text>
+							)}
 						</Text>
-						{paramArgs ? (
-							paramArgs.map(([param, arg]) => (
+						{args && !!args.length && (
+							args.map(({ argName, argValue }, index) => (
 								<View
-									key={param}
-									style={styles.callDetails}
+									key={index}
+									style={styles.callArguments}
 								>
 									<Text style={styles.titleText}>
-										{param}:{' '}
-										{arg && arg instanceof Array
-											? arg.join(', ')
-											: arg}{' '}
+										{argName}:{' '}
+										{argValue && argValue instanceof Array
+											? argValue.join(', ')
+											: argValue}{' '}
 									</Text>
 								</View>
 							))
-						) : (
-							<Text style={styles.secondaryText}>
-								This method takes no argument.
-							</Text>
 						)}
 					</View>
 				);
@@ -299,6 +308,9 @@ const PayloadDetailsCard = ({ description, networkKey, payload, signature, style
 const styles = StyleSheet.create({
 	body: {
 		marginTop: 8
+	},
+	callArguments: {
+		marginLeft: 16
 	},
 	callDetails: {
 		marginBottom: 4
