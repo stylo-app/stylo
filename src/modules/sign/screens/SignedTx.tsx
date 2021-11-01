@@ -19,8 +19,8 @@ import { Loader } from 'components/Loader';
 import QrView from 'components/QrView';
 import { SafeAreaScrollViewContainer } from 'components/SafeAreaContainer';
 import Separator from 'components/Separator';
+import EthTxDetailsCard from 'modules/sign/components/EthTxDetailsCard';
 import PayloadDetailsCard from 'modules/sign/components/PayloadDetailsCard';
-import TxDetailsCard from 'modules/sign/components/TxDetailsCard';
 import { usePayloadDetails } from 'modules/sign/hooks';
 import strings from 'modules/sign/strings';
 import styles from 'modules/sign/styles';
@@ -73,7 +73,7 @@ const SignedTxView = ({ recipientAddress, senderAddress }: Props): React.ReactEl
 		if (isEthereum) {
 			return (
 				<View style={{ marginTop: 16 }}>
-					<TxDetailsCard
+					<EthTxDetailsCard
 						description={strings.INFO_ETH_TX}
 						gas={gas}
 						gasPrice={gasPrice}

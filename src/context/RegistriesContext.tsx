@@ -84,6 +84,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 	const { getNetwork } = useContext(NetworksContext);
 
 	const getTypeRegistry = useCallback((networkKey: string): TypeRegistry | null => {
+
 		try {
 			const network = getNetwork(networkKey) as SubstrateNetworkParams;
 			const networkMetadataRaw: string = (metadataJson as Record<string, any>)[network.metadataKey].hex;
@@ -112,9 +113,12 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 			}
 
 			overrideTypes && newRegistry.register(overrideTypes);
+
+			// this is the slow/blocking one
 			const metadata = new Metadata(newRegistry, networkMetadataRaw);
 
 			newRegistry.setMetadata(metadata);
+
 			// this takes care of decoding the addresses etc with the right prefix
 			newRegistry.setChainProperties(newRegistry.createType('ChainProperties', {
 				ss58Format: network.prefix,
@@ -127,7 +131,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 			setRegistries(newRegistries);
 
 			return newRegistry;
-		} catch (e) {
+		} catch (e: any) {
 			console.error('oops', e);
 
 			return null;
