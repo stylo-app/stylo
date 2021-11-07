@@ -1,8 +1,6 @@
 # Stylo tutorial with Polkadot-js apps
 
-This tutorial will walk you through setting up a Kusama account with the Stylo Android or iOS App and then use this account together with [Polkadot-js apps](https://polkadot.js.org/apps/) to see your balance and transfer funds or perform any extrinsic from this account.
-
-* Notice: The UI maybe variant for different versions, but the functionalities are the same in v4 version.
+This tutorial will walk you through setting up a Kusama account with the Stylo Android and then use this account together with [Polkadot-js apps](https://polkadot.js.org/apps/) to see your balance and transfer funds or perform any extrinsic from this account.
 
 ## Summary
 - [1. Get Stylo mobile application](#1-get-stylo-mobile-application)

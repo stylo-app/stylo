@@ -1,9 +1,6 @@
 # Stylo tutorial with MyCrypto
 
-This tutorial will walk through setting up an account with Stylo Android or iOs App and sign a transaction using [MyCrypto Desktop App](https://download.mycrypto.com/) to transfer Ether from one account to another.
-
-* Notice: The UI maybe variant for different versions, but the functionalities are the same in v4 version.
-
+This tutorial will walk through setting up an account with Stylo Android app and sign a transaction using [MyCrypto Desktop App](https://download.mycrypto.com/) to transfer Ether from one account to another.
 
 ## Summary
 - [1. Get Stylo mobile application](#1-get-stylo-mobile-application)

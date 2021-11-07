@@ -12,7 +12,7 @@ Stylo is built to be used offline. The mobile device used to run the app will ho
 ## How to get it and use it?
 
 ### Install the app
-The app is available in beta for Android and iOs :
+The app is available in beta for Android :
 - Android: From the [Github releases page](https://github.com/stylo-app/stylo/releases) or [Android play store](https://play.google.com/store/apps/details?id=com.styloapp)
 
 Please double check carefully the origin of the app, and make sure that the company distributing it is **Stylo app**. Usual security advice apply to this air-gapped wallet: 
