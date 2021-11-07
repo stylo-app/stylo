@@ -1,8 +1,6 @@
 # Stylo tutorial with Polkadot-js apps
 
-This tutorial will walk you through setting up a Kusama account with the Stylo Android or iOS App and then use this account together with [Polkadot-js apps](https://polkadot.js.org/apps/) to see your balance and transfer funds or perform any extrinsic from this account.
-
-* Notice: The UI maybe variant for different versions, but the functionalities are the same in v4 version.
+This tutorial will walk you through setting up a Kusama account with the Stylo Android and then use this account together with [Polkadot-js apps](https://polkadot.js.org/apps/) to see your balance and transfer funds or perform any extrinsic from this account.
 
 ## Summary
 - [1. Get Stylo mobile application](#1-get-stylo-mobile-application)
@@ -16,12 +14,14 @@ This tutorial will walk you through setting up a Kusama account with the Stylo A
 ## 1. Get Stylo mobile application
 
 ### Device security
-Stylo is meant to be used offline. The mobile device used to run Stylo will hold valuable information that needs to be kept securely stored. It is therefore advised to:
-- Get a Stylo dedicated mobile device.
-- Make a factory reset.
+Stylo is meant to be used offline. The mobile device used to run Stylo will hold valuable information that needs to be kept securely stored, offline. It is therefore advised to:
+- Get a dedicated mobile device, don't use your day to day phone.
+- Factory reset the phone.
 - Enable full-disk encryption on the device, with a reasonable password (might not be on by default, for example for older Android devices).
 - Do not use any biometrics such as fingerprint or face recognition for device decryption/unlocking, as those may be less secure than regular passwords.
-- Once Stylo has been installed, enable airplane mode and make sure to switch off Wifi, Bluetooth or any connection ability of the device.
+- The device should idealy never be connected to the internet. Don't use any sim card or ever connect it to a wifi/bluetooth
+- Download the apk from [Github releases page](https://github.com/stylo-app/stylo/releases)
+- Install Stylo using a micro-sd card.
 - Only charge the phone using a power outlet that is never connected to the internet. Only charge the phone with the manufacturer's charging adapter. Do not charge the phone on public USB chargers.
 
 
@@ -33,11 +33,13 @@ Install Stylo making sure that it originated from **Stylo app**
 
 
 ## 2. Setup or recover an account
-When launching the app for the first time, no account is created. At this stage, you will either want to create an account directly from your mobile device or recover an account previously created.
+When launching the app for the first time, no account is created. At this stage, you will either want to create an account or recover an account previously created.
  
 ### Create an account
  
-Tap on the `+` button, and follow along.
+Tap on the `+` button, and follow along by choosing a name, the network (e.g Kusama) and an icon.
+
+
 
 In the next step, your secret phrase will be presented to you. Think of it as a master key. If you lose it, you lose your access to your money.
 **Write this secret phrase down and store it in a safe place**.

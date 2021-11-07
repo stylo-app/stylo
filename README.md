@@ -40,7 +40,8 @@ Stylo aims at creating a pleasing user experience for account creation and recov
 
 ### Tutorials
 
-- [Signing with Pokadot.js apps or extension](./docs/tutorials/Kusama-tutorial.md)
+- [Link Stylo and the Polkadot.js extension](./docs/tutorials/Crowdloan-tutorial.md)
+- [Signing with Pokadot.js apps](./docs/tutorials/Kusama-tutorial.md)
 - [Recover Account from Polkadot.js Apps](./docs/tutorials/Recover-Account-Polkadotjs.md)
 - [Signing an Ethereum tx with MyCrypto](./docs/tutorials/MyCrypto-tutorial.md)
 <!-- - [Update New Network](./docs/tutorials/New-Network.md)-->
