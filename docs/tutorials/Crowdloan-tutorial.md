@@ -64,7 +64,7 @@ Polkadot-js extension allows you to see your Stylo account on your computer. The
 - Once it's installed, you'll need to allow access to your camera. To do so, click on the settings button, and check the "allow camera" checkbox
 - You may need to open the extension in a new window to see the browser popup requesting your camera permission
 - Once this is done, you can attach an external account via QR code.
-- On Stylo, choose on the account you want to attach and show its QR code to your computer camera. Make sure the QR code is fully displayed on your mobile's screen.
+- On Stylo, choose the account you want to attach and show its QR code to your computer camera. Make sure the QR code is fully displayed on your mobile's screen.
 - You can now name this account on Polkadot-js extension and add it.
 
 ![Linking steps](./images/crowdloans/extension.png)
@@ -78,7 +78,7 @@ Assuming that your Stylo account now has funds, you will be able to participate 
 - Tap your pin and be patient for Stylo to decode and sign the transaction, this may take up to a minute the first time.
 - Review the transaction methods and the amount to send on your phone. The amount and addresses must match what you've entered in the app. If someone tries to hack you, this is where you can realize it and reject the transaction.
 
-Your phone has now *signed the transaction offline* using your Stylo account private key. If you scroll down, the QR code that is now displayed on your phone represents a signed transaction that can be broadcasted. We will do this in the next steps:
+Your phone has now *signed the transaction offline* using your Stylo account private key. If you scroll down, the QR code that is now displayed on your phone represents a signed transaction that can be sent to the blockchain. We will do this in the next steps:
 - On Polkadot-js extension, click on `Scan Signature QR`, this will turn on your computer camera.
 - Face your phone's display to your webcam for the extension to be able to read the signed transaction.
 - Your transaction is sent automatically.
