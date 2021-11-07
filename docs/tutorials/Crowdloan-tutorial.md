@@ -83,3 +83,5 @@ Your phone has now *signed the transaction offline* using your Stylo account pri
 - Face your phone's display to your webcam for the extension to be able to read the signed transaction.
 - Your transaction is sent automatically.
 - Congrats you just signed a transaction from an air-gapped account :)
+
+![Signing steps](./images/crowdloans/signing.png)
