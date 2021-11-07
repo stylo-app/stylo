@@ -30,11 +30,11 @@ Any data transfer from or to the app happens using QR code. By doing so, the mos
 
 Stylo aims at creating a pleasing user experience for account creation and recovery. An account you create on Stylo can be recovered directly on Subkey or Polkadot.js/apps wihtout having to deal with account derivation. While the critical parts (key management and signing) are similar to what Parity Signer has as of v4.5.3, a significant part of the code base has been re-written to ease the maintainance.
 
-### What Stylo brings:
-- Unless you are an advanced user, you will not have to deal with "derivation paths"
+### What Stylo brings compared to Signer:
+- It is user friendly. E.g unless you are an advanced user, you will not have to deal with "derivation paths"
 - Review what you are signing. This feature used to be part of Parity Signer but was removed starting with v4.2
 - Choose your account based on the identicon
-- Arbitrary message signing
+- Arbitrary message signing (allows participatin in crowdloans for network requiring you to sign terms and conditions)
 
 ## Getting Start
 
@@ -42,8 +42,7 @@ Stylo aims at creating a pleasing user experience for account creation and recov
 
 - [Signing with Pokadot.js apps or extension](./docs/tutorials/Kusama-tutorial.md)
 - [Recover Account from Polkadot.js Apps](./docs/tutorials/Recover-Account-Polkadotjs.md)
-- [Manage Accounts on Stylo](./docs/tutorials/Hierarchical-Deterministic-Key-Derivation.md)
-- [Signing with MyCrypto](./docs/tutorials/MyCrypto-tutorial.md)
+- [Signing an Ethereum tx with MyCrypto](./docs/tutorials/MyCrypto-tutorial.md)
 <!-- - [Update New Network](./docs/tutorials/New-Network.md)-->
 
 ### Wiki
