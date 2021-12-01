@@ -143,7 +143,6 @@ export default function AccountSeed({ onChangeText, valid, ...props }: Props): R
 			{value.length > 0 && !valid && renderSuggestions()}
 			<TextInput
 				autoCapitalize="none"
-				autoCompleteType="off"
 				autoCorrect={false}
 				blurOnSubmit={true}
 				multiline

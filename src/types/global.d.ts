@@ -14,9 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-/* eslint-disable no-unused-vars */
-import { ScanTestRequest } from 'e2e/mockScanRequests';
-
 export {};
 
 /*~ If the app has properties exposed on a global variable,
@@ -24,12 +21,6 @@ export {};
  *~ You should also place types (interfaces and type alias) here.
  */
 declare global {
-    namespace NodeJS {
-        interface Global {
-            inTest: boolean;
-            scanRequest?: ScanTestRequest;
-        }
-    }
     // declare webpack modules
     declare module '*.png'
 }

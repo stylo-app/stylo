@@ -21,7 +21,7 @@ jobs:
       - name:           Install NodeJS
         uses:           actions/setup-node@v1
         with:
-          node-version: '13.x'
+          node-version: '14.x'
       - name:           Cache Npm
         uses:           actions/cache@v1
         with:
@@ -46,7 +46,5 @@ jobs:
            yarn
       - name:           Lint
         run:            yarn lint
-      - name:           Unit Test
-        run:            yarn unit
       - name:           Type checking
         run:            yarn tsc

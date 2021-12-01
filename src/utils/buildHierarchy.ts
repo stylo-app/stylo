@@ -6,7 +6,7 @@ import { ETHEREUM_NETWORK_LIST, NetworkProtocols } from 'constants/networkSpecs'
 import { AccountType } from 'types/accountTypes';
 import { NetworkParams } from 'types/networkTypes';
 
-import { decodeAddress } from '@polkadot/keyring';
+import { decodeAddress } from '@polkadot/util-crypto';
 
 export type AccountWithChildren = AccountType & {
     children?: AccountWithChildren[];
