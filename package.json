@@ -38,10 +38,10 @@
   },
   "dependencies": {
     "@acala-network/type-definitions": "^3.0.2",
-    "@polkadot/api": "^6.6.1",
-    "@polkadot/reactnative-identicon": "^0.86.3",
-    "@polkadot/util": "^7.7.1",
-    "@polkadot/util-crypto": "^7.7.1",
+    "@polkadot/api": "^6.10.3",
+    "@polkadot/reactnative-identicon": "^0.87.3",
+    "@polkadot/util": "8.0.6-7",
+    "@polkadot/util-crypto": "8.0.6-7",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/netinfo": "^6.0.4",
@@ -112,5 +112,9 @@
     "projects": [
       "test/unit/jest.config.js"
     ]
+  },
+  "resolutions": {
+    "@polkadot/util": "8.0.6-7",
+    "@polkadot/util-crypto": "8.0.6-7"
   }
 }
