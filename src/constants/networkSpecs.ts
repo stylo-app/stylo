@@ -29,9 +29,8 @@ export const EthereumNetworkKeys: Record<string, string> = Object.freeze({
 	GOERLI: '5'
 });
 
-/* eslint-enable sort-keys */
-
 // genesisHash is used as Network key for Substrate networks
+/* eslint-enable sort-keys */
 export const SubstrateNetworkKeys = Object.freeze({
 	POLKADOT: '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3',
 	// eslint-disable-next-line sort-keys
@@ -44,7 +43,11 @@ export const SubstrateNetworkKeys = Object.freeze({
 	SHIDEN: '0xf1cf9022c7ebb34b162d5b5e34e705a5a740b2d0ecc1009fb89023e62a488108',
 	STATEMINE: '0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a',
 	SUBSOCIAL: '0x0bd72c1c305172e1275278aaeb3f161e02eccb7a819e63f62d47bd53a28189f8',
-	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e'
+	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e',
+	// eslint-disable-next-line sort-keys
+	BIFROST: '0x9f28c6a68e0fc9646eff64935684f6eeeece527e37bbe1f213d22caa1d9d6bed',
+	CALAMARI: '0x4ac80c99289841dd946ef92765bf659a307d39189b3ce374a92b5f0415ee17a1',
+	KILT: '0x411f057b9107718c9624d6aa4a3f23c1653898297f3d4d529d9bb6511a39dd21'
 });
 
 const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
@@ -155,6 +158,42 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 28,
 		title: 'Subsocial',
 		unit: 'SUB'
+	},
+	[SubstrateNetworkKeys.BIFROST]: {
+		color: '#5a25f0',
+		decimals: 12,
+		genesisHash: SubstrateNetworkKeys.BIFROST,
+		logo: require('res/img/logos/Bifrost.png'),
+		metadataKey: 'bifrostMetadata',
+		order: 3,
+		pathId: 'bifrost',
+		prefix: 42,
+		title: 'Bifrost',
+		unit: 'BNC'
+	},
+	[SubstrateNetworkKeys.CALAMARI]: {
+		color: '#000000',
+		decimals: 12,
+		genesisHash: SubstrateNetworkKeys.BIFROST,
+		logo: require('res/img/logos/Calamari.png'),
+		metadataKey: 'calamariMetadata',
+		order: 3,
+		pathId: 'calamari',
+		prefix: 42,
+		title: 'Calamari',
+		unit: 'KMA'
+	},
+	[SubstrateNetworkKeys.KILT]: {
+		color: '#8c145a',
+		decimals: 15,
+		genesisHash: SubstrateNetworkKeys.KILT,
+		logo: require('res/img/logos/Kilt.png'),
+		metadataKey: 'kiltMetadata',
+		order: 3,
+		pathId: 'kilt',
+		prefix: 38,
+		title: 'Kilt',
+		unit: 'KILT'
 	}
 	// [SubstrateNetworkKeys.MOONRIVER]: {
 	// 	color: '#0E132E',
