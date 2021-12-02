@@ -1,4 +1,4 @@
-name:                   Lint & Unit Test
+name:                   Lint & TSC
 
 on:
   pull_request:
