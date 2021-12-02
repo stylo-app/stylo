@@ -1,0 +1,13 @@
+[toolchain]
+channel = "1.41.1"
+targets = [
+  "x86_64-apple-ios",
+  "armv7-apple-ios",
+  "armv7s-apple-ios",
+  "aarch64-apple-ios",
+  "aarch64-linux-android",
+  "armv7-linux-androideabi",
+  "i686-linux-android",
+  "x86_64-linux-android",
+]
+profile = "minimal"
