@@ -47,6 +47,7 @@ export const SubstrateNetworkKeys = Object.freeze({
 	// eslint-disable-next-line sort-keys
 	BIFROST: '0x9f28c6a68e0fc9646eff64935684f6eeeece527e37bbe1f213d22caa1d9d6bed',
 	CALAMARI: '0x4ac80c99289841dd946ef92765bf659a307d39189b3ce374a92b5f0415ee17a1',
+	KHALA: '0xd43540ba6d3eb4897c28a77d48cb5b729fea37603cbbfc7a86a73b72adb3be8d',
 	KILT: '0x411f057b9107718c9624d6aa4a3f23c1653898297f3d4d529d9bb6511a39dd21'
 });
 
@@ -194,6 +195,18 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 38,
 		title: 'Kilt',
 		unit: 'KILT'
+	},
+	[SubstrateNetworkKeys.KHALA]: {
+		color: '#03f3f3',
+		decimals: 12,
+		genesisHash: SubstrateNetworkKeys.KHALA,
+		logo: require('res/img/logos/Khala.png'),
+		metadataKey: 'khalaMetadata',
+		order: 3,
+		pathId: 'khala',
+		prefix: 30,
+		title: 'Khala',
+		unit: 'PHA'
 	}
 	// [SubstrateNetworkKeys.MOONRIVER]: {
 	// 	color: '#0E132E',
