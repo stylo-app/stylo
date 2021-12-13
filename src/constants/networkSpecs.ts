@@ -37,7 +37,6 @@ export const SubstrateNetworkKeys = Object.freeze({
 	KUSAMA: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe', // https://polkascan.io/pre/kusama-cc3/block/0
 	// eslint-disable-next-line sort-keys
 	KARURA: '0xbaf5aabe40646d11f0ee8abbdc64f4a4b7674925cba08e4a05ff9ebed6e2126b',
-	// CENTRIFUGE: '0x67dddf2673b69e5f875f6f25277495834398eafd67f492e09f3f3345e003d1b5', // https://portal.chain.centrifuge.io/#/explorer/query/0
 	// MOONRIVER: '0x401a1f9dca3da46f5c4091016c8a2f26dcea05865116b286f60f668207d1474b',
 	// ROCOCO: '0x1611e1dbf0405379b861e2e27daa90f480b2e6d3682414a80835a52e8cb8a215',
 	SHIDEN: '0xf1cf9022c7ebb34b162d5b5e34e705a5a740b2d0ecc1009fb89023e62a488108',
@@ -45,10 +44,14 @@ export const SubstrateNetworkKeys = Object.freeze({
 	SUBSOCIAL: '0x0bd72c1c305172e1275278aaeb3f161e02eccb7a819e63f62d47bd53a28189f8',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e',
 	// eslint-disable-next-line sort-keys
+	ALTAIR: '0xaa3876c1dc8a1afcc2e9a685a49ff7704cfd36ad8c90bf2702b9d1b00cc40011',
+	BASILISK: '0xa85cfb9b9fd4d622a5b28289a02347af987d8f73fa3108450e2b4a11c1ce5755',
 	BIFROST: '0x9f28c6a68e0fc9646eff64935684f6eeeece527e37bbe1f213d22caa1d9d6bed',
 	CALAMARI: '0x4ac80c99289841dd946ef92765bf659a307d39189b3ce374a92b5f0415ee17a1',
 	KHALA: '0xd43540ba6d3eb4897c28a77d48cb5b729fea37603cbbfc7a86a73b72adb3be8d',
 	KILT: '0x411f057b9107718c9624d6aa4a3f23c1653898297f3d4d529d9bb6511a39dd21'
+	// ,
+	// ZEITGEIST: ''
 });
 
 const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
@@ -76,18 +79,18 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		title: 'Kusama',
 		unit: 'KSM'
 	},
-	// [SubstrateNetworkKeys.CENTRIFUGE]: {
-	// 	color: '#FCC367',
-	// 	decimals: 18,
-	// 	genesisHash: SubstrateNetworkKeys.CENTRIFUGE,
-	// 	logo: require('res/img/logos/Centrifuge.png'),
-	// 	metadataKey: 'centrifugeMetadata',
-	// 	order: 7,
-	// 	pathId: 'centrifuge',
-	// 	prefix: 36,
-	// 	title: 'Centrifuge Mainnet',
-	// 	unit: 'RAD'
-	// },
+	[SubstrateNetworkKeys.ALTAIR]: {
+		color: '#ffb700',
+		decimals: 18,
+		genesisHash: SubstrateNetworkKeys.ALTAIR,
+		logo: require('res/img/logos/Centrifuge.png'),
+		metadataKey: 'altairMetadata',
+		order: 3,
+		pathId: 'altair',
+		prefix: 136,
+		title: 'Altair',
+		unit: 'AIR'
+	},
 	// [SubstrateNetworkKeys.ROCOCO]: {
 	// 	color: '#6f36dc',
 	// 	decimals: 12,
@@ -207,7 +210,32 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 30,
 		title: 'Khala',
 		unit: 'PHA'
+	},
+	[SubstrateNetworkKeys.BASILISK]: {
+		color: '#9eec1b',
+		decimals: 12,
+		genesisHash: SubstrateNetworkKeys.BASILISK,
+		logo: require('res/img/logos/Basilisk.png'),
+		metadataKey: 'basiliskMetadata',
+		order: 3,
+		pathId: 'basilisk',
+		prefix: 10041,
+		title: 'Basilisk',
+		unit: 'BSX'
 	}
+	// ,
+	// [SubstrateNetworkKeys.ZEITGEIST]: {
+	// 	color: '#000000',
+	// 	decimals: 12,
+	// 	genesisHash: SubstrateNetworkKeys.ZEITGEIST,
+	// 	logo: require('res/img/logos/Zeitgeist.png'),
+	// 	metadataKey: 'zeitgeistMetadata',
+	// 	order: 3,
+	// 	pathId: 'zeitgeist',
+	// 	prefix: 0,
+	// 	title: 'Zeitgeist',
+	// 	unit: 'ZTG'
+	// }
 	// [SubstrateNetworkKeys.MOONRIVER]: {
 	// 	color: '#0E132E',
 	// 	decimals: 18,
