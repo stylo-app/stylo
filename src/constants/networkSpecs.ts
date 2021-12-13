@@ -83,7 +83,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		color: '#ffb700',
 		decimals: 18,
 		genesisHash: SubstrateNetworkKeys.ALTAIR,
-		logo: require('res/img/logos/Centrifuge.png'),
+		logo: require('res/img/logos/Altair.png'),
 		metadataKey: 'altairMetadata',
 		order: 3,
 		pathId: 'altair',
