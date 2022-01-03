@@ -44,13 +44,14 @@ export const SubstrateNetworkKeys = Object.freeze({
 	SUBSOCIAL: '0x0bd72c1c305172e1275278aaeb3f161e02eccb7a819e63f62d47bd53a28189f8',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e',
 	// eslint-disable-next-line sort-keys
+	ACALA: '0xfc41b9bd8ef8fe53d58c7ea67c794c7ec9a73daf05e6d54b14ff6342c99ba64c',
 	ALTAIR: '0xaa3876c1dc8a1afcc2e9a685a49ff7704cfd36ad8c90bf2702b9d1b00cc40011',
 	BASILISK: '0xa85cfb9b9fd4d622a5b28289a02347af987d8f73fa3108450e2b4a11c1ce5755',
 	BIFROST: '0x9f28c6a68e0fc9646eff64935684f6eeeece527e37bbe1f213d22caa1d9d6bed',
 	CALAMARI: '0x4ac80c99289841dd946ef92765bf659a307d39189b3ce374a92b5f0415ee17a1',
 	KHALA: '0xd43540ba6d3eb4897c28a77d48cb5b729fea37603cbbfc7a86a73b72adb3be8d',
-	KILT: '0x411f057b9107718c9624d6aa4a3f23c1653898297f3d4d529d9bb6511a39dd21'
-	// ,
+	KILT: '0x411f057b9107718c9624d6aa4a3f23c1653898297f3d4d529d9bb6511a39dd21',
+	PARALLELPOLKADOT: '0xe61a41c53f5dcd0beb09df93b34402aada44cb05117b71059cce40a2723a4e97'
 	// ZEITGEIST: ''
 });
 
@@ -90,6 +91,30 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 136,
 		title: 'Altair',
 		unit: 'AIR'
+	},
+	[SubstrateNetworkKeys.ACALA]: {
+		color: '#645AFF',
+		decimals: 12,
+		genesisHash: SubstrateNetworkKeys.ACALA,
+		logo: require('res/img/logos/Acala.png'),
+		metadataKey: 'acalaMetadata',
+		order: 3,
+		pathId: 'acala',
+		prefix: 10,
+		title: 'Acala',
+		unit: 'ACA'
+	},
+	[SubstrateNetworkKeys.PARALLELPOLKADOT]: {
+		color: '#ef18ac',
+		decimals: 12,
+		genesisHash: SubstrateNetworkKeys.PARALLELPOLKADOT,
+		logo: require('res/img/logos/ParallelPolkadot.png'),
+		metadataKey: 'parallelPolkadotMetadata',
+		order: 3,
+		pathId: 'parallelpolkadot',
+		prefix: 172,
+		title: 'Parallel (P)',
+		unit: 'PARA'
 	},
 	// [SubstrateNetworkKeys.ROCOCO]: {
 	// 	color: '#6f36dc',
