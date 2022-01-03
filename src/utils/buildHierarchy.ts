@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Modifications Copyright (c) 2021-2022 Thibaut Sardan
 
-import { ETHEREUM_NETWORK_LIST, NetworkProtocols } from 'constants/networkSpecs';
+import { ETHEREUM_NETWORK_LIST, NetworkProtocols, SUBSTRATE_NETWORK_LIST } from 'constants/networkSpecs';
 import { AccountType } from 'types/accountTypes';
 import { NetworkParams } from 'types/networkTypes';
 
@@ -25,34 +25,28 @@ function compareByName (a: AccountType, b: AccountType): number {
 	return nameA.localeCompare(nameB);
 }
 
-function compareByPath (a: AccountType, b: AccountType): number {
-	const suriA = a.derivationPath?.toUpperCase() || '';
-	const suriB = b.derivationPath?.toUpperCase() || '';
+// function compareByPath (a: AccountType, b: AccountType): number {
+// 	const suriA = a.derivationPath?.toUpperCase() || '';
+// 	const suriB = b.derivationPath?.toUpperCase() || '';
 
-	return suriA.localeCompare(suriB);
-}
+// 	return suriA.localeCompare(suriB);
+// }
 
 function compareByNetwork (a: AccountType, b: AccountType): number {
-	const networkA = a?.networkKey || '';
-	const networkB = b?.networkKey || '';
+	const networkA = SUBSTRATE_NETWORK_LIST[a?.networkKey].title || '';
+	const networkB = SUBSTRATE_NETWORK_LIST[b?.networkKey].title || '';
 
 	return networkA.localeCompare(networkB);
 }
 
-function compareByPathThenCreation (a: AccountType, b: AccountType): number {
-	// if the paths are equal, compare by creation time
-	return compareByPath(a, b) || compareByCreation(a, b);
+function compareByNameThenCreation (a: AccountType, b: AccountType): number {
+	// if the names are equal, compare by creation time
+	return compareByName(a,b) ||  compareByCreation(a, b);
 }
 
-function compareByNameThenPathThenCreation (a: AccountType, b: AccountType): number {
-	// This comparison happens after an initial sorting by network.
-	// if the 2 accounts are from different networks, don't touch their order
-	if (a.networkKey !== b.networkKey) {
-		return 0;
-	}
-
-	// if the names are equal, compare by path then creation time
-	return compareByName(a, b) || compareByPathThenCreation(a, b);
+function compareByNetworkNameCreation (a: AccountType, b: AccountType): number {
+	// if the networks are equal, compare by name then creation time
+	return compareByNetwork(a, b) || compareByNameThenCreation(a, b);
 }
 
 export function accountWithChildren (accounts: AccountType[]): ChildFilter {
@@ -64,13 +58,13 @@ export function accountWithChildren (accounts: AccountType[]): ChildFilter {
 				try {
 					isParent = decodeAddress(account.address).toString() === parent
 				} catch(e){
-					console.error('Error while decodeing the parent address - 2', e)
+					console.error('Error while decoding the parent address - 2', e)
 				}
 
 				return isParent
 			})
 			.map(accountWithChildren(accounts))
-			.sort(compareByNameThenPathThenCreation);
+			.sort(compareByNetworkNameCreation);
 
 		const res = children.length === 0
 			? account
@@ -85,14 +79,16 @@ const isEthereum = (networkKey: string) => ethereumNetworks.get(networkKey)?.pro
 
 export function buildHierarchy (accounts: AccountType[]): AccountWithChildren[] {
 	const substrateAccounts = accounts.filter(({ networkKey }) => !isEthereum(networkKey))
+	const ethereumAccounts = accounts.filter(({ networkKey }) => isEthereum(networkKey))
 
-	return substrateAccounts.filter(({ parent }) =>
-		// it is a parent
-		!parent ||
-      // we don't have a parent for this one
-      !substrateAccounts.some(({ address }) => parent === decodeAddress(address).toString()))
+	return substrateAccounts.filter(({ parent }) => {
+		const parentExistsInList = substrateAccounts.some(({ address }) => parent === decodeAddress(address).toString())
+
+		// it is not a child account (it has no parent) or it's a child that we don't have the parent address for (it'll be displayed as a parent)
+		return !parent || !parentExistsInList
+	})
 		.map(accountWithChildren(accounts))
 		.sort(compareByNetwork)
-		.sort(compareByNameThenPathThenCreation)
-		.concat(...accounts.filter(({ networkKey }) => isEthereum(networkKey)));
+		.sort(compareByNetworkNameCreation)
+		.concat(ethereumAccounts);
 }
