@@ -1,6 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// Modifications Copyright (c) 2021 Thibaut Sardan
+// Modifications Copyright (c) 2021-2022 Thibaut Sardan
 
 import { ETHEREUM_NETWORK_LIST, NetworkProtocols } from 'constants/networkSpecs';
 import { AccountType } from 'types/accountTypes';
