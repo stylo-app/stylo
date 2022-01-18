@@ -87,7 +87,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 
 		try {
 			const network = getNetwork(networkKey) as SubstrateNetworkParams;
-			const networkMetadataRaw: string = (metadataJson as Record<string, any>)[network.metadataKey].hex;
+			const networkMetadataRaw: `0x${string}` = (metadataJson as Record<string, any>)[network.metadataKey].hex;
 
 			if (!networkMetadataRaw) return null;
 			if (registries.has(networkKey)) return registries.get(networkKey)!;
