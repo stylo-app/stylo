@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import type { ChainProperties } from '@polkadot/types/interfaces';
+
 import { types as karTypesdef } from '@acala-network/type-definitions'
-import { subsocial } from '@subsocial/types/substrate/interfaces/definitions'
 import { SubstrateNetworkKeys } from 'constants/networkSpecs';
 import React, { useCallback, useContext, useState } from 'react';
 import { SubstrateNetworkParams } from 'types/networkTypes';
 
-import { Metadata,TypeRegistry } from '@polkadot/types';
+import { Metadata, TypeRegistry } from '@polkadot/types';
 import { getSpecTypes } from '@polkadot/types-known';
 
 import metadataJson from '../constants/metadata.json';
@@ -72,7 +73,7 @@ export const getOverrideTypes = (registry: TypeRegistry, pathId: string, specVer
 		return true;
 	});
 
-	return getSpecTypes(registry, chainName, specName, specVersion);
+	return getSpecTypes(registry as any, chainName, specName, specVersion);
 };
 
 interface RegistriesContextProviderProps {
@@ -87,7 +88,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 
 		try {
 			const network = getNetwork(networkKey) as SubstrateNetworkParams;
-			const networkMetadataRaw: string = (metadataJson as Record<string, any>)[network.metadataKey].hex;
+			const networkMetadataRaw: `0x${string}` = (metadataJson as Record<string, any>)[network.metadataKey].hex;
 
 			if (!networkMetadataRaw) return null;
 			if (registries.has(networkKey)) return registries.get(networkKey)!;
@@ -98,10 +99,6 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 			switch (networkKey) {
 			case SubstrateNetworkKeys.KARURA:
 				overrideTypes = karTypesdef
-				break;
-
-			case SubstrateNetworkKeys.SUBSOCIAL:
-				overrideTypes = subsocial.types
 				break;
 
 			case SubstrateNetworkKeys.SHIDEN:
@@ -124,7 +121,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 				ss58Format: network.prefix,
 				tokenDecimals: network.decimals,
 				tokenSymbol: network.unit
-			  }));
+			  } as unknown as ChainProperties));
 			const newRegistries = deepCopyMap(registries);
 
 			newRegistries.set(networkKey, newRegistry);
