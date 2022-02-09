@@ -41,7 +41,7 @@ export const SubstrateNetworkKeys = Object.freeze({
 	// ROCOCO: '0x1611e1dbf0405379b861e2e27daa90f480b2e6d3682414a80835a52e8cb8a215',
 	SHIDEN: '0xf1cf9022c7ebb34b162d5b5e34e705a5a740b2d0ecc1009fb89023e62a488108',
 	STATEMINE: '0x48239ef607d7928874027a43a67689209727dfb3d3dc5e5b03a39bdc2eda771a',
-	SUBSOCIAL: '0x0bd72c1c305172e1275278aaeb3f161e02eccb7a819e63f62d47bd53a28189f8',
+	SUBSOCIAL: '0x4a12be580bb959937a1c7a61d5cf24428ed67fa571974b4007645d1886e7c89f',
 	WESTEND: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e',
 	// eslint-disable-next-line sort-keys
 	ACALA: '0xfc41b9bd8ef8fe53d58c7ea67c794c7ec9a73daf05e6d54b14ff6342c99ba64c',
@@ -53,8 +53,8 @@ export const SubstrateNetworkKeys = Object.freeze({
 	INTERLAY: '0xed86d448b84db333cdbe07362ddc79530343b907bd88712557c024d7a94296bb',
 	KHALA: '0xd43540ba6d3eb4897c28a77d48cb5b729fea37603cbbfc7a86a73b72adb3be8d',
 	KILT: '0x411f057b9107718c9624d6aa4a3f23c1653898297f3d4d529d9bb6511a39dd21',
-	PARALLELPOLKADOT: '0xe61a41c53f5dcd0beb09df93b34402aada44cb05117b71059cce40a2723a4e97'
-	// ZEITGEIST: ''
+	PARALLELPOLKADOT: '0xe61a41c53f5dcd0beb09df93b34402aada44cb05117b71059cce40a2723a4e97',
+	ZEITGEIST: '0x1bf2a2ecb4a868de66ea8610f2ce7c8c43706561b6476031315f6640fe38e060'
 });
 
 const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
@@ -273,20 +273,19 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 42,
 		title: 'Interlay',
 		unit: 'DOT'
+	},
+	[SubstrateNetworkKeys.ZEITGEIST]: {
+		color: '#184380',
+		decimals: 10,
+		genesisHash: SubstrateNetworkKeys.ZEITGEIST,
+		logo: require('res/img/logos/Zeitgeist.png'),
+		metadataKey: 'zeitgeistMetadata',
+		order: 3,
+		pathId: 'zeitgeist',
+		prefix: 73,
+		title: 'Zeitgeist',
+		unit: 'ZTG'
 	}
-	// ,
-	// [SubstrateNetworkKeys.ZEITGEIST]: {
-	// 	color: '#000000',
-	// 	decimals: 12,
-	// 	genesisHash: SubstrateNetworkKeys.ZEITGEIST,
-	// 	logo: require('res/img/logos/Zeitgeist.png'),
-	// 	metadataKey: 'zeitgeistMetadata',
-	// 	order: 3,
-	// 	pathId: 'zeitgeist',
-	// 	prefix: 0,
-	// 	title: 'Zeitgeist',
-	// 	unit: 'ZTG'
-	// }
 	// [SubstrateNetworkKeys.MOONRIVER]: {
 	// 	color: '#0E132E',
 	// 	decimals: 18,
@@ -359,11 +358,11 @@ function setSubstrateNetworkDefault(): Record<string, SubstrateNetworkParams> {
 	}, {});
 }
 
-export const ETHEREUM_NETWORK_LIST: Record< string, EthereumNetwork> = Object.freeze(setEthereumNetworkDefault());
-export const SUBSTRATE_NETWORK_LIST: Record< string, SubstrateNetworkParams> = Object.freeze(setSubstrateNetworkDefault());
+export const ETHEREUM_NETWORK_LIST: Record<string, EthereumNetwork> = Object.freeze(setEthereumNetworkDefault());
+export const SUBSTRATE_NETWORK_LIST: Record<string, SubstrateNetworkParams> = Object.freeze(setSubstrateNetworkDefault());
 
 export const NETWORK_LIST: Record<string, NetworkParams> = Object.freeze(Object.assign({},
 	SUBSTRATE_NETWORK_LIST,
-	ETHEREUM_NETWORK_LIST,));
+	ETHEREUM_NETWORK_LIST));
 
 export const defaultNetworkKey = SubstrateNetworkKeys.KUSAMA;
