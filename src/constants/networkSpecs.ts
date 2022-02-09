@@ -134,7 +134,7 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		color: '#da68a7',
 		decimals: 12,
 		genesisHash: SubstrateNetworkKeys.WESTEND,
-		logo: require('res/img/logos/Polkadot.png'),
+		logo: require('res/img/logos/Westend.png'),
 		metadataKey: 'westendMetadata',
 		order: 3,
 		pathId: 'westend',
