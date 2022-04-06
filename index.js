@@ -25,11 +25,12 @@ import { AppRegistry } from 'react-native';
 
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 
+cryptoWaitReady().catch(console.log);
+
 import App from './src/App';
 
 // YellowBox.ignoreWarnings([
 // 	'Warning: isMounted(...) is deprecated',
 // 	'Module RCTImageLoader'
 // ]);
-cryptoWaitReady().catch(console.log);
 AppRegistry.registerComponent('stylo-app', () => App);
