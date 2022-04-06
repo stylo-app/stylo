@@ -17,14 +17,15 @@
 import { UnlockedAccount } from 'types/accountTypes';
 import { ValidSeed } from 'types/utilTypes';
 
-import { decodeAddress } from '@polkadot/util-crypto';
+import { cryptoWaitReady, decodeAddress } from '@polkadot/util-crypto';
 
-export function emptyAccount(address = '', networkKey: string = '', parentAddress: string = ''): UnlockedAccount {
+export async function emptyAccount(address = '', networkKey: string = '', parentAddress: string = ''): Promise<UnlockedAccount> {
 	let parent = undefined
 
 	try {
+		await cryptoWaitReady().catch(console.log)
 		parent = parentAddress ? decodeAddress(parentAddress).toString() : undefined
-	} catch(e){
+	} catch (e) {
 		console.log('Error while decoding the parent address', e)
 	}
 
@@ -45,7 +46,7 @@ export function emptyAccount(address = '', networkKey: string = '', parentAddres
 	};
 }
 
-export function validateSeed(seed: string | undefined, validBip39Seed: boolean): ValidSeed {
+export function validateSeed(seed: string | undefined, validBip39Seed?: boolean): ValidSeed {
 	if (!seed || seed.length === 0) {
 		return {
 			accountRecoveryAllowed: false,

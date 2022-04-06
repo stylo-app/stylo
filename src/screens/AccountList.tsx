@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
 // Modifications Copyright (c) 2021-2022 Thibaut Sardan
 
@@ -21,12 +22,12 @@ import InsecureDeviceBanner from 'components/InsecureDeviceBanner';
 import { Loader } from 'components/Loader';
 import QrScannerTab from 'components/QrScannerTab';
 import { SafeAreaViewContainer } from 'components/SafeAreaContainer';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import colors from 'styles/colors';
 import { RootStackParamList } from 'types/routes';
-import { buildHierarchy } from 'utils/buildHierarchy';
+import { AccountWithChildren, buildHierarchy } from 'utils/buildHierarchy';
 
 import { AccountsContext } from '../context';
 import { useTac } from '../hooks/useTac';
@@ -36,16 +37,21 @@ function AccountList(): React.ReactElement {
 	const [isConnected, setIsConnected] = useState(false);
 	const { dataLoaded } = useTac();
 	const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
-	const hierarchy = useMemo(() => buildHierarchy(accounts), [accounts])
+	const [hierarchy, setHierarchy] = useState<AccountWithChildren[]>([])
+
+	useEffect(() => {
+		buildHierarchy(accounts)
+			.then(setHierarchy)
+	}, [accounts])
 
 	useEffect(() =>
 		NetInfo.addEventListener(state => {
 			setIsConnected(state.isConnected || false);
 		}),
-	[]);
+		[]);
 
-	if(!dataLoaded) {
-		return <Loader/>
+	if (!dataLoaded) {
+		return <Loader />
 	}
 
 	const onAccountSelected = async (accountAddress: string): Promise<void> => {
@@ -55,7 +61,7 @@ function AccountList(): React.ReactElement {
 
 	return (
 		<SafeAreaViewContainer>
-			{isConnected && <InsecureDeviceBanner onPress={(): void => navigate('Security')}/>}
+			{isConnected && <InsecureDeviceBanner onPress={(): void => navigate('Security')} />}
 			{
 				accounts.length
 					? (
@@ -89,7 +95,7 @@ function AccountList(): React.ReactElement {
 							<QrScannerTab />
 						</>
 					)
-					:(
+					: (
 						<View style={styles.emptyContainer}>
 							<Icon
 								color={colors.text.faded}
@@ -112,16 +118,16 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingBottom: 40
 	},
-	emptyContainer:{
-		alignItems:'center',
-		flex:1,
-		justifyContent:'center'
+	emptyContainer: {
+		alignItems: 'center',
+		flex: 1,
+		justifyContent: 'center'
 	},
-	emptyText:{
+	emptyText: {
 		color: colors.text.faded,
 		fontSize: 15
 	},
-	emptyTextTitle:{
+	emptyTextTitle: {
 		color: colors.text.faded,
 		fontSize: 32,
 		paddingBottom: 10

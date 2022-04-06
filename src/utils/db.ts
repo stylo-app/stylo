@@ -21,7 +21,7 @@ import { AccountType } from 'types/accountTypes';
 import { SubstrateNetworkParams } from 'types/networkTypes';
 import { mergeNetworks, serializeNetworks } from 'utils/networksUtils';
 
-import { decodeAddress } from '@polkadot/util-crypto';
+import { cryptoWaitReady, decodeAddress } from '@polkadot/util-crypto';
 
 function handleError(e: Error, label: string): any[] {
 	console.warn(`loading ${label} error`, e);
@@ -65,15 +65,17 @@ const currentAccountsStore = {
 
 const ACCOUNT_BASE_KEY = 'account:'
 
-export const deleteAccount = (address: string, isEthereum: boolean): Promise<void> => {
+export const deleteAccount = async (address: string, isEthereum: boolean): Promise<void> => {
+	await cryptoWaitReady().catch(console.log)
 	const dbKey = isEthereum
 		? address
 		: decodeAddress(address).toString();
 
-	return	SecureStorage.deleteItem(`${ACCOUNT_BASE_KEY}${dbKey}`, currentAccountsStore);
+	return SecureStorage.deleteItem(`${ACCOUNT_BASE_KEY}${dbKey}`, currentAccountsStore);
 }
 
-export const saveAccount = (account: AccountType, isEthereum: boolean): Promise<void> => {
+export const saveAccount = async (account: AccountType, isEthereum: boolean): Promise<void> => {
+	await cryptoWaitReady().catch(console.log)
 	const dbKey = isEthereum
 		? account.address
 		: decodeAddress(account.address).toString();
@@ -105,7 +107,7 @@ export async function loadNetworks(): Promise<Map<string, SubstrateNetworkParams
 
 		return mergeNetworks(SUBSTRATE_NETWORK_LIST, networksEntries);
 	} catch (e: unknown) {
-		if(e instanceof Error){
+		if (e instanceof Error) {
 			handleError(e, 'networks');
 		}
 
@@ -127,7 +129,7 @@ export async function saveNetworks(newNetwork: SubstrateNetworkParams): Promise<
 			serializeNetworks(addedNetworks),
 			networkStorage);
 	} catch (e: unknown) {
-		if(e instanceof Error){
+		if (e instanceof Error) {
 			handleError(e, 'networks');
 		}
 

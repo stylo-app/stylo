@@ -13,7 +13,7 @@
     "build-prod:android": "NODE_OPTIONS=--max_old_space_size=8192 npx react-native bundle --dev true --entry-file index.js --bundle-output bundle/main.jsbundle --platform android --assets-dest='./bundle'",
     "install:ios": "yarn install && npx pod-install",
     "archive": "xcodebuild -scheme stylo-app -workspace ios/stylo-app.xcworkspace -configuration Release clean archive -archivePath \"ios/build/stylo-app.xcarchive\" \n    CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO",
-    "clean": "watchman watch-del-all && rm -rf /tmp/metro-bundler-cache-* && rm -rf /tmp/haste-map-react-native-packager-* && rm -rf node_modules/ && yarn cache clean --force",
+    "clean": "watchman watch-del-all && rm -rf /tmp/metro* && rm -rf /tmp/haste-map-react-native-packager-* && rm -rf node_modules/ && yarn cache clean --force",
     "clean:android": "(cd android && rm -rf .gradle && ./gradlew clean) && yarn clean && rm -rf ./android/app/build",
     "clean:ios": "yarn clean && rm -rf ./ios/build && (cd ios && pod deintegrate)",
     "build-rust:ios": "(cd rust/signer && make ios)",
@@ -38,10 +38,11 @@
   },
   "dependencies": {
     "@acala-network/type-definitions": "^4.0.1",
-    "@polkadot/api": "^6.12.1",
-    "@polkadot/reactnative-identicon": "^0.89.2",
-    "@polkadot/util": "8.3.2",
-    "@polkadot/util-crypto": "8.3.2",
+    "@polkadot/api": "^7.15.1",
+    "@polkadot/reactnative-identicon": "^1.4.1",
+    "@polkadot/util": "8.7.1",
+    "@polkadot/util-crypto": "8.7.1",
+    "@polkadot/wasm-crypto": "^5.1.1",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/netinfo": "^7.1.7",
@@ -112,5 +113,12 @@
     "projects": [
       "test/unit/jest.config.js"
     ]
+  },
+  "resolutions": {
+    "@polkadot/api": "^7.15.1",
+    "@polkadot/reactnative-identicon": "^1.4.1",
+    "@polkadot/util": "8.7.1",
+    "@polkadot/util-crypto": "8.7.1",
+    "@polkadot/wasm-crypto": "^5.1.1"
   }
 }

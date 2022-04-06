@@ -45,15 +45,16 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 	// const [isDerivationPathValid, setIsDerivationPathValid] = useState(true)
 	const { newAccount, updateNew } = useContext(AccountsContext);
 	const { getNetwork } = useContext(NetworksContext);
-	const { address, name, networkKey, seed, validBip39Seed  } = newAccount;
+	const { address, name, networkKey, seed, validBip39Seed } = newAccount || {};
 	const selectedNetwork = getNetwork(networkKey);
 	const isSubstrate = selectedNetwork?.protocol === NetworkProtocols.SUBSTRATE;
 
 	useEffect((): void => {
 		// make sure all fields are reset on mount
-		updateNew(emptyAccount('', ''));
-	// we get an infinite loop if we add anything here.
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		emptyAccount('', '')
+			.then((empty) => updateNew(empty));
+		// we get an infinite loop if we add anything here.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const updateAccountSelection = useCallback(({ isBip39, newAddress, newSeed }): void => {
@@ -93,14 +94,14 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 				validBip39Seed: false
 			});
 		}
-	},[isSubstrate, updateNew])
+	}, [isSubstrate, updateNew])
 
 	const onCreate = useCallback(() => {
 		navigation.navigate('Mnemonic', { isNew: true })
 	}, [navigation])
 
 	const onNetworkNavigation = useCallback(() => {
-		updateNew({ address:'', seed: '', seedPhrase: '', validBip39Seed: false })
+		updateNew({ address: '', seed: '', seedPhrase: '', validBip39Seed: false })
 		navigation.navigate('NetworkList')
 	}, [navigation, updateNew])
 
@@ -132,7 +133,7 @@ export default function AccountNew({ navigation }: NavigationProps<'AccountNew'>
 					title={selectedNetwork?.title || 'Select Network'}
 				/>
 			</View>
-			{selectedNetwork && (
+			{selectedNetwork && address && (
 				<>
 					<View style={styles.step}>
 						<Text style={styles.title}>ICON & ADDRESS</Text>

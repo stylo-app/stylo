@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 // Copyright 2015-2020 Parity Technologies (UK) Ltd.
 // Modifications Copyright (c) 2021-2022 Thibaut Sardan
 
@@ -97,16 +98,16 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 			let overrideTypes
 
 			switch (networkKey) {
-			case SubstrateNetworkKeys.KARURA:
-				overrideTypes = karTypesdef
-				break;
+				case SubstrateNetworkKeys.KARURA:
+					overrideTypes = karTypesdef
+					break;
 
-			case SubstrateNetworkKeys.SHIDEN:
-				overrideTypes = plasmTypeDefs
-				break;
-			default:
-				network && getOverrideTypes(newRegistry, network.pathId, specVersion);
-				break;
+				case SubstrateNetworkKeys.SHIDEN:
+					overrideTypes = plasmTypeDefs
+					break;
+				default:
+					network && getOverrideTypes(newRegistry, network.pathId, specVersion);
+					break;
 			}
 
 			overrideTypes && newRegistry.register(overrideTypes);
@@ -121,7 +122,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 				ss58Format: network.prefix,
 				tokenDecimals: network.decimals,
 				tokenSymbol: network.unit
-			  } as unknown as ChainProperties));
+			}) as unknown as ChainProperties);
 			const newRegistries = deepCopyMap(registries);
 
 			newRegistries.set(networkKey, newRegistry);

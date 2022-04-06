@@ -6,12 +6,12 @@ import { deleteAccount as deleteDbAccount, loadAccounts, saveAccount as saveDbAc
 import { decryptData, encryptData } from 'utils/native';
 import { parseSURI } from 'utils/suri';
 
-import { decodeAddress , encodeAddress } from '@polkadot/util-crypto';
+import { cryptoWaitReady, decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 
 import { NetworksContext } from './NetworksContext';
 
 export interface AccountsContextType {
-	accountExists: (address?: string | null, network?: NetworkParams | null) => boolean;
+	accountExists: (address?: string | null, network?: NetworkParams | null) => Promise<boolean>;
 	accounts: AccountType[];
 	accountsLoaded: boolean;
 	changeCurrentAccountNetwork: (networkKey: string) => Promise<string | undefined>
@@ -19,7 +19,7 @@ export interface AccountsContextType {
 	lockAccount: (accountKey: string) => void;
 	getAccountByAddress: (address: string) => AccountType | undefined;
 	getSelectedAccount: () => AccountType | undefined;
-	newAccount: AccountType;
+	newAccount: AccountType | undefined;
 	saveAccount: (account: AccountType, pin?: string) => Promise<void>;
 	selectAccount: (accountAddress: string) => void;
 	submitNew: (pin: string) => Promise<void>;
@@ -36,7 +36,7 @@ export const AccountsContext = createContext({} as AccountsContextType);
 export function AccountsContextProvider({ children }: AccountsContextProviderProps): React.ReactElement {
 	const [selectedAccountAddress, setSelectedAccountAddress] = useState('');
 	const [accounts, setAccounts] = useState<AccountType[]>([]);
-	const [newAccount, setNewAccount] = useState<AccountType>(emptyAccount());
+	const [newAccount, setNewAccount] = useState<AccountType | undefined>();
 	const [accountsLoaded, setAccountLoaded] = useState(false);
 	const { getNetwork } = useContext(NetworksContext);
 
@@ -52,6 +52,10 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 			.catch((e) => console.error('Error while loading accounts from db', e));
 	}, []);
 
+	useEffect(() => {
+		emptyAccount()
+			.then((empty) => setNewAccount(empty));
+	}, [])
 	const updateNew = useCallback((accountUpdate: Partial<AccountType>): void => {
 
 		setNewAccount((previous: AccountType | undefined) => ({
@@ -60,8 +64,8 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 		} as AccountType))
 	}, [])
 
-	const accountExists = (address? : string | null, network?: NetworkParams | null) => {
-		if (!address){
+	const accountExists = async (address?: string | null, network?: NetworkParams | null) => {
+		if (!address) {
 			return false;
 		}
 
@@ -77,6 +81,8 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 			return false
 		}
 
+		await cryptoWaitReady().catch(console.log)
+
 		// we're left with a substrate network, we can decode the address
 		const searchingForPubKey = decodeAddress(address).toString();
 
@@ -84,7 +90,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 		const existing = accounts.filter((account) => !isEthereumAccount(account))
 			.some((substrateAccount) => {
 
-				if(searchingForPubKey === decodeAddress(substrateAccount.address).toString()){
+				if (searchingForPubKey === decodeAddress(substrateAccount.address).toString()) {
 					// this will break the "some" iteration
 					return true
 				}
@@ -133,8 +139,8 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 	}
 
 	async function submitNew(pin: string): Promise<void> {
-		try{
-			if (!newAccount.seed) {
+		try {
+			if (!newAccount?.seed) {
 				console.error('Account seed is empty')
 
 				return
@@ -142,7 +148,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 
 			await saveAccount(newAccount, pin);
 
-			setNewAccount(emptyAccount());
+			emptyAccount().then((empty) => setNewAccount(empty));
 			loadAccountsFromDb();
 		} catch (e) {
 			console.error('error when saving new account', e)
@@ -158,8 +164,8 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 	async function deleteAccount(addressToDelete: string): Promise<void> {
 		const accountToDelete = getAccountByAddress(addressToDelete)
 
-		if (!accountToDelete){
-			console.error('Could not find the account to delete with address',addressToDelete)
+		if (!accountToDelete) {
+			console.error('Could not find the account to delete with address', addressToDelete)
 
 			return;
 		}
@@ -187,7 +193,7 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 	}, [accounts])
 
 	async function unlockAccount(address: string, pin: string): Promise<boolean> {
-		const account = getAccountByAddress(address) ;
+		const account = getAccountByAddress(address);
 
 		if (!account || !account.encryptedSeed) {
 			console.error('No account found for the address', address)
@@ -240,18 +246,19 @@ export function AccountsContextProvider({ children }: AccountsContextProviderPro
 	const changeCurrentAccountNetwork = async (networkKey: string) => {
 		const newAccount = getSelectedAccount()
 
-		if (!newAccount || !newAccount.address){
+		if (!newAccount || !newAccount.address) {
 			console.error('no account selected')
 
 			return Promise.reject('No account selected')
 		}
 
-		const newAddresse = encodeAddress(newAccount?.address, (getNetwork(networkKey) as SubstrateNetworkParams).prefix)
-
 		try {
+			await cryptoWaitReady().catch(console.log)
+			const newAddresse = encodeAddress(newAccount?.address, (getNetwork(networkKey) as SubstrateNetworkParams).prefix)
+
 			// saving the same account with the new address and network
 			// the db indexes accounts by pub key so it will replace the previous one
-			await saveAccount({ ...newAccount, address: newAddresse,networkKey })
+			await saveAccount({ ...newAccount, address: newAddresse, networkKey })
 
 			return Promise.resolve(newAddresse)
 		} catch (e) {

@@ -19,14 +19,17 @@
  * https://github.com/facebook/react-native
  * @flow
  */
+import '@polkadot/wasm-crypto/initOnlyAsm'
 
-import { AppRegistry, YellowBox } from 'react-native';
+import { AppRegistry } from 'react-native';
+
+import { cryptoWaitReady } from '@polkadot/util-crypto';
 
 import App from './src/App';
 
-YellowBox.ignoreWarnings([
-	'Warning: isMounted(...) is deprecated',
-	'Module RCTImageLoader'
-]);
-
+// YellowBox.ignoreWarnings([
+// 	'Warning: isMounted(...) is deprecated',
+// 	'Module RCTImageLoader'
+// ]);
+cryptoWaitReady().catch(console.log);
 AppRegistry.registerComponent('stylo-app', () => App);

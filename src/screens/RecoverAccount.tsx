@@ -27,7 +27,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { AppState, AppStateStatus, StyleSheet, Text, View } from 'react-native';
 import colors from 'styles/colors';
 import fontStyles from 'styles/fontStyles';
-import { isSubstrateNetwork, SubstrateNetworkParams  } from 'types/networkTypes';
+import { isSubstrateNetwork, SubstrateNetworkParams } from 'types/networkTypes';
 import { RootStackParamList } from 'types/routes';
 import { emptyAccount, validateSeed } from 'utils/account';
 import { alertError, alertRisks } from 'utils/alertUtils';
@@ -54,16 +54,21 @@ function RecoverAccount(): React.ReactElement {
 	const [seedPhrase, setSeedPhrase] = useState('');
 	const { setAlert } = useContext(AlertContext);
 	const { getNetwork } = useContext(NetworksContext)
-	const selectedNetwork = useMemo(() => getNetwork(newAccount.networkKey), [getNetwork, newAccount.networkKey])
+	const selectedNetwork = useMemo(() => getNetwork(newAccount?.networkKey), [getNetwork, newAccount?.networkKey])
 	const { goBack, navigate } = useNavigation<NavigationProp<RootStackParamList>>()
 	const { params } = useRoute<RouteProp<RootStackParamList, 'RecoverAccount'>>()
-	const accountAlreadyExists = useMemo(() => accountExists(newAccount.address, selectedNetwork), [accountExists, newAccount.address, selectedNetwork])
+	const [accountAlreadyExists, setAccountAlreadyExists] = useState<boolean>(false)
 	const isSubstrate = useMemo(() => isSubstrateNetwork(selectedNetwork), [selectedNetwork])
 	const isDerivingAccount = useMemo(() => params?.isDerivation, [params?.isDerivation])
 	const selectedAccount = useMemo(() => getSelectedAccount(), [getSelectedAccount])
 
 	const goToPin = useCallback(() => navigate('AccountPin', { isNew: true }), [navigate])
 
+	useEffect(() => {
+		accountExists(newAccount?.address, selectedNetwork)
+			.then(setAccountAlreadyExists)
+			.catch(console.error)
+	}, [accountExists, newAccount?.address, selectedNetwork])
 	// Make sure to lock the account if the app goes innactive or the user goes back
 	useEffect(() => {
 
@@ -87,7 +92,7 @@ function RecoverAccount(): React.ReactElement {
 	useEffect((): void => {
 		const parentAddress = isDerivingAccount ? selectedAccount?.address : undefined
 
-		updateNew(emptyAccount('', '', parentAddress));
+		emptyAccount('', '', parentAddress).then((empty) => updateNew(empty));
 		setDerivationPath('')
 		setDerivationPassword('')
 	}, [isDerivingAccount, selectedAccount?.address, updateNew]);
@@ -112,7 +117,7 @@ function RecoverAccount(): React.ReactElement {
 				})
 				.catch(console.error);
 		} else {
-			if (!seedPhrase){
+			if (!seedPhrase) {
 				return;
 			}
 
@@ -204,7 +209,7 @@ function RecoverAccount(): React.ReactElement {
 		setIsDerivationPathValid(isDerivationPathValid)
 	}, [])
 
-	const { address, name, networkKey } = newAccount;
+	const { address, name, networkKey } = newAccount || {};
 
 	return (
 		<KeyboardScrollView>
@@ -243,11 +248,11 @@ function RecoverAccount(): React.ReactElement {
 						isDropdown={isDerivingAccount}
 						onChange={onDerivationChange}
 						styles={styles}
-						value={`${derivationPath}${derivationPassword ? '///' : '' }${derivationPassword}`}
+						value={`${derivationPath}${derivationPassword ? '///' : ''}${derivationPassword}`}
 					/>
 				</View>
 			)}
-			{ isSeedValid.bip39 && !!networkKey && !!address && !accountAlreadyExists && (
+			{isSeedValid.bip39 && !!networkKey && !!address && !accountAlreadyExists && (
 				<View style={styles.step}>
 					<AccountCard
 						address={address}
@@ -257,14 +262,14 @@ function RecoverAccount(): React.ReactElement {
 					/>
 				</View>
 			)}
-			{ accountAlreadyExists && !(isDerivingAccount && !derivationPath) && (
+			{accountAlreadyExists && !(isDerivingAccount && !derivationPath) && (
 				<View style={styles.step}>
 					<Text style={styles.errorText}>
 						An account with this secret phrase already exists.
 					</Text>
 				</View>
 			)}
-			{ !isDerivationPathValid && (
+			{!isDerivationPathValid && (
 				<View style={styles.step}>
 					<Text style={styles.errorText}>
 						Invalid derivation path.
@@ -295,7 +300,7 @@ const styles = StyleSheet.create({
 		alignContent: 'center',
 		marginTop: 10
 	},
-	errorText:{
+	errorText: {
 		color: colors.signal.error,
 		fontSize: 20,
 		textAlign: 'center'

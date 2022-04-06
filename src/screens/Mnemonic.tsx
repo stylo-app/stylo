@@ -31,7 +31,7 @@ import { alertBackupDone, alertCopyBackupPhrase } from 'utils/alertUtils';
 import { AccountsContext, AlertContext, NetworksContext } from '../context';
 
 function Mnemonic({ navigation, route }: NavigationProps<'Mnemonic'>): React.ReactElement {
-	const { getSelectedAccount, lockAccount,newAccount } = useContext(AccountsContext);
+	const { getSelectedAccount, lockAccount, newAccount } = useContext(AccountsContext);
 	const selectedAccount = getSelectedAccount();
 	const { getNetwork } = useContext(NetworksContext);
 	const { navigate } = navigation;
@@ -39,7 +39,7 @@ function Mnemonic({ navigation, route }: NavigationProps<'Mnemonic'>): React.Rea
 	const isNew = !!route.params?.isNew;
 
 	const { address = '', derivationPassword = '', derivationPath = '', name, networkKey, seed = '', seedPhrase = '' } = isNew
-		? newAccount
+		? newAccount || {}
 		: selectedAccount || {};
 	const protocol = getNetwork(networkKey)?.protocol;
 

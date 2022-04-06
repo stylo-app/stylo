@@ -13,7 +13,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+import '@polkadot/wasm-crypto/initOnlyAsm'
 import '../shim';
 import 'utils/iconLoader';
 import '../ReactotronConfig';
@@ -21,7 +21,7 @@ import '../ReactotronConfig';
 import { NavigationContainer } from '@react-navigation/native';
 import CustomAlert from 'components/CustomAlert';
 import * as React from 'react';
-import { LogBox,StatusBar } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 import NavigationBar from 'react-native-navbar-color';
 import { MenuProvider } from 'react-native-popup-menu';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
