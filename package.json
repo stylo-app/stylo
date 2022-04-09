@@ -39,10 +39,10 @@
   "dependencies": {
     "@acala-network/type-definitions": "^4.0.1",
     "@polkadot/api": "^7.15.1",
-    "@polkadot/reactnative-identicon": "^1.4.1",
-    "@polkadot/util": "8.7.1",
-    "@polkadot/util-crypto": "8.7.1",
-    "@polkadot/wasm-crypto": "^5.1.1",
+    "@polkadot/reactnative-identicon": "^2.0.1",
+    "@polkadot/util": "^9.0.1",
+    "@polkadot/util-crypto": "^9.0.1",
+    "@polkadot/wasm-crypto": "^6.0.1",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/netinfo": "^7.1.7",
@@ -116,9 +116,9 @@
   },
   "resolutions": {
     "@polkadot/api": "^7.15.1",
-    "@polkadot/reactnative-identicon": "^1.4.1",
-    "@polkadot/util": "8.7.1",
-    "@polkadot/util-crypto": "8.7.1",
-    "@polkadot/wasm-crypto": "^5.1.1"
+    "@polkadot/reactnative-identicon": "^2.0.1",
+    "@polkadot/util": "^9.0.1",
+    "@polkadot/util-crypto": "^9.0.1",
+    "@polkadot/wasm-crypto": "^6.0.1"
   }
 }
