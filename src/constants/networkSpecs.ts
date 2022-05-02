@@ -54,6 +54,7 @@ export const SubstrateNetworkKeys = Object.freeze({
 	KHALA: '0xd43540ba6d3eb4897c28a77d48cb5b729fea37603cbbfc7a86a73b72adb3be8d',
 	KILT: '0x411f057b9107718c9624d6aa4a3f23c1653898297f3d4d529d9bb6511a39dd21',
 	PARALLELPOLKADOT: '0xe61a41c53f5dcd0beb09df93b34402aada44cb05117b71059cce40a2723a4e97',
+	CENTRIFUGE: '0xb3db41421702df9a7fcac62b53ffeac85f7853cc4e689e0b93aeb3db18c09d82',
 	ZEITGEIST: '0x1bf2a2ecb4a868de66ea8610f2ce7c8c43706561b6476031315f6640fe38e060'
 });
 
@@ -117,6 +118,18 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 172,
 		title: 'Parallel (P)',
 		unit: 'PARA'
+	},
+	[SubstrateNetworkKeys.CENTRIFUGE]: {
+		color: '#fcc367',
+		decimals: 18,
+		genesisHash: SubstrateNetworkKeys.CENTRIFUGE,
+		logo: require('res/img/logos/Centrifuge.png'),
+		metadataKey: 'centrifugeMetadata',
+		order: 3,
+		pathId: 'centrifuge',
+		prefix: 36,
+		title: 'Centrifuge',
+		unit: 'CFG'
 	},
 	// [SubstrateNetworkKeys.ROCOCO]: {
 	// 	color: '#6f36dc',
