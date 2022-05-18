@@ -207,7 +207,7 @@ def useIntlJsc = false
 dependencies {
     implementation project(':react-native-navbar-color')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:0.64.2"
+    implementation "com.facebook.react:react-native:0.68.2"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.android.support:multidex:1.0.3'
 
