@@ -50,6 +50,7 @@ export const SubstrateNetworkKeys = Object.freeze({
 	BASILISK: '0xa85cfb9b9fd4d622a5b28289a02347af987d8f73fa3108450e2b4a11c1ce5755',
 	BIFROST: '0x9f28c6a68e0fc9646eff64935684f6eeeece527e37bbe1f213d22caa1d9d6bed',
 	CALAMARI: '0x4ac80c99289841dd946ef92765bf659a307d39189b3ce374a92b5f0415ee17a1',
+	CENTRIFUGE: '0xb3db41421702df9a7fcac62b53ffeac85f7853cc4e689e0b93aeb3db18c09d82',
 	INTERLAY: '0xed86d448b84db333cdbe07362ddc79530343b907bd88712557c024d7a94296bb',
 	KHALA: '0xd43540ba6d3eb4897c28a77d48cb5b729fea37603cbbfc7a86a73b72adb3be8d',
 	KILT: '0x411f057b9107718c9624d6aa4a3f23c1653898297f3d4d529d9bb6511a39dd21',
@@ -213,6 +214,18 @@ const substrateNetworkBase: Record<string, SubstrateNetworkDefaultConstant> = {
 		prefix: 42,
 		title: 'Calamari',
 		unit: 'KMA'
+	},
+	[SubstrateNetworkKeys.CENTRIFUGE]: {
+		color: '#fcc367',
+		decimals: 18,
+		genesisHash: SubstrateNetworkKeys.CENTRIFUGE,
+		logo: require('res/img/logos/Centrifuge.png'),
+		metadataKey: 'centrifugeMetadata',
+		order: 3,
+		pathId: 'centrifuge',
+		prefix: 36,
+		title: 'Centrifuge',
+		unit: 'CFG'
 	},
 	[SubstrateNetworkKeys.KILT]: {
 		color: '#8c145a',
