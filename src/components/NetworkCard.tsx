@@ -41,7 +41,8 @@ export function NetworkCard({ isAdd, networkKey, onPress, title }: NetworkCardPr
 	const isDisabled = onPress === undefined;
 
 	return (
-		<TouchableItem disabled={isDisabled}
+		<TouchableItem
+			disabled={isDisabled}
 			onPress={onPress}
 		>
 			<View style={styles.content}>
