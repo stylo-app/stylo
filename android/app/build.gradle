@@ -134,8 +134,8 @@ android {
         minSdkVersion 23
         missingDimensionStrategy 'react-native-camera', 'general'
         targetSdkVersion 30
-        versionCode 912
-        versionName "0.9.12"
+        versionCode 913
+        versionName "0.9.13"
         ndk {
             abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
             // abiFilters 'armeabi-v7a','x86'
@@ -207,7 +207,7 @@ def useIntlJsc = false
 dependencies {
     implementation project(':react-native-navbar-color')
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:0.64.2"
+    implementation "com.facebook.react:react-native:0.68.2"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'com.android.support:multidex:1.0.3'
 

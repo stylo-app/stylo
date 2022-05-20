@@ -121,7 +121,7 @@ export function RegistriesContextProvider({ children }: RegistriesContextProvide
 				ss58Format: network.prefix,
 				tokenDecimals: network.decimals,
 				tokenSymbol: network.unit
-			  } as unknown as ChainProperties));
+			  }) as unknown as ChainProperties);
 			const newRegistries = deepCopyMap(registries);
 
 			newRegistries.set(networkKey, newRegistry);
