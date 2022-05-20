@@ -19,10 +19,13 @@
  * https://github.com/facebook/react-native
  * @flow
  */
+import '@polkadot/wasm-crypto/initOnlyAsm'
 
 import { AppRegistry, YellowBox } from 'react-native';
 
 import App from './src/App';
+
+cryptoWaitReady().catch(console.log);
 
 YellowBox.ignoreWarnings([
 	'Warning: isMounted(...) is deprecated',
