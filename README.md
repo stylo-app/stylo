@@ -28,11 +28,11 @@ Any data transfer from or to the app happens using QR code. By doing so, the mos
 
 ## What's the difference between Stylo and Parity Signer
 
-Stylo aims at creating a pleasing user experience for account creation and recovery. An account you create on Stylo can be recovered directly on Subkey or Polkadot.js/apps wihtout having to deal with account derivation. While the critical parts (key management and signing) are similar to what Parity Signer has as of v4.5.3, a significant part of the code base has been re-written to ease the maintainance.
+Stylo aims at creating a pleasing user experience for offline account creation and recovery. An account you create on Stylo can be recovered directly on Subkey or Polkadot.js/apps wihtout having to deal with account derivation. While the critical parts (key management and signing) are similar to what Parity Signer has as of v4.5.3, a significant part of the code base has been re-written to ease the maintainance.
 
 ### What Stylo brings compared to Signer:
 - It is user friendly. E.g unless you are an advanced user, you will not have to deal with "derivation paths"
-- Review what you are signing. This feature used to be part of Parity Signer but was removed starting with v4.2
+- Review what you are signing. ~This feature used to be part of Parity Signer but was removed starting with v4.2~. edit: it is now back in v5 🎉
 - Choose your account based on the identicon
 - Arbitrary message signing (allows participatin in crowdloans for network requiring you to sign terms and conditions)
 
