@@ -115,10 +115,10 @@
     ]
   },
   "resolutions": {
-    "@polkadot/api": "^8.4.2",
-    "@polkadot/reactnative-identicon": "^2.2.1",
-    "@polkadot/util": "^9.2.1",
-    "@polkadot/util-crypto": "^9.2.1",
+    "@polkadot/api": "^8.6.2",
+    "@polkadot/reactnative-identicon": "^2.3.1",
+    "@polkadot/util": "^9.3.1",
+    "@polkadot/util-crypto": "^9.3.1",
     "@polkadot/wasm-crypto": "^6.1.1",
     "@types/react": "17.0.14"
   }
