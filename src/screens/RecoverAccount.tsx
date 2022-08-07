@@ -35,6 +35,8 @@ import { debounce } from 'utils/debounce';
 import { brainWalletAddress, substrateAddress } from 'utils/native';
 import { constructSURI } from 'utils/suri';
 
+import { encodeAddress } from '@polkadot/util-crypto';
+
 import { AccountsContext, AlertContext, NetworksContext } from '../context';
 
 interface OnDerivationType {
@@ -125,10 +127,12 @@ function RecoverAccount(): React.ReactElement {
 					phrase: seedPhrase
 				});
 
-				substrateAddress(suri, prefix)
-					.then(address => {
+				substrateAddress(suri, 42)
+					.then(async (address) => {
+						const newAddress = await encodeAddress(address, prefix)
+
 						updateNew({
-							address,
+							address: newAddress,
 							derivationPassword,
 							derivationPath,
 							seed: suri,
