@@ -25,6 +25,8 @@ import { debounce } from 'utils/debounce';
 import { brainWalletAddress, substrateAddress, words } from 'utils/native';
 import { constructSURI } from 'utils/suri';
 
+import { encodeAddress } from '@polkadot/util-crypto';
+
 import AccountIcon from './AccountIcon';
 import Address from './Address';
 
@@ -79,8 +81,9 @@ export default class AccountIconChooser extends React.PureComponent<Props, { ico
 								phrase: result.seed
 							});
 
-							result.address = await substrateAddress(suri,
-								(network as SubstrateNetworkParams).prefix);
+							const tempAddress = await substrateAddress(suri, 42);
+
+							result.address = await encodeAddress(tempAddress, (network as SubstrateNetworkParams).prefix)
 							result.bip39 = true;
 						} catch (e) {
 							// invalid seed or derivation path
