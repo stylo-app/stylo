@@ -44,8 +44,8 @@ function AccountList(): React.ReactElement {
 		}),
 	[]);
 
-	if(!dataLoaded) {
-		return <Loader/>
+	if (!dataLoaded) {
+		return <Loader />
 	}
 
 	const onAccountSelected = async (accountAddress: string): Promise<void> => {
@@ -55,7 +55,7 @@ function AccountList(): React.ReactElement {
 
 	return (
 		<SafeAreaViewContainer>
-			{isConnected && <InsecureDeviceBanner onPress={(): void => navigate('Security')}/>}
+			{isConnected && <InsecureDeviceBanner onPress={(): void => navigate('Security')} />}
 			{
 				accounts.length
 					? (
@@ -89,7 +89,7 @@ function AccountList(): React.ReactElement {
 							<QrScannerTab />
 						</>
 					)
-					:(
+					: (
 						<View style={styles.emptyContainer}>
 							<Icon
 								color={colors.text.faded}
@@ -112,16 +112,16 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingBottom: 40
 	},
-	emptyContainer:{
-		alignItems:'center',
-		flex:1,
-		justifyContent:'center'
+	emptyContainer: {
+		alignItems: 'center',
+		flex: 1,
+		justifyContent: 'center'
 	},
-	emptyText:{
+	emptyText: {
 		color: colors.text.faded,
 		fontSize: 15
 	},
-	emptyTextTitle:{
+	emptyTextTitle: {
 		color: colors.text.faded,
 		fontSize: 32,
 		paddingBottom: 10

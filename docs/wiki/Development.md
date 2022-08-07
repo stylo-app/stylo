@@ -88,3 +88,12 @@ Then:
 	
 	Magic command to clean, reinstall deps and launch the RN server with the cache cleaned:  
   `yarn clean:android && yarn && yarn start --reset-cache` 
+
+### Get new metadata and version manually
+
+Visite the right network and go to the js console e.g: https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fkusama-rpc.polkadot.io#/js
+Type:
+```
+console.log(api.runtimeMetadata.asCallsOnly.toHex())
+console.log(api.runtimeVersion.specVersion.toNumber())
+```
