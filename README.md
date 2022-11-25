@@ -1,3 +1,9 @@
+# ⚠️ This project is not maintained any more.
+
+While Stylo has been very useful to many during the time when Parity Signer was not in its best shape. Things have changed. Since the v5 Signer has been greatly enhanved with features such as metadata upgrade over QR code. As a result, Stylo will not be maintained any more. It is advised to use [Parity signer](https://github.com/paritytech/parity-signer/) instead.
+<br/>
+<br/>
+<br/>
 <p align="center" style="margin-bottom: 0px !important;">
     <img src="./res/stylo-logos/stylo_logo-black-blue.png" alt="stylo app logo offline signer"/>
 </p>
